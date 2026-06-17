@@ -1,0 +1,115 @@
+<style>
+
+    table {
+        width: 50%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    {
+        display: grid
+    ;
+        grid-template-columns: 120px 300px
+    ;
+        gap: 15px
+    ;
+        align-items: center
+    ;
+    }
+</style>
+<html>
+<head>
+    <form action="<%=request.getContextPath() + MAIN_PAGE_ADMINISTRATOR%>" method="post">
+        <input type="submit" value="Вернуться в личный кабинет">
+    </form>
+    <title>Редактировать каталог</title>
+    <h1>Редактировать каталог товаров</h1>
+</head>
+<body>
+<form action="<%=request.getContextPath() + ADD_PRODUCT_PAGE%>" method="post">
+    <input type="submit" value="Добавить товар в каталог">
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>Номер товара</th>
+        <th>Название</th>
+        <th>Категория</th>
+        <th>Цена</th>
+        <th>Продавец</th>
+        <th>Редактировать</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="productDTO:${productDTOList}">
+        <td th:text="${productDTO.getId()}">
+        </td>
+        <td th:text="${productDTO.getProductName()}">
+        </td>
+        <td th:text="${productDTO.getProductCategory()}">
+        </td>
+        <td th:text="${productDTO.getPrice()}">
+        </td>
+        <td th:text="${productDTO.getSeller().getSellerName()}">
+        </td>
+        <td>
+            <form method="post">
+                <input type="hidden" name="productId" value="<%=productDTO.getId()%>">
+                <input type="hidden" name="func" value="catalog">
+                <input type="hidden" name="currentPage" value="<%=currentPage%>">
+                <input type="submit" value="Редактировать" formaction="<%=request.getContextPath() + EDIT_PRODUCT%>"/>
+                <input type="submit" value="Удалить" formaction="<%=request.getContextPath() + REMOVE_PRODUCT%>"/>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<!--<% int productCountResult = (int) request.getAttribute("productCountResult");
+    int lastPage = productCountResult / PRODUCT_PER_PAGE;
+    int minPage = currentPage - 3;
+    int maxPage = currentPage + 3;
+    if (minPage < 1) {
+        minPage = 1;
+    }
+
+    if (productCountResult % PRODUCT_PER_PAGE != 0) {
+        lastPage = lastPage + 1;
+    }
+    if (maxPage > lastPage) {
+        maxPage = lastPage;
+    }%>-->
+
+<!--<a href="<%=request.getContextPath() + EDIT_CATALOG+"?currentPage=1"%>">Первая
+</a>
+<% for (int i = minPage; i < maxPage + 1; i++) {
+    if (i == currentPage) {%>
+<a href="<%=request.getContextPath() + EDIT_CATALOG + "?currentPage=" + i%>"><span style="font-size: 25px;"><%=i%>
+</span>&nbsp;
+</a>
+<%} else {%><a href="<%=request.getContextPath() + EDIT_CATALOG + "?currentPage=" + i%>"><span
+        style="font-size: 20px;"><%=i%>
+</span>&nbsp;
+</a>
+<%
+        }
+    }
+%>
+<a href="<%=request.getContextPath() + SHOW_CATALOG+"?currentPage=" + lastPage%>">Последняя
+</a>
+<% } else {
+%>
+Список товаров пуст
+<%}%>-->
+</body>
+</html>

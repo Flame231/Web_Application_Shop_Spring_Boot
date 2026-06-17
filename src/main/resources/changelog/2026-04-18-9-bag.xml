@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="10" author="Oleg">
+        <createTable tableName="Bag">
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="product_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="count" type="INT"/>
+            <column name="createDateTime" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updateDateTime" type="TIMESTAMP"
+                    defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="11" author="Oleg">
+        <addPrimaryKey tableName="Bag"
+                       columnNames="user_id, product_id"
+                       constraintName="pk_bag"/>
+    </changeSet>
+
+
+</databaseChangeLog>

@@ -1,0 +1,34 @@
+package org.example.webApplicationShopSpringBoot.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import jakarta.persistence.*;
+import org.example.webApplicationShopSpringBoot.model.additional.DataEntity;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "product_category")
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class ProductCategory extends DataEntity {
+
+    @OneToMany(mappedBy = "productCategory", cascade = CascadeType.REMOVE)
+    private Set<Product> products = new HashSet<>();
+
+    @Column
+    private String category;
+
+    @Override
+    public String toString() {
+        return "ProductCategory{" +
+                ", category='" + category + '\'' +
+                '}';
+    }
+}

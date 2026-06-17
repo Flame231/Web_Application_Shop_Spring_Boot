@@ -1,4 +1,4 @@
-package org.example.web_application_shop_spring_boot;
+package org.example.webApplicationShopSpringBoot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,0 +1,66 @@
+<style>
+    fieldset {
+        width: fit-content;
+    }
+
+    form button,
+    form input[type="submit"] {
+        width: 300px;
+        height: 40px;
+        padding: 5px;
+        margin-top: 10px;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
+
+    table {
+        width: 50%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    {
+        display: grid
+    ;
+        grid-template-columns: 120px 300px
+    ;
+        gap: 15px
+    ;
+        align-items: center
+    ;
+    }
+
+    .my-form input {
+        padding: 5px;
+        width: 100%;
+    }
+
+    .my-form button {
+        grid-column: 1 / span 2;
+        width: fit-content;
+    }
+</style>
+<html>
+<head>
+    <title>Вход в систему</title>
+    <h1>Вход или регистрация пользователя</h1>
+    <form method="post">
+        Логин: <p><input name="login" type="text"/></p>
+        Пароль: <p><input name="password" type="password"/></p>
+        <p><input type="submit" value="Войти" th:formaction="@{/accountAdministrator}"/></p>
+        <a th:href="@{/registration}">Регистрация нового пользователя</a>
+    </form>
+</head>
+<body>
+</body>
+</html>

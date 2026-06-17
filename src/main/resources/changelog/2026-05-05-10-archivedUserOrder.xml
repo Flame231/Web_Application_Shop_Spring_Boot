@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="11" author="Oleg">
+        <createTable tableName="archivedUserOrder">
+            <column name="userOrderId" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="createDateTime" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+
+            <column name="userId" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="orderStatus" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="orderPoint" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="orderSum" type="decimal(10,2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="finalOrderSum" type="decimal(10,2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="userOrderCreateDateTime" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

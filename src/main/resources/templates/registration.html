@@ -1,0 +1,75 @@
+<html>
+<head>
+    <title>Регистрация нового пользователя</title>
+    <style>
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            width: 400px;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        input {
+            width: 60%;
+            box-sizing: border-box;
+            padding: 5px;
+        }
+
+        input[type="submit"] {
+            width: auto;
+            align-self: flex-start;
+            padding: 8px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Регистрация нового пользователя</h1>
+<a th:href="@{/login}"> На главную</a>
+<form th:action="@{/saveOrUpdateUser}" method="post">
+    <div class="form-container">
+
+        <div class="form-row">
+            <label>Имя:</label>
+            <input name="name" type="text"/>
+        </div>
+
+        <div class="form-row">
+            <label>Логин:</label>
+            <input name="login" type="text"/>
+        </div>
+        <input type="hidden" name="oldPassword" value="0">
+        <div class="form-row">
+            <label>Пароль:</label>
+            <input name="newPassword" type="password"/>
+        </div>
+        <div>
+            <label>Подтвердите пароль:</label>
+            <input name="newPasswordRepeat" type="password"/>
+        </div>
+
+        <div class="form-row">
+            <label>День Рождения:</label>
+            <input name="birthday" type="date"/>
+        </div>
+
+        <div class="form-row">
+            <label>Способ Оплаты:</label>
+            <input name="paymentMethods" type="text"/>
+        </div>
+
+        <input type="submit" value="Сохранить"/>
+    </div>
+</form>
+
+</body>
+</html>

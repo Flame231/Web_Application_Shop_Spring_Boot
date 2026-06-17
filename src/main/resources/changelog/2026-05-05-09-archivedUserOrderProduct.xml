@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="11" author="Oleg">
+        <createTable tableName="archivedUserOrderProduct">
+            <column name="userOrderId" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="productId" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="productName" type="VARCHAR(50)"/>
+            <column name="productCount" type="INT"/>
+            <column name="finalProductCount" type="INT"/>
+            <column name="price" type="decimal(10,2)"/>
+            <column name="createDateTime" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updateDateTime" type="TIMESTAMP"
+                    defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>
+        </createTable>
+        <addPrimaryKey tableName="archivedUserOrderProduct"
+                       columnNames="userOrderId, productId"
+                       constraintName="pk_order_items"/>
+
+        <addForeignKeyConstraint baseTableName="archivedUserOrderProduct"
+                                 baseColumnNames="userOrderId"
+                                 referencedTableName="archivedUserOrder"
+                                 referencedColumnNames="userOrderId"
+                                 constraintName="fk_archived_userOrderProduct_archivedUserOrder"/>
+    </changeSet>
+</databaseChangeLog>

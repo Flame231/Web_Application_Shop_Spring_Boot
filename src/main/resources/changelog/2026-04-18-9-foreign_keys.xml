@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="12" author="Oleg">
+        <addForeignKeyConstraint
+                baseTableName="user"
+                baseColumnNames="discount_id"
+                constraintName="fk_user_discount"
+                referencedTableName="discount"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="userOrder"
+                baseColumnNames="user_id"
+                constraintName="fk_userOrder_user"
+                referencedTableName="user"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="userOrder"
+                baseColumnNames="orderPoint_id"
+                constraintName="fk_userOrder_orderPoint"
+                referencedTableName="orderPoint"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="userOrder_product"
+                baseColumnNames="userOrder_id"
+                constraintName="fk_userOrder-product_userOrder"
+                referencedTableName="userOrder"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="userOrder_product"
+                baseColumnNames="product_id"
+                constraintName="fk_userOrder-product_product"
+                referencedTableName="product"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="product"
+                baseColumnNames="productCategory_id"
+                constraintName="fk_product_productCategory"
+                referencedTableName="product_category"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="product"
+                baseColumnNames="seller_id"
+                constraintName="fk_product_seller"
+                referencedTableName="seller"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="Bag"
+                baseColumnNames="user_id"
+                constraintName="fk_bag_user"
+                referencedTableName="user"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="Bag"
+                baseColumnNames="product_id"
+                constraintName="fk_bag_product"
+                referencedTableName="product"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="User"
+                baseColumnNames="orderPoint_id"
+                constraintName="fk_user_orderPoint"
+                referencedTableName="orderPoint"
+                referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

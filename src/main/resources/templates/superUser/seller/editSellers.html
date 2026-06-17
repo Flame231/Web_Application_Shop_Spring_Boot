@@ -1,0 +1,70 @@
+<style>
+
+    table {
+        width: 50%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    {
+        display: grid
+    ;
+        grid-template-columns: 120px 300px
+    ;
+        gap: 15px
+    ;
+        align-items: center
+    ;
+    }
+</style>
+<html>
+<head>
+    <form action="<%=request.getContextPath() +MAIN_PAGE_ADMINISTRATOR%>" method="post">
+        <input type="submit" value="Вернуться в личный кабинет">
+    </form>
+    <title>Редактировать продавцов</title>
+    <h1>Редактировать продавцов</h1>
+
+</head>
+<body>
+<form action="<%=request.getContextPath() + ADD_SELLER_PAGE%>" method="post">
+    <input type="submit" value="Добавить продавца">
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>Номер продавца</th>
+        <th>Название продавца</th>
+        <th>Адрес</th>
+        <th>Редактировать</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="sellerDTO:${sellerDTOList}">
+        <td th:text="${sellerDTO.getId()}">
+        </td>
+        <td th:text="${sellerDTO.getSellerName()}">
+        </td>
+        <td th:text="${sellerDTO.getSellerAddress()}">
+            <form method="post">
+                <input type="submit" value="Редактировать" formaction="<%=request.getContextPath() + EDIT_SELLER%>">
+                <input type="submit" value="Удалить" formaction="<%=request.getContextPath() + REMOVE_SELLER%>">
+                <input type="hidden" name="sellerId" value="<%=seller.getId()%>">
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
