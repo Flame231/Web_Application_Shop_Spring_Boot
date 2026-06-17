@@ -1,67 +1,52 @@
 package org.example.webApplicationShopSpringBoot.service.product;
 
 
+import jakarta.transaction.Transactional;
 import org.example.webApplicationShopSpringBoot.dao.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTO;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ProductDTOConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
 import org.example.webApplicationShopSpringBoot.model.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
-import java.util.List;
+
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
-    private ProductRepository productDAO;
+    private ConverterDTO<Product, ProductDTO> converterDTO;
+    private ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductRepository productDAO) {
-        this.productDAO = productDAO;
+    public ProductServiceImpl(ConverterDTO<Product, ProductDTO> converterDTO, ProductRepository productRepository) {
+        this.converterDTO = converterDTO;
+        this.productRepository = productRepository;
     }
-
-    private ConverterDTO<Product, ProductDTO> converterDTO = new ProductDTOConverter();
 
     @Override
-    public List<ProductDTO> getAllProducts(int currentPage) {
-        return productDAO.getProductList(currentPage).stream()
-                .map(converterDTO::toDTO)
-                .toList();
+    public Page<ProductDTO> getAllProducts(Pageable pageable) {
+        Page<Product> page = productRepository.findAll(pageable);
+        return page.map(converterDTO::toDTO);
     }
 
-    public ProductDTO findProduct(Serializable id) {
-        return converterDTO.toDTO(productDAO.get(id));
+    public ProductDTO findProduct(Long id) {
+        return converterDTO.toDTO(productRepository.findById(id).get());
     }
 
     @Override
     public void addProduct(ProductDTO productDTO) {
         Product product = converterDTO.toEntity(productDTO);
-        productDAO.save(product);
+        productRepository.save(product);
     }
 
     @Override
     public void updateProduct(ProductDTO productDTO) {
         Product product = converterDTO.toEntity(productDTO);
-        productDAO.save(product);
+        productRepository.save(product);
     }
 
     @Override
-    public void removeProduct(Serializable id) {
-        productDAO.delete(id);
+    public void removeProduct(Long id) {
+        productRepository.deleteById(id);
     }
 
-    @Override
-    public Integer getProductCountResult() {
-        return productDAO.getProductsCount();
-    }
-
-    @Override
-    public ProductPagesDivide getProductsAndList(Integer currentPage) {
-        List<ProductDTO> productList = null;
-        if (currentPage != null) {
-        } else {
-            currentPage = 1;
-        }
-        productList = this.getAllProducts(currentPage);
-        int productCountResult = this.getProductCountResult();
-        return new ProductPagesDivide(productList, productCountResult, currentPage);
-    }
 }

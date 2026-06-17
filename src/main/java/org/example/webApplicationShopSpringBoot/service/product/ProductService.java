@@ -2,23 +2,19 @@ package org.example.webApplicationShopSpringBoot.service.product;
 
 
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
-
-import java.io.Serializable;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
 
-    List<ProductDTO> getAllProducts(int currentPage);
+    Page<ProductDTO> getAllProducts(Pageable pageable);
 
-    ProductDTO findProduct(Serializable id);
+    ProductDTO findProduct(Long id);
 
     void addProduct(ProductDTO productDTO);
 
     void updateProduct(ProductDTO productDTO);
 
-    void removeProduct(Serializable id);
+    void removeProduct(Long id);
 
-    Integer getProductCountResult();
-
-    ProductPagesDivide getProductsAndList(Integer currentPage);
 }

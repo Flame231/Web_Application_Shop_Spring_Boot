@@ -1,21 +1,15 @@
 package org.example.webApplicationShopSpringBoot.dao.product;
 
-import org.example.webApplicationShopSpringBoot.dao.DAO;
 import org.example.webApplicationShopSpringBoot.model.Product;
-import org.example.webApplicationShopSpringBoot.model.ProductCategory;
-import org.example.webApplicationShopSpringBoot.model.Seller;
+import org.jspecify.annotations.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
-
-public interface ProductRepository extends DAO<Product> {
-
-    void addSeller(Product product, Seller seller);
-
-    void addProductCategory(Product product, ProductCategory productCategory);
+import org.springframework.stereotype.Service;
 
 
-    List<Product> getProductList(int currentPage);
+@Service
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Integer getProductsCount();
+    Page<Product> findAll(@NonNull Pageable pageable);
 }

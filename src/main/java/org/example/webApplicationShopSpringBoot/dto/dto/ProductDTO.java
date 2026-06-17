@@ -2,12 +2,14 @@ package org.example.webApplicationShopSpringBoot.dto.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Builder
 @Getter
+@Setter
 public class ProductDTO {
 
     private Long id;

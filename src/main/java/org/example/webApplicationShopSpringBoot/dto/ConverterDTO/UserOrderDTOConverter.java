@@ -14,7 +14,11 @@ import java.util.stream.Collectors;
 @Qualifier("converterDTO")
 @Component
 public class UserOrderDTOConverter implements ConverterDTO<UserOrder, UserOrderDTO> {
-    private ConverterDTO<UserOrderProduct, UserOrderProductDTO> converterDTO = new UserOrderProductDTOConverter();
+    private ConverterDTO<UserOrderProduct, UserOrderProductDTO> converterDTO;
+
+    public UserOrderDTOConverter(ConverterDTO<UserOrderProduct, UserOrderProductDTO> converterDTO) {
+        this.converterDTO = converterDTO;
+    }
 
     @Override
     public UserOrder toEntity(UserOrderDTO userOrderDTO) {

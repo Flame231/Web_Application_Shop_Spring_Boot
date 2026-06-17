@@ -1,0 +1,13 @@
+<html>
+<head>
+    <title>Редактировать категорию</title>
+</head>
+<body>
+
+<form th:action="@{/addProductCategory}" method="post">
+    Название категории:
+    <input type="text" th:value="${productCategoryDTO.getCategory()}">
+    <input type="submit" value="Подтвердить">
+</form>
+</body>
+</html>

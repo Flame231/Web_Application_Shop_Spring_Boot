@@ -1,14 +1,12 @@
 package org.example.webApplicationShopSpringBoot.dto.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class SellerDTO {
 
     private Long id;

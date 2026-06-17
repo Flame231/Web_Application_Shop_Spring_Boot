@@ -1,11 +1,14 @@
 package org.example.webApplicationShopSpringBoot.service.seller;
 
 import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.io.Serializable;
 import java.util.List;
 
 public interface SellerService {
+
+    Page<SellerDTO> getSellerDTOList(Pageable pageable);
 
     List<SellerDTO> getSellerDTOList();
 

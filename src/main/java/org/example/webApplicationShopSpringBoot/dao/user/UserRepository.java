@@ -10,9 +10,5 @@ import org.springframework.stereotype.Repository;
 
 public interface UserRepository extends DAO<User> {
 
-    void addUserOrder(User user, UserOrder userOrder);
-
-    void addDiscount(User user, Discount discount);
-
     User findUser(String login);
 }

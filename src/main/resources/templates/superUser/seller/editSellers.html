@@ -29,11 +29,9 @@
 </style>
 <html>
 <head>
-    <form action="<%=request.getContextPath() +MAIN_PAGE_ADMINISTRATOR%>" method="post">
-        <input type="submit" value="Вернуться в личный кабинет">
-    </form>
-    <title>Редактировать продавцов</title>
-    <h1>Редактировать продавцов</h1>
+    <a th:href="@{/accountAdministrator}">Вернуться в личный кабинет</a>
+        <title>Редактировать продавцов</title>
+        <h1>Редактировать продавцов</h1>
 
 </head>
 <body>
@@ -56,15 +54,37 @@
         <td th:text="${sellerDTO.getSellerName()}">
         </td>
         <td th:text="${sellerDTO.getSellerAddress()}">
+        </td>
+        <td>
             <form method="post">
-                <input type="submit" value="Редактировать" formaction="<%=request.getContextPath() + EDIT_SELLER%>">
-                <input type="submit" value="Удалить" formaction="<%=request.getContextPath() + REMOVE_SELLER%>">
-                <input type="hidden" name="sellerId" value="<%=seller.getId()%>">
+                <input type="submit" value="Редактировать"
+                       formaction="<%=request.getContextPath() + EDIT_PRODUCT_CATEGORY%>">
+            </form>
+            <form method="post" th:action="@{/deleteSeller/{id}(id=${sellerDTO.id})}">
+                <input type="submit" value="удалить">
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
+
+
+
+<a th:href="@{/editSellers(page=1)}">В начало</a>
+<span style="font-size: 20px" th:if="${sellerDTOList.getNumber()>0}"
+      th:each="i : ${#numbers.sequence((sellerDTOList.getNumber()-3>0?sellerDTOList.getNumber()-3:0),sellerDTOList.getNumber()-1)}">
+    <a th:href="@{/editSellers(page=${i})}"
+       th:text="${i}"></a>
+    </span>
+<span style="font-size: 24px" th:text="${sellerDTOList.getNumber()}"></span>
+<span style="font-size: 20px" th:if="${sellerDTOList.getNumber()<sellerDTOList.getTotalPages()-1}"
+      th:each="i : ${#numbers.sequence(sellerDTOList.getNumber()+1,(sellerDTOList.getNumber()+3<sellerDTOList.getTotalPages()-1?sellerDTOList.getNumber()+3:sellerDTOList.getTotalPages()-1))}">
+    <a th:href="@{/editSellers(page=${i})}"
+       th:text="${i}"></a>
+    </span>
+<a th:href="@{/editSellers(page=${sellerDTOList.getTotalPages()-1})}">В конец</a>
+
 
 </body>
 </html>

@@ -5,9 +5,15 @@ import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderProductDTO;
 import org.example.webApplicationShopSpringBoot.model.Product;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserOrderProductDTOConverter implements ConverterDTO<UserOrderProduct, UserOrderProductDTO> {
-    private ConverterDTO<Product, ProductDTO> converterDTO = new ProductDTOConverter();
+    private ConverterDTO<Product, ProductDTO> converterDTO;
+
+    public UserOrderProductDTOConverter(ConverterDTO<Product, ProductDTO> converterDTO) {
+        this.converterDTO = converterDTO;
+    }
 
     @Override
     public UserOrderProduct toEntity(UserOrderProductDTO userOrderProductDTO) {

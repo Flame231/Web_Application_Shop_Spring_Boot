@@ -37,9 +37,9 @@
 
 <h1>Интернет-магазин</h1>
 <h2>Администратор</h2>
-<form method="post">
-    <input type="submit" value="выйти из кабинета" formaction="<%=request.getContextPath() + LOGOUT_USER%>">
-    <input type="submit" value="Редактировать каталог" th:formaction="@{/editCatalog}">
+<form method="get">
+    <input type="submit" formmethod="post" value="выйти из кабинета" formaction="<%=request.getContextPath() + LOGOUT_USER%>">
+    <input type="submit" value="Редактировать каталог" th:formaction="@{/editCatalog(page=${2})}">
     <input type="submit" value="Редактировать Категории товаров"
            th:formaction="@{/editProductCategories}">
     <input type="submit" value="Редактировать продавцов" th:formaction="@{/editSellers}">
