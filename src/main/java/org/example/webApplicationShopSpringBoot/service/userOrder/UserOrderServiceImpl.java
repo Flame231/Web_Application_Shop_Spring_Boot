@@ -35,7 +35,7 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     private UserOrderRepository userOrderRepository;
     private UserRepository userDAO;
-    private ConverterDTO<UserOrder, UserOrderDTO> converterDTO = new UserOrderDTOConverter();
+    private ConverterDTO<UserOrder, UserOrderDTO> converterDTO;
     private OrderPointRepository orderPointDAO;
     private BagRepository bagDAO;
     private ProductRepository productDAO = new ProductDAOImpl();
@@ -83,7 +83,6 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public List<UserOrderDTO> showAllUserOrders() {
-        ConverterDTO<UserOrder, UserOrderDTO> converterDTO = new UserOrderDTOConverter();
         return userOrderRepository.getUserOrderList().stream().map(converterDTO::toDTO)
                 .toList();
     }

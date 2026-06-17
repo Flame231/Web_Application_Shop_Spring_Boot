@@ -1,0 +1,39 @@
+<html>
+<head>
+    <title>Добавить товар в каталог</title>
+    <a th:href="@{/accountAdministrator}">Вернуться в личный кабинет</a>
+    <h1>Добавить товар в каталог</h1>
+    <form th:action="@{/addNewProduct}" method="post">
+        <div>
+            Название продукта:
+            <input type="text" name="productName">
+        </div>
+        <div>
+            Категория продукта:
+            <select name="productCategory.id">
+                <option th:each="productCategoryDTO:${productCategoryDTOList}"
+                        th:value="${productCategoryDTO.getId()}"
+                        th:text="${productCategoryDTO.getCategory()}">
+                </option>
+            </select>
+        </div>
+        <div>
+            Цена:
+            <input name="price">
+        </div>
+
+        <div>
+            Продавец:
+            <select name="seller.id">
+                <option th:each="sellerDTO:${sellerDTOList}"
+                        th:value="${sellerDTO.getId()}"
+                        th:text="${sellerDTO.getSellerName()}">
+                </option>
+            </select>
+        </div>
+        <input type="submit" value="Подтвердить">
+    </form>
+</head>
+<body>
+</body>
+</html>

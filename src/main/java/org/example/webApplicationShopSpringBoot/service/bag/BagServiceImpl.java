@@ -9,11 +9,18 @@ import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO;
 import org.example.webApplicationShopSpringBoot.model.Bag;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUtil;
-import java.util.List;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+@Service
 public class BagServiceImpl implements BagService {
     private BagRepository bagDAO;
-    private ConverterDTO<Bag, BagDTO> converterDTO = new BagDTOConverter();
+    private ConverterDTO<Bag, BagDTO> converterDTO;
+
+    public BagServiceImpl(BagRepository bagDAO, ConverterDTO<Bag, BagDTO> converterDTO) {
+        this.bagDAO = bagDAO;
+        this.converterDTO = converterDTO;
+    }
 
     @Override
     public void addProductToBag(BagDTO bagDTO) {

@@ -29,16 +29,13 @@
 </style>
 <html>
 <head>
-    <form action="<%=request.getContextPath() + MAIN_PAGE_ADMINISTRATOR%>" method="post">
-        <input type="submit" value="Вернуться в личный кабинет">
-    </form>
+    <a th:href="@{/accountAdministrator}">Вернуться в личный кабинет</a>
     <title>Редактировать каталог</title>
     <h1>Редактировать каталог товаров</h1>
-</head>
+    </head>
 <body>
-<form action="<%=request.getContextPath() + ADD_PRODUCT_PAGE%>" method="post">
-    <input type="submit" value="Добавить товар в каталог">
-</form>
+<a th:href="@{/addProduct}">Добавить товар</a>
+
 <table>
     <thead>
     <tr>
@@ -57,7 +54,7 @@
         </td>
         <td th:text="${productDTO.getProductName()}">
         </td>
-        <td th:text="${productDTO.getProductCategory()}">
+        <td th:text="${productDTO.getProductCategory().getCategory()}">
         </td>
         <td th:text="${productDTO.getPrice()}">
         </td>

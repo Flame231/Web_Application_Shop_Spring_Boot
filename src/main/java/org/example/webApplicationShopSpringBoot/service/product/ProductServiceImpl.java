@@ -1,6 +1,7 @@
 package org.example.webApplicationShopSpringBoot.service.product;
 
 
+import jakarta.transaction.Transactional;
 import org.example.webApplicationShopSpringBoot.dao.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTO;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ProductDTOConverter;
@@ -11,14 +12,15 @@ import org.springframework.stereotype.Service;
 import java.io.Serializable;
 import java.util.List;
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
+    private ConverterDTO<Product, ProductDTO> converterDTO;
     private ProductRepository productDAO;
 
-    public ProductServiceImpl(ProductRepository productDAO) {
+    public ProductServiceImpl(ConverterDTO<Product, ProductDTO> converterDTO, ProductRepository productDAO) {
+        this.converterDTO = converterDTO;
         this.productDAO = productDAO;
     }
-
-    private ConverterDTO<Product, ProductDTO> converterDTO = new ProductDTOConverter();
 
     @Override
     public List<ProductDTO> getAllProducts(int currentPage) {

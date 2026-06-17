@@ -29,9 +29,7 @@
 </style>
 <html>
 <head>
-    <form action="<%=request.getContextPath() + MAIN_PAGE_ADMINISTRATOR%>" method="post">
-        <input type="submit" value="Вернуться в личный кабинет">
-    </form>
+    <a th:href="@{/accountAdministrator}">Вернуться в личный кабинет<a>
     <title>Редактировать категории товаров</title>
     <h1>Категории</h1>
 </head>

@@ -7,9 +7,15 @@ import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
 import org.example.webApplicationShopSpringBoot.model.Bag;
 import org.example.webApplicationShopSpringBoot.model.Product;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BagDTOConverter implements ConverterDTO<Bag, BagDTO> {
-    private ConverterDTO<Product, ProductDTO> converter = new ProductDTOConverter();
+    private ConverterDTO<Product, ProductDTO> converter;
+
+    public BagDTOConverter(ConverterDTO<Product, ProductDTO> converter) {
+        this.converter = converter;
+    }
 
     @Override
     public Bag toEntity(BagDTO bagDTO) {

@@ -1,6 +1,7 @@
 package org.example.webApplicationShopSpringBoot.service.productCategory;
 
 
+import jakarta.transaction.Transactional;
 import org.example.webApplicationShopSpringBoot.dao.productCategory.ProductCategoryRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTO;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ProductCategoryDTOConverter;
@@ -9,6 +10,7 @@ import org.example.webApplicationShopSpringBoot.model.ProductCategory;
 import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
+@Transactional
 public class ProductCategoryServiceImpl implements ProductCategoryService {
     private ProductCategoryRepository productCategoryDAO;
     private ConverterDTO<ProductCategory, ProductCategoryDTO> converterDTO;
