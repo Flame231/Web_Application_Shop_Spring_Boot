@@ -1,0 +1,46 @@
+<html>
+<head>
+    <a th:href="@{/accountAdministrator}">Вернуться в личный кабинет</a>
+    <title>Редактировать продукт</title>
+    <h1>Редактировать продукт</h1>
+
+    <a th:href="@{/editCatalog}">Назад</a>
+    <form th:action="@{/updateProduct}" th:object="${productDTO}" method="post">
+        Номер продукта:
+        <label>
+            <input type="text" th:field="*{id}" readonly/>
+        </label>
+        <div>
+            Название продукта:
+            <input type="text" th:field="*{productName}"/>
+        </div>
+
+        <div>
+            Категория продукта:
+            <select th:field="*{productCategory.id}">
+                <option th:each="productCategoryDTO:${productCategoryDTOList}"
+                        th:value="${productCategoryDTO.getId()}"
+                        th:text="${productCategoryDTO.getCategory()}">
+                </option>
+            </select>
+        </div>
+        <div>
+            Цена:
+            <input type="text" th:field="*{price}"/>
+        </div>
+
+        <div>
+            Продавец:
+            <select th:field="*{seller.id}">
+                <option th:each="sellerDTO:${sellerDTOList}"
+                        th:value="${sellerDTO.getId()}"
+                        th:text="${sellerDTO.getSellerName()}">
+                </option>
+            </select>
+        </div>
+        <input type="submit" value="Подтвердить">
+    </form>
+</head>
+<body>
+</body>
+</html>

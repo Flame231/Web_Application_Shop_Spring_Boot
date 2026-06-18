@@ -27,9 +27,9 @@ public class ProductDTOConverter implements ConverterDTO<Product, ProductDTO> {
     public Product toEntity(ProductDTO productDTO) {
         return Product.builder()
                 .productName(productDTO.getProductName())
-                .productCategory(productCategoryRepository.findById(productDTO.getProductCategory().getId()).get())
+                .productCategory(productCategoryRepository.getReferenceById(productDTO.getProductCategory().getId()))
                 .price(productDTO.getPrice())
-                .seller(sellerRepository.findById(productDTO.getSeller().getId()).get())
+                .seller(sellerRepository.getReferenceById(productDTO.getSeller().getId()))
                 .id(productDTO.getId())
                 .updateDateTime(productDTO.getUpdateDateTime())
                 .build();

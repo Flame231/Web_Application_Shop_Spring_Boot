@@ -1,0 +1,43 @@
+<html>
+<head>
+    <title>Страница товара</title>
+    <a th:href="@{/accountAdministrator}">Вернуться в личный кабинет</a>
+    <br>
+    <a th:href="@{/editCatalog}">Назад</a>
+    </form>
+
+    <h1>Страница товара</h1>
+</head>
+<body>
+
+<div>Номер товара:
+    <a th:text="${productDTO.getId()}"></a>
+</div>
+<br>
+<div>Название товара:
+    <a th:text="${productDTO.getProductName()}"></a>
+
+</div>
+<br>
+<div>Категория:
+    <a th:text="${productDTO.getProductCategory().getCategory()}"></a>
+
+</div>
+<br>
+<div>Цена:
+    <a th:text="${productDTO.getPrice()}"></a>
+
+</div>
+<br>
+<div>Продавец:
+    <a th:text="${productDTO.getSeller().getSellerName()}"></a>
+
+</div>
+<br>
+<div>Обновлено:
+    <a th:text="${productDTO.getUpdateDateTime()}"></a>
+
+</div>
+<br>
+</body>
+</html>

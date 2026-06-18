@@ -13,21 +13,8 @@ import org.springframework.stereotype.Repository;
 @Qualifier("UserDAOImpl")
 public class UserDAOImpl extends DAOImpl<User> implements UserRepository {
 
-
     public UserDAOImpl() {
         super(User.class);
-    }
-
-    @Override
-    public void addUserOrder(User user, UserOrder userOrder) {
-        user.getUserOrders().add(userOrder);
-        userOrder.setUser(user);
-    }
-
-    @Override
-    public void addDiscount(User user, Discount discount) {
-        user.setDiscount(discount);
-        discount.getUsers().add(user);
     }
 
     @Override

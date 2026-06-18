@@ -32,7 +32,7 @@
     <a th:href="@{/accountAdministrator}">Вернуться в личный кабинет</a>
     <title>Редактировать каталог</title>
     <h1>Редактировать каталог товаров</h1>
-    </head>
+</head>
 <body>
 <a th:href="@{/addProduct}">Добавить товар</a>
 
@@ -52,7 +52,8 @@
     <tr th:each="productDTO:${productDTOList}">
         <td th:text="${productDTO.getId()}">
         </td>
-        <td th:text="${productDTO.getProductName()}">
+        <td><a th:href="@{/productPage/{id}(id=${productDTO.id})}"
+               th:text="${productDTO.getProductName()}"></a>
         </td>
         <td th:text="${productDTO.getProductCategory().getCategory()}">
         </td>
@@ -61,52 +62,36 @@
         <td th:text="${productDTO.getSeller().getSellerName()}">
         </td>
         <td>
-            <form method="post">
-                <input type="hidden" name="productId" value="<%=productDTO.getId()%>">
-                <input type="hidden" name="func" value="catalog">
-                <input type="hidden" name="currentPage" value="<%=currentPage%>">
-                <input type="submit" value="Редактировать" formaction="<%=request.getContextPath() + EDIT_PRODUCT%>"/>
-                <input type="submit" value="Удалить" formaction="<%=request.getContextPath() + REMOVE_PRODUCT%>"/>
+            <form method="get" th:action="@{/editProduct/{id}(id=${productDTO.id})}">
+                <input type="submit" value="Редактировать"/>
             </form>
+            <form method="post" th:action="@{/deleteProduct/{id}(id=${productDTO.id})}">
+                <input type="submit" value="Удалить"/>
+            </form>
+
         </td>
     </tr>
     </tbody>
 </table>
-<!--<% int productCountResult = (int) request.getAttribute("productCountResult");
-    int lastPage = productCountResult / PRODUCT_PER_PAGE;
-    int minPage = currentPage - 3;
-    int maxPage = currentPage + 3;
-    if (minPage < 1) {
-        minPage = 1;
-    }
 
-    if (productCountResult % PRODUCT_PER_PAGE != 0) {
-        lastPage = lastPage + 1;
-    }
-    if (maxPage > lastPage) {
-        maxPage = lastPage;
-    }%>-->
+<a th:if="${productDTOList.getNumber()>0}" th:href="@{/editCatalog(page=${productDTOList.getNumber()-1})}">Назад</a>
 
-<!--<a href="<%=request.getContextPath() + EDIT_CATALOG+"?currentPage=1"%>">Первая
-</a>
-<% for (int i = minPage; i < maxPage + 1; i++) {
-    if (i == currentPage) {%>
-<a href="<%=request.getContextPath() + EDIT_CATALOG + "?currentPage=" + i%>"><span style="font-size: 25px;"><%=i%>
-</span>&nbsp;
-</a>
-<%} else {%><a href="<%=request.getContextPath() + EDIT_CATALOG + "?currentPage=" + i%>"><span
-        style="font-size: 20px;"><%=i%>
-</span>&nbsp;
-</a>
-<%
-        }
-    }
-%>
-<a href="<%=request.getContextPath() + SHOW_CATALOG+"?currentPage=" + lastPage%>">Последняя
-</a>
-<% } else {
-%>
-Список товаров пуст
-<%}%>-->
+<span th:if="${productDTOList.getNumber()>0}"
+      th:each="i : ${#numbers.sequence((productDTOList.getNumber()-3>0?productDTOList.getNumber()-3:0),productDTOList.getNumber()-1)}">
+    <a th:href="@{/editCatalog(page=${i})}"
+       th:text="${i}"></a>
+    </span>
+<span th:text="${productDTOList.getNumber()}"></span>
+
+
+<span th:if="${productDTOList.getNumber()<productDTOList.getTotalPages()-1}"
+      th:each="i : ${#numbers.sequence(productDTOList.getNumber()+1,(productDTOList.getNumber()+3<productDTOList.getTotalPages()-1?productDTOList.getNumber()+3:productDTOList.getTotalPages()-1))}">
+    <a th:href="@{/editCatalog(page=${i})}"
+       th:text="${i}"></a>
+    </span>
+
+<a th:if="${productDTOList.getNumber()<productDTOList.getTotalPages()-1}" th:href="@{/editCatalog(page=${productDTOList.getNumber()+1})}">Вперёд</a>
+
+
 </body>
 </html>
