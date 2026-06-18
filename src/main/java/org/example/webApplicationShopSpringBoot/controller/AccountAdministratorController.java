@@ -24,18 +24,14 @@ public class AccountAdministratorController {
     private ProductService productService;
     private SellerService sellerService;
 
-    public AccountAdministratorController(ProductCategoryService productCategoryService, SellerService sellerService, ProductService productService) {
+    public AccountAdministratorController(ProductCategoryService productCategoryService,
+                                          SellerService sellerService,
+                                          ProductService productService) {
         this.productCategoryService = productCategoryService;
         this.productService = productService;
         this.sellerService = sellerService;
         this.productService = productService;
-    }
-
-    @GetMapping("/editProductCategories")
-    public String showEditProductCategoriesPage(Model model) {
-        List<ProductCategoryDTO> productCategoriesList = productCategoryService.getProductCategoryDTOList();
-        model.addAttribute("productCategoriesList", productCategoriesList);
-        return "superUser/productCategory/editProductCategories";
+        this.productCategoryService = productCategoryService;
     }
 
     @RequestMapping(value = "/accountAdministrator", method = {RequestMethod.GET, RequestMethod.POST})
@@ -45,10 +41,18 @@ public class AccountAdministratorController {
 
     @GetMapping(value = "/editCatalog")
     public String showEditCatalogPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Pageable pageable = PageRequest.of(page, 8, Sort.by("id").ascending());
+        Pageable pageable = PageRequest.of(page, 6, Sort.by("id").ascending());
         Page<ProductDTO> productDTOList = productService.getAllProducts(pageable);
         model.addAttribute("productDTOList", productDTOList);
         return "/superUser/product/editCatalog";
+    }
+
+    @GetMapping("/editProductCategories")
+    public String showEditProductCategoriesPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+        Pageable pageable = PageRequest.of(page, 6, Sort.by("id").ascending());
+        Page<ProductCategoryDTO> productCategoriesList = productCategoryService.getProductCategoryDTOList(pageable);
+        model.addAttribute("productCategoriesList", productCategoriesList);
+        return "superUser/productCategory/editProductCategories";
     }
 
     @GetMapping("/editSellers")
@@ -60,7 +64,8 @@ public class AccountAdministratorController {
     }
 
     @RequestMapping(value = "/addProduct", method = {RequestMethod.GET, RequestMethod.POST})
-    public String showAddProductPage(Model model) {
+    public String showAddProductPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+        Pageable pageable = PageRequest.of(page, 8, Sort.by("id").ascending());
         List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getProductCategoryDTOList();
         List<SellerDTO> sellerDTOList = sellerService.getSellerDTOList();
         model.addAttribute("productCategoryDTOList", productCategoryDTOList);
@@ -114,6 +119,17 @@ public class AccountAdministratorController {
     public String deleteSeller(@PathVariable Long id) {
         sellerService.removeSeller(id);
         return "redirect:/editSellers";
+    }
+
+    @GetMapping("/addProductCategory")
+    public String showAddProductCategoryPage() {
+        return "/superUser/productCategory/addProductCategory";
+    }
+
+    @PostMapping("/addNewProductCategory")
+    public String addNewProductCategory(@ModelAttribute ProductCategoryDTO productCategoryDTO){
+        productCategoryService.addProductCategory(productCategoryDTO);
+        return "redirect:editProductCategories";
     }
 
 }

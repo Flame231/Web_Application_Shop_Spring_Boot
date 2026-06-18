@@ -29,14 +29,14 @@
 </style>
 <html>
 <head>
-    <a th:href="@{/accountAdministrator}">Вернуться в личный кабинет<a>
+    <a th:href="@{/accountAdministrator}">Вернуться в личный кабинет</a>
     <title>Редактировать категории товаров</title>
     <h1>Категории</h1>
 </head>
 <body>
-<form action="<%=request.getContextPath() + ADD_PRODUCT_CATEGORY_PAGE%>" method="post">
-    <input type="submit" value="Добавить категорию">
-</form>
+<a th:href="@{/addProductCategory}">
+    Добавить категорию
+</a>
 <table>
     <thead>
     <tr>
@@ -67,24 +67,19 @@
 </table>
 
 
-<a th:if="${productDTOList.getNumber()>0}" th:href="@{/editCatalog(page=${productDTOList.getNumber()-1})}">Назад</a>
-
-<span th:if="${productDTOList.getNumber()>0}"
-      th:each="i : ${#numbers.sequence((productDTOList.getNumber()-3>0?productDTOList.getNumber()-3:0),productDTOList.getNumber()-1)}">
-    <a th:href="@{/editCatalog(page=${i})}"
+<a th:href="@{/editProductCategories(page=1)}">В начало</a>
+<span style="font-size: 20px" th:if="${productCategoriesList.getNumber()>0}"
+      th:each="i : ${#numbers.sequence((productCategoriesList.getNumber()-3>0?productCategoriesList.getNumber()-3:0),productCategoriesList.getNumber()-1)}">
+    <a th:href="@{/editProductCategories(page=${i})}"
        th:text="${i}"></a>
     </span>
-<span th:text="${productDTOList.getNumber()}"></span>
-
-
-<span th:if="${productDTOList.getNumber()<productDTOList.getTotalPages()-1}"
-      th:each="i : ${#numbers.sequence(productDTOList.getNumber()+1,(productDTOList.getNumber()+3<productDTOList.getTotalPages()-1?productDTOList.getNumber()+3:productDTOList.getTotalPages()-1))}">
-    <a th:href="@{/editCatalog(page=${i})}"
+<span style="font-size: 24px" th:text="${productCategoriesList.getNumber()}"></span>
+<span style="font-size: 20px" th:if="${productCategoriesList.getNumber()<productCategoriesList.getTotalPages()-1}"
+      th:each="i : ${#numbers.sequence(productCategoriesList.getNumber()+1,(productCategoriesList.getNumber()+3<productCategoriesList.getTotalPages()-1?productCategoriesList.getNumber()+3:productCategoriesList.getTotalPages()-1))}">
+    <a th:href="@{/editProductCategories(page=${i})}"
        th:text="${i}"></a>
     </span>
-
-<a th:if="${productDTOList.getNumber()<productDTOList.getTotalPages()-1}" th:href="@{/editCatalog(page=${productDTOList.getNumber()+1})}">Вперёд</a>
-
+<a th:href="@{/editProductCategories(page=${productCategoriesList.getTotalPages()-1})}">В конец</a>
 
 </body>
 </html>

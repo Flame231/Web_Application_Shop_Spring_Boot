@@ -78,7 +78,7 @@ public class NamesUtil {
     public static final String EDIT_PRODUCT_JSP = "/superUser/product/editProduct.html";
     public static final String PRODUCT_PAGE_JSP = "/superUser/product/productPage.html";
     //productCategory
-    public static final String ADD_PRODUCT_CATEGORY_JSP = "/superUser/productCategory/addProductCategory.jsp";
+    public static final String ADD_PRODUCT_CATEGORY_JSP = "/superUser/productCategory/addProductCategory.html";
     public static final String EDIT_PRODUCT_CATEGORIES_JSP = "/superUser/productCategory/editProductCategories.html";
     public static final String EDIT_PRODUCT_CATEGORY_JSP = "/superUser/productCategory/editProductCategory.jsp";
     //seller
