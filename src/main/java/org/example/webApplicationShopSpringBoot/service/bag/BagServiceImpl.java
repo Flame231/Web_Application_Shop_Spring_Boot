@@ -9,9 +9,12 @@ import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO;
 import org.example.webApplicationShopSpringBoot.model.Bag;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUtil;
+import org.example.webApplicationShopSpringBoot.model.user.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class BagServiceImpl implements BagService {
     private BagRepository bagDAO;
@@ -42,11 +45,11 @@ public class BagServiceImpl implements BagService {
     public void closeBag() {
     }
 
-  /*  public List<BagDTO> showAllBags(HttpServletRequest request) {
-        ConverterPost converterPost = new ConverterPost(request);
-        Integer userId = converterPost.convertSessionAttribute("userId");
-        List<Bag> bagList = bagDAO.getBagList(userId);
+    public List<BagDTO> showAllBags() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        List<Bag> bagList = bagDAO.getBagList(user.getId());
         return bagList.stream().map(converterDTO::toDTO).toList();
-    }*/
+    }
 
 }
