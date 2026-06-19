@@ -12,11 +12,14 @@ import org.example.webApplicationShopSpringBoot.model.Discount;
 import org.example.webApplicationShopSpringBoot.model.OrderPoint;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrder;
 import org.example.webApplicationShopSpringBoot.model.additional.DataEntity;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "User")
@@ -25,7 +28,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Setter
 @Getter
-public class User extends DataEntity {
+public class User extends DataEntity implements UserDetails {
 
     @Column
     private String name;
@@ -62,4 +65,39 @@ public class User extends DataEntity {
     @ManyToOne
     @JoinColumn(name = "orderPoint_id")
     private OrderPoint orderPoint;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return passwordHash;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

@@ -9,6 +9,6 @@ import java.util.List;
 public interface BagService {
     void addProductToBag(BagDTO bagDTO);
 
-    /*List<BagDTO> showAllBags(HttpServletRequest request);*/
+    List<BagDTO> showAllBags();
 
 }

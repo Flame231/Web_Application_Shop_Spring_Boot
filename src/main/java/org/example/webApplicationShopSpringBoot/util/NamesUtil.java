@@ -58,14 +58,14 @@ public class NamesUtil {
     public static final String SHOW_USERS_ORDER_HISTORY = "/client/ShowUsersOrderHistory";
     //НАЗВАНИЯ JSP
     //папка webapp
-    public static final String ACCOUNT_CLIENT_JSP = "/account/accountClient.jsp";
+    public static final String ACCOUNT_CLIENT_JSP = "/account/accountClient.html";
     public static final String ACCOUNT_ADMINISTRATOR_JSP = "/account/accountAdministrator.html";
-    public static final String ACCOUNT_OPERATOR_JSP = "/account/accountOperator.jsp";
-    public static final String BAG_JSP = "/bag.jsp";
-    public static final String CATALOG_JSP = "/catalog.jsp";
+    public static final String ACCOUNT_OPERATOR_JSP = "/account/accountOperator.html";
+    public static final String BAG_JSP = "/bag.html";
+    public static final String CATALOG_JSP = "/catalog.html";
     public static final String LOGIN_JSP = "/login.html";
     public static final String REGISTRATION_JSP = "registration";
-    public static final String USER_PROFILE_JSP = "/userProfile.jsp";
+    public static final String USER_PROFILE_JSP = "/userProfile.html";
     //order
     public static final String ORDERS_JSP = "/order/orders.jsp";
     public static final String SHOW_ORDER_POINT_ORDERS_JSP = "/order/showOrderPointOrders.jsp";
@@ -80,9 +80,9 @@ public class NamesUtil {
     //productCategory
     public static final String ADD_PRODUCT_CATEGORY_JSP = "/superUser/productCategory/addProductCategory.html";
     public static final String EDIT_PRODUCT_CATEGORIES_JSP = "/superUser/productCategory/editProductCategories.html";
-    public static final String EDIT_PRODUCT_CATEGORY_JSP = "/superUser/productCategory/editProductCategory.jsp";
+    public static final String EDIT_PRODUCT_CATEGORY_JSP = "/superUser/productCategory/editProductCategory.html";
     //seller
-    public static final String ADD_SELLER_PAGE_JSP = "/superUser/seller/addSellerPage.jsp";
+    public static final String ADD_SELLER_PAGE_JSP = "/superUser/seller/addSellerPage.html";
     public static final String EDIT_SELLER_JSP = "/superUser/seller/editSeller.html";
     public static final String EDIT_SELLERS_JSP = "/superUser/seller/editSellers.html";
 

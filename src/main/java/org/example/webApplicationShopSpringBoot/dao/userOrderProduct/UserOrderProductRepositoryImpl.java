@@ -1,4 +1,4 @@
-package org.example.webApplicationShopSpringBoot.dao.userOrderProduct;
+/*package org.example.webApplicationShopSpringBoot.dao.userOrderProduct;
 
 
 import org.example.webApplicationShopSpringBoot.dao.DAOImpl;
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Qualifier("userOrderProductDAO")
-public class UserOrderProductDAOImpl extends DAOImpl<UserOrderProduct> implements UserOrderProductDAO {
-    public UserOrderProductDAOImpl() {
+public class UserOrderProductRepositoryImpl extends DAOImpl<UserOrderProduct> implements UserOrderProductRepository {
+    public UserOrderProductRepositoryImpl() {
         super(UserOrderProduct.class);
     }
 
@@ -27,4 +27,4 @@ public class UserOrderProductDAOImpl extends DAOImpl<UserOrderProduct> implement
         product.getUserOrderProducts().add(userOrderProduct);
     }
 
-}
+}*/

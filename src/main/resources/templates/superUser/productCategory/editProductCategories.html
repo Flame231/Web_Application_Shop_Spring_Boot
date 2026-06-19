@@ -29,12 +29,12 @@
 </style>
 <html>
 <head>
-    <a th:href="@{/accountAdministrator}">Вернуться в личный кабинет</a>
+    <a th:href="@{/administrator/accountAdministrator}">Вернуться в личный кабинет</a>
     <title>Редактировать категории товаров</title>
     <h1>Категории</h1>
 </head>
 <body>
-<a th:href="@{/addProductCategory}">
+<a th:href="@{/administrator/addProductCategory}">
     Добавить категорию
 </a>
 <table>
@@ -54,9 +54,8 @@
         </td>
 
         <td>
-            <form method="post">
-                <input type="submit" value="Редактировать"
-                       formaction="<%=request.getContextPath() + EDIT_PRODUCT_CATEGORY%>">
+            <form th:action="@{/editProductCategory/{id}(id=${productCategoryDTO.id})}">
+                <input type="submit" value="редактировать">
             </form>
             <form method="post" th:action="@{/deleteProductCategory/{id}(id=${productCategoryDTO.id})}">
                 <input type="submit" value="удалить">
@@ -67,19 +66,19 @@
 </table>
 
 
-<a th:href="@{/editProductCategories(page=1)}">В начало</a>
+<a th:href="@{/administrator/editProductCategories(page=0)}">В начало</a>
 <span style="font-size: 20px" th:if="${productCategoriesList.getNumber()>0}"
       th:each="i : ${#numbers.sequence((productCategoriesList.getNumber()-3>0?productCategoriesList.getNumber()-3:0),productCategoriesList.getNumber()-1)}">
-    <a th:href="@{/editProductCategories(page=${i})}"
+    <a th:href="@{/administrator/editProductCategories(page=${i})}"
        th:text="${i}"></a>
     </span>
 <span style="font-size: 24px" th:text="${productCategoriesList.getNumber()}"></span>
 <span style="font-size: 20px" th:if="${productCategoriesList.getNumber()<productCategoriesList.getTotalPages()-1}"
       th:each="i : ${#numbers.sequence(productCategoriesList.getNumber()+1,(productCategoriesList.getNumber()+3<productCategoriesList.getTotalPages()-1?productCategoriesList.getNumber()+3:productCategoriesList.getTotalPages()-1))}">
-    <a th:href="@{/editProductCategories(page=${i})}"
+    <a th:href="@{/administrator/editProductCategories(page=${i})}"
        th:text="${i}"></a>
     </span>
-<a th:href="@{/editProductCategories(page=${productCategoriesList.getTotalPages()-1})}">В конец</a>
+<a th:href="@{/administrator/editProductCategories(page=${productCategoriesList.getTotalPages()-1})}">В конец</a>
 
 </body>
 </html>

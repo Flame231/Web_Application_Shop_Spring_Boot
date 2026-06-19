@@ -12,5 +12,5 @@ public interface BagRepository extends JpaRepository<Bag, PrimaryKeyBag> {
 
     @Query("select distinct bag from Bag bag left join fetch bag.product p left join fetch p.productCategory " +
             "left join fetch p.seller where bag.user.id = :userId")
-   List<Bag> getBagList(Integer userId);
+   List<Bag> getBagList(Long userId);
 }

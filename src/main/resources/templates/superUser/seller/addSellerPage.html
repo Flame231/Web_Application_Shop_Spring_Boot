@@ -1,0 +1,23 @@
+<html>
+<head>
+    <title>Добавить продавца</title>
+</head>
+<body>
+<a th:href="@{/administrator/accountAdministrator}">Вернуться в личный кабинет</a>
+<h1>Добавить товар в каталог</h1>
+<a th:href="@{/administrator/editSellers}">Назад</a>
+<br>
+<form th:action="@{/administrator/addNewSeller}" method="post">
+
+    <div>
+        Название продавца:
+        <input type="text" name="sellerName">
+    </div>
+    <div>
+        Адрес продавца:
+        <input type="text" name="sellerAddress">
+    </div>
+    <input type="submit" value="Подтвердить">
+</form>
+</body>
+</html>

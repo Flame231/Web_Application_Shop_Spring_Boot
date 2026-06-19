@@ -8,7 +8,7 @@ import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrder;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-
+/*
 @Repository
 @Qualifier("UserDAOImpl")
 public class UserDAOImpl extends DAOImpl<User> implements UserRepository {
@@ -25,4 +25,4 @@ public class UserDAOImpl extends DAOImpl<User> implements UserRepository {
                     .setParameter("login", login).getSingleResult();
         return user;
     }
-}
+}*/

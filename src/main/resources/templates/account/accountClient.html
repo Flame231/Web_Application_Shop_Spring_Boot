@@ -36,16 +36,15 @@
 <body>
 
 <h1>Интернет-магазин</h1>
-<h2>Администратор</h2>
+<h2>Пользователь</h2>
 <form method="post" th:action="@{/logout}">
     <input type="submit" value="выйти из кабинета">
 </form>
-<form method="get">
-    <input type="submit" value="Редактировать каталог" th:formaction="@{/administrator/editCatalog}">
-    <input type="submit" value="Редактировать Категории товаров"
-           th:formaction="@{/administrator/editProductCategories}">
-    <input type="submit" value="Редактировать продавцов" th:formaction="@{/administrator/editSellers}">
+<form method="post">
+    <input type="submit" formmethod="get" th:formaction="@{/client/catalog}" value="Просмотреть каталог товаров">
+    <input type="submit" value="Мои заказы">
+    <input type="submit" value="История заказов">
+    <input type="submit" value="Посмотреть профиль">
 </form>
-
 </body>
 </html>

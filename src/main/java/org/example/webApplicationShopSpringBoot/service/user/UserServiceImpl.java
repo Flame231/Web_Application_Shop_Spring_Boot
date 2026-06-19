@@ -1,27 +1,18 @@
 package org.example.webApplicationShopSpringBoot.service.user;
 
+import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceException;
-import org.example.webApplicationShopSpringBoot.dao.user.UserDAOImpl;
 import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTO;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.UserDTOConverter;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ValidatorDTO;
-import org.example.webApplicationShopSpringBoot.dto.dto.LoginDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserDTO;
 import org.example.webApplicationShopSpringBoot.model.user.Role;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.BcryptUtil;
 import org.example.webApplicationShopSpringBoot.service.exceptions.*;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import java.io.Serializable;
 
 @Service
 @Transactional
@@ -30,12 +21,12 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserService.class);
 
 
-    private UserRepository userDAO;
+    private UserRepository userRepository;
     private ConverterDTO<User, UserDTO> converterDTO;
 
 
-    public UserServiceImpl(@Qualifier("UserDAOImpl") UserRepository userDAO, ConverterDTO<User, UserDTO> converterDTO) {
-        this.userDAO = userDAO;
+    public UserServiceImpl(UserRepository userRepository, ConverterDTO<User, UserDTO> converterDTO) {
+        this.userRepository = userRepository;
         this.converterDTO = converterDTO;
     }
 
@@ -46,7 +37,7 @@ public class UserServiceImpl implements UserService {
                 ValidatorDTO.validate(userDTO);
                 passwordValidation(userDTO);
                 userDTO.setRole(Role.CLIENT);
-                userDAO.save(converterDTO.toEntity(userDTO));
+                userRepository.save(converterDTO.toEntity(userDTO));
                 logger.info("Пользователь {} успешно зарегистрирован!", userDTO.getLogin());
             } catch (PersistenceException e) {
                 logger.error("Ошибка регистрации пользователя {}", userDTO.getLogin(), e);
@@ -58,7 +49,7 @@ public class UserServiceImpl implements UserService {
         } else updateUser(userDTO);
     }
 
-    @Override
+/*    @Override
     public UserDTO authorizeUser(LoginDTO loginDTO) {
         User user = null;
         try {
@@ -74,16 +65,16 @@ public class UserServiceImpl implements UserService {
         }
         logger.info("Успешная авторизация пользователя {}", loginDTO.getLogin());
         return converterDTO.toDTO(user);
-    }
+    }*/
 
     public UserDTO getUserDTO(Long id) {
-        return converterDTO.toDTO(userDAO.get(id));
+        return converterDTO.toDTO(userRepository.findById(id).get());
     }
 
     @Override
     public void updateUser(UserDTO userDTO) {
         passwordValidation(userDTO);
-        User user = userDAO.get(userDTO.getId());
+        User user = userRepository.findById(userDTO.getId()).get();
         user.setName(userDTO.getName());
         user.setLogin(userDTO.getLogin());
         user.setPasswordHash(BcryptUtil.hashPassword(userDTO.getNewPassword()));
@@ -94,7 +85,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void passwordValidation(UserDTO userDTO) {
         if (userDTO.getId() != null) {
-            User user = userDAO.get(userDTO.getId());
+            User user = userRepository.findById(userDTO.getId()).get();
             if (BcryptUtil.checkPassword(userDTO.getOldPassword(), user.getPasswordHash())) {
                 if (!userDTO.getNewPassword().equals(userDTO.getNewPasswordRepeat())) {
                     throw new DifferentPasswordsUpdate("Введенные пароли не совпадают!");
@@ -111,6 +102,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(Long id) {
-        return userDAO.get(id);
+        return userRepository.findById(id).get();
     }
 }

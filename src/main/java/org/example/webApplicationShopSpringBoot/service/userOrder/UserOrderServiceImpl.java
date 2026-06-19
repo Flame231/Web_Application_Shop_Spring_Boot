@@ -7,8 +7,7 @@ import org.example.webApplicationShopSpringBoot.dao.orderPoint.OrderPointReposit
 import org.example.webApplicationShopSpringBoot.dao.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
 import org.example.webApplicationShopSpringBoot.dao.userOrder.UserOrderRepository;
-import org.example.webApplicationShopSpringBoot.dao.userOrderProduct.UserOrderProductDAO;
-import org.example.webApplicationShopSpringBoot.dao.userOrderProduct.UserOrderProductDAOImpl;
+import org.example.webApplicationShopSpringBoot.dao.userOrderProduct.UserOrderProductRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
@@ -34,20 +33,20 @@ public class UserOrderServiceImpl implements UserOrderService {
     private OrderPointRepository orderPointDAO;
     private BagRepository bagDAO;
     private ProductRepository productRepository;
-    private UserOrderProductDAO userOrderProductDAO = new UserOrderProductDAOImpl();
+    private UserOrderProductRepository userOrderProductRepository;
 
 
     public UserOrderServiceImpl(UserOrderRepository userOrderRepository, UserRepository userDAO,
                                 @Qualifier("converterDTO") ConverterDTO<UserOrder, UserOrderDTO> converterDTO,
                                 OrderPointRepository orderPointDAO, BagRepository bagDAO, ProductRepository productRepository,
-                                @Qualifier("userOrderProductDAO") UserOrderProductDAO userOrderProductDAO) {
+                                UserOrderProductRepository userOrderProductRepository) {
         this.userOrderRepository = userOrderRepository;
         this.userDAO = userDAO;
         this.converterDTO = converterDTO;
         this.orderPointDAO = orderPointDAO;
         this.bagDAO = bagDAO;
         this.productRepository = productRepository;
-        this.userOrderProductDAO = userOrderProductDAO;
+        this.userOrderProductRepository = userOrderProductRepository;
     }
 
     @Override
@@ -56,7 +55,7 @@ public class UserOrderServiceImpl implements UserOrderService {
 
         BigDecimal orderSum = BigDecimal.ZERO;
         UserOrder userOrder = UserOrder.builder().orderStatus(OrderStatus.CREATED)
-                .user(userDAO.get(list.get(0).getUserId()))
+                .user(userDAO.findById(list.get(0).getUserId()).get())
                 .orderPoint(orderPointDAO.findById(list.get(0).getOrderPointId()).get())
                 .build();
         userOrderRepository.save(userOrder);
@@ -68,7 +67,7 @@ public class UserOrderServiceImpl implements UserOrderService {
 
                 orderSum = orderSum.add(((list.get(i).getProductPrice()).multiply(new BigDecimal(list.get(i).getCount()))));
 
-                userOrderProductDAO.save(userOrderProduct);
+                userOrderProductRepository.save(userOrderProduct);
                 PrimaryKeyBag primaryKeyBag = new PrimaryKeyBag(list.get(i).getUserId(), list.get(i).getProductId());
                 bagDAO.deleteById(primaryKeyBag);
             }
@@ -85,7 +84,7 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public List<UserOrderDTO> showUserOrdersByOrderPoint(Long userId) {
-        User user = userDAO.get(userId);
+        User user = userDAO.findById(userId).get();
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.getUserOrderByOrderPoint(orderPointId);
         return userOrderList.stream().map(converterDTO::toDTO).toList();
@@ -93,7 +92,7 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public List<UserOrderDTO> showArrivedUserOrdersByOrderPoint(Long userId) {
-        User user = userDAO.get(userId);
+        User user = userDAO.findById(userId).get();
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.getArrivedUserOrderByOrderPoint(orderPointId);
         return userOrderList.stream().map(converterDTO::toDTO).toList();

@@ -3,11 +3,15 @@
     <title>Редактировать категорию</title>
 </head>
 <body>
-
-<form th:action="@{/addProductCategory}" method="post">
-    Название категории:
-    <input type="text" th:value="${productCategoryDTO.getCategory()}">
-    <input type="submit" value="Подтвердить">
+<a th:href="@{/administrator/accountAdministrator}">Вернуться в личный кабинет</a>
+<h1>Добавить категорию</h1>
+<a th:href="@{/administrator/editProductCategories}">Назад</a>
+<form method="post" th:action="@{/administrator/addNewProductCategory}">
+    <div>
+        Название категории:
+        <input type="text" name="category"/>
+    </div>
+    <input type="submit" value="Подтвердить"/>
 </form>
 </body>
 </html>

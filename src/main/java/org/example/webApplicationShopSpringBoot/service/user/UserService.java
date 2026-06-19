@@ -11,7 +11,7 @@ public interface UserService {
 
     void saveOrUpdateUser(UserDTO userDTO);
 
-    UserDTO authorizeUser(LoginDTO loginDTO);
+    /*UserDTO authorizeUser(LoginDTO loginDTO);*/
 
     UserDTO getUserDTO(Long id);
 

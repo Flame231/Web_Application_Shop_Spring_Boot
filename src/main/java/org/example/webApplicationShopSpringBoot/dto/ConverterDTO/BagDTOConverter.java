@@ -1,7 +1,6 @@
 package org.example.webApplicationShopSpringBoot.dto.ConverterDTO;
 
 
-import org.example.webApplicationShopSpringBoot.dao.user.UserDAOImpl;
 import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
@@ -11,16 +10,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BagDTOConverter implements ConverterDTO<Bag, BagDTO> {
+    UserRepository userRepository;
     private ConverterDTO<Product, ProductDTO> converter;
 
-    public BagDTOConverter(ConverterDTO<Product, ProductDTO> converter) {
+    public BagDTOConverter(UserRepository userRepository, ConverterDTO<Product, ProductDTO> converter) {
+        this.userRepository = userRepository;
         this.converter = converter;
     }
 
     @Override
     public Bag toEntity(BagDTO bagDTO) {
-        UserRepository userDAO = new UserDAOImpl();
-        return Bag.builder().user(userDAO.get(bagDTO.getUserId())).product(converter.toEntity(bagDTO.getProduct()))
+
+        return Bag.builder().user(userRepository.findById(bagDTO.getUserId()).get()).product(converter.toEntity(bagDTO.getProduct()))
                 .count(bagDTO.getCount())
                 .build();
     }

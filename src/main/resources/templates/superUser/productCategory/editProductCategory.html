@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>Редактировать категорию</title>
+</head>
+<a th:href="@{/accountAdministrator}">Вернуться в личный кабинет</a>
+<title>Редактировать категорию</title>
+<h1>Редактировать категорию</h1>
+
+<a th:href="@{/editProductCategories}">Назад</a>
+<body>
+<form th:object="${productCategoryDTO}" th:action="@{/updateProductCategory}" method="post">
+    <div>
+        Номер категории:
+        <label>
+            <input type="text" th:field="*{id}" readonly/>
+        </label>
+    </div>
+    <div>
+        Название категории:
+        <label>
+            <input type="text" th:field="*{category}"/>
+        </label>
+    </div>
+    <input type="submit" value="Подтвердить"/>
+</form>
+</body>
+</html>
