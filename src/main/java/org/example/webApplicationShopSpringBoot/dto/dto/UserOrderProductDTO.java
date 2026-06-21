@@ -11,7 +11,7 @@ public class UserOrderProductDTO {
 
     private ProductDTO productDTO;
 
-    private Integer productCount;
+    private Long productCount;
 
-    private Integer actualProductCount;
+    private Long actualProductCount;
 }

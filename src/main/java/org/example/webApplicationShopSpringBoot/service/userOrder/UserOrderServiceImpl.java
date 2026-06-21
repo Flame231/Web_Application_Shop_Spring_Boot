@@ -51,8 +51,6 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public void confirmOrder(List<OrderDTO> list) {
-
-
         BigDecimal orderSum = BigDecimal.ZERO;
         UserOrder userOrder = UserOrder.builder().orderStatus(OrderStatus.CREATED)
                 .user(userDAO.findById(list.get(0).getUserId()).get())

@@ -1,14 +1,18 @@
 package org.example.webApplicationShopSpringBoot.service.bag;
 
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO;
+import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
+import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
 
 import java.util.List;
 
 public interface BagService {
-    void addProductToBag(BagDTO bagDTO);
+    void addProductToBag(BagDTORequest bagDTORequest);
 
-    List<BagDTO> showAllBags();
+    void deleteProductFromBag(BagDTORequest bagDTORequest);
+
+    List<BagDTOResponse> showAllBags();
+
+    void clearAllBags();
 
 }

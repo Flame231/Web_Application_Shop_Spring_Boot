@@ -2,6 +2,7 @@ package org.example.webApplicationShopSpringBoot.model.additional;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -13,6 +14,7 @@ import java.sql.Timestamp;
 @SuperBuilder
 @NoArgsConstructor
 @Getter
+@Setter
 public class DataEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

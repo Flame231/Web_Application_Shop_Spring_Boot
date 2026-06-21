@@ -17,9 +17,9 @@ public class ArchivedUserOrderProductDTO {
 
     private String productName;
 
-    private Integer productCount;
+    private Long productCount;
 
-    private Integer finalProductCount;
+    private Long finalProductCount;
 
     private BigDecimal price;
 

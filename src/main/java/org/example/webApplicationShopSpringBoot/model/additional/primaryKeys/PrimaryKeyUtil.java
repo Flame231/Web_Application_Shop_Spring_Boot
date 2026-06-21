@@ -13,7 +13,7 @@ public class PrimaryKeyUtil {
         return PrimaryKeyBag.builder().user(userId).product(productId).build();
     }
 
-    public static PrimaryKeyUserOrderProduct getPrimaryKeyUserOrderProduct(Integer userOrderId, Integer productId) {
+    public static PrimaryKeyUserOrderProduct getPrimaryKeyUserOrderProduct(Long userOrderId, Long productId) {
         return PrimaryKeyUserOrderProduct.builder().userOrder(userOrderId).product(productId).build();
     }
 }

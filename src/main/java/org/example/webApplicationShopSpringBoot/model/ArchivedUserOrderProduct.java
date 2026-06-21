@@ -31,10 +31,10 @@ public class ArchivedUserOrderProduct {
     private String productName;
 
     @Column(updatable = false)
-    private Integer productCount;
+    private Long productCount;
 
     @Column(updatable = false)
-    private Integer finalProductCount;
+    private Long finalProductCount;
 
     @Column(updatable = false)
     private BigDecimal price;
