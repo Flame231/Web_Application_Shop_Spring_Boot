@@ -6,13 +6,17 @@ import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTO;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.OrderPointDTOConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderPointDTO;
 import org.example.webApplicationShopSpringBoot.model.OrderPoint;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class OrderPointServiceImpl implements OrderPointService {
 
     private OrderPointRepository orderPointDAO;
-    private UserOrderRepository userOrderDAO;
+
+    public OrderPointServiceImpl(OrderPointRepository orderPointDAO) {
+        this.orderPointDAO = orderPointDAO;
+    }
 
     @Override
     public List<OrderPointDTO> getAllOrderPoints() {

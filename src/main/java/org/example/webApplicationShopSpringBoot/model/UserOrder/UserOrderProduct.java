@@ -34,10 +34,10 @@ public class UserOrderProduct {
     private Product product;
 
     @Column(updatable = false)
-    private Integer productCount;
+    private Long productCount;
 
     @Column
-    private Integer actualProductCount;
+    private Long actualProductCount;
 
     @Column
     private BigDecimal productPrice;

@@ -16,15 +16,15 @@ public class UserOrderProductServiceImpl implements UserOrderProductService {
     }
 
     @Override
-    public void changeProductCount(Integer userOrderId, Integer productId,
-                                   Integer count) {
+    public void changeProductCount(Long userOrderId, Long productId,
+                                   Long count) {
         PrimaryKeyUserOrderProduct primaryKeyUserOrderProduct =
                 PrimaryKeyUtil.getPrimaryKeyUserOrderProduct(userOrderId, productId);
         UserOrderProduct userOrderProduct = userOrderProductRepository.findById(primaryKeyUserOrderProduct).get();
 
         if (userOrderProduct.getActualProductCount() + count >= 0) {
             if (userOrderProduct.getActualProductCount() + count <= userOrderProduct.getProductCount()) {
-                Integer newCount = userOrderProduct.getActualProductCount() + count;
+                Long newCount = userOrderProduct.getActualProductCount() + count;
 
                 userOrderProduct.setActualProductCount(newCount);
                 userOrderProductRepository.flush();

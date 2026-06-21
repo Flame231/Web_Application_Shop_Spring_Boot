@@ -12,7 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class PrimaryKeyUserOrderProduct implements Serializable {
 
-    private Integer userOrder;
+    private Long userOrder;
 
-    private Integer product;
+    private Long product;
 }

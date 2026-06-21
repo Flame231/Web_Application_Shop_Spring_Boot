@@ -17,7 +17,7 @@ public class OrderDTO {
 
     private Long productId;
 
-    private Integer Count;
+    private Long Count;
 
     private BigDecimal productPrice;
 

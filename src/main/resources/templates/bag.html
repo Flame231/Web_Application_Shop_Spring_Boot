@@ -1,11 +1,3 @@
-<%@ page import="java.util.List" %>
-<%@ page import="java.math.BigDecimal" %>
-<%@ page import="org.example.dto.dto.OrderPointDTO" %>
-<%@ page import="javax.swing.*" %>
-<%@ page import="static org.example.util.NamesUtil.SHOW_CATALOG" %>
-<%@ page import="static org.example.util.NamesUtil.*" %>
-<%@ page import="org.example.dto.dto.BagDTO" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style>
 
     table {
@@ -37,39 +29,26 @@
 </style>
 <html>
 <head>
-    <form action="<%=request.getContextPath() + MAIN_PAGE_CLIENT%>" method="post">
-        <input type="submit" value="Вернуться в личный кабинет">
-    </form>
-    <%  int currentPage = 1;
-        if(request.getParameter("currentPage")!=null){
-            currentPage = Integer.parseInt(request.getParameter("currentPage"));
-        }
-    %>
-    <form action="<%=request.getContextPath() + SHOW_CATALOG%>" method="post">
-        <input type="hidden" name="currentPage" value="<%=currentPage%>">
-        <input type="submit" value="Назад">
-    </form>
-    <h1>Каталог товаров</h1>
-    <title>Каталог товаров</title>
-
-    <%List<OrderPointDTO> orderPointList = (List<OrderPointDTO>) request.getAttribute("orderPointList");%>
-
-
+    <a th:href="@{/client/accountClient}">Вернуться в личный кабинет</a>
+    <h1>Корзина</h1>
+    <a th:href="@{/client/catalog}">Назад</a>
+    <title>Корзина</title>
     <br>
     <br>
 </head>
 <body>
-<form id="orderForm" action="<%=request.getContextPath() + CONFIRM_ORDER%>" method="post">
+<form id="orderForm" method="post" th:action="@{/client/confirmOrder}">
     <input type="submit" value="Оформить заказ">
     Выбрать пункт выдачи:
     <select name="orderPointId" form="orderForm">
-        <%for (OrderPointDTO orderPointDTO : orderPointList) {%>
-        <option value="<%=orderPointDTO.getId()%>">
-            <%=orderPointDTO.getOrderPointAddress()%>
+        <option th:each="orderPointDTO:${orderPointDTOList}"
+                th:value="${orderPointDTO.getId()}"
+                th:text="${orderPointDTO.getOrderPointAddress()}">
         </option>
-        <%}%>
     </select>
-
+</form>
+<form method="post" th:action="@{/client/clearBag}">
+    <input type="submit" value="Очистить корзину">
 </form>
 <table>
     <thead>
@@ -82,70 +61,37 @@
     </tr>
     </thead>
     <tbody>
-    <%
-        List<BagDTO> bagDTOList = (List<BagDTO>) request.getAttribute("BagList");
-        Integer totalCount = 0;
-        BigDecimal sum = new BigDecimal(0);
-        if (bagDTOList != null && !bagDTOList.isEmpty()) {
-            for (BagDTO bagDTO : bagDTOList) {
-    %>
-    <tr>
+    <tr th:each="bagDTO:${bagDTOResponseList}">
         <td>
-            <a href="<%=request.getContextPath() + PRODUCT_PAGE+"?productId="+ bagDTO.getProduct().getId() + "&currentPage="+currentPage%>"><%= bagDTO.getProduct().getProductName() %>
-                <input type="hidden" name="productId" form="orderForm" value="<%= bagDTO.getProduct().getId() %>"/>
-
-        </td>
-        <td><%= bagDTO.getProduct().getProductCategory().getCategory() %>
-        </td>
-        <td><%= bagDTO.getProduct().getPrice() %>
-            <input type="hidden" name="productPrice" form="orderForm" value="<%= bagDTO.getProduct().getPrice()%>">
-        </td>
-        <td><%= bagDTO.getProduct().getSeller().getSellerName() %>
-            <input type="hidden" name="count" form="orderForm" value="<%= bagDTO.getCount() %>">
-
+            <input type="hidden" name="productId" form="orderForm" th:value="${bagDTO.getProductDTO().getId()}">
+            <span th:text="${bagDTO.getProductDTO.getProductName()}"></span>
         </td>
         <td>
-            <%int value = bagDTO.getCount();%>
-            В корзине:<%=value%>
-            <form action="<%=request.getContextPath() + ADD_TO_BAG%>" method="post">
-                <input type="hidden" name="productId" value="<%= bagDTO.getProduct().getId()%>"/>
-                <input type="hidden" name="count" value="1">
-                <input type="submit" name="plusProduct" value="+">
-                <input type="hidden" name="func" value="bag">
-
-            </form>
-            <form action="<%=request.getContextPath() + ADD_TO_BAG%>" method="post">
-                <input type="hidden" name="productId" value="<%= bagDTO.getProduct().getId()%>"/>
-                <input type="hidden" name="count" value="-1">
-                <input type="submit" name="minusProduct" value="-">
-                <input type="hidden" name="func" value="bag">
-
+            <span th:text="${bagDTO.getProductDTO.getProductCategory().getCategory()}"></span>
+        </td>
+        <td>
+            <span th:text="${bagDTO.getProductDTO.getPrice()}"></span>
+            <input type="hidden" name="productPrice" form="orderForm" th:value="${bagDTO.getProductDTO.getPrice()}"></input>
+        </td>
+        <td>
+            <span th:text="${bagDTO.getProductDTO.getSeller().getSellerName()}"></span>
+            <input type="hidden" name="count" form="orderForm" th:value="${bagDTO.getCount()}"></input>
+        </td>
+        <td>
+            <form method="post">
+                <input type="submit" formmethod="post" th:formaction="@{/addProductToBag1}" value="+">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" th:name="productId" th:value="${bagDTO.getProductDTO().getId()}">
+                <span th:text="${bagDTO.getCount()}"></span>
+                <input type="submit" formmethod="post" th:formaction="@{/deleteProductFromBag1}" value="-">
             </form>
         </td>
     </tr>
-
-    <%
-        totalCount += bagDTO.getCount();
-        sum = sum.add((new BigDecimal(bagDTO.getCount()).multiply(bagDTO.getProduct().getPrice())));
-
-    %>
-    <input type="hidden" name="productPrice"
-           value="<%=new BigDecimal(bagDTO.getCount()).multiply(bagDTO.getProduct().getPrice())%>">
-    <%
-        }
-    } else {
-    %>
-    <tr>
-        <td colspan="2" style="text-align: center;">Корзина пуста".</td>
-    </tr>
-    <%
-        }
-    %>
     </tbody>
 </table>
-<div>Количество: <%= totalCount%>
+<div>
 </div>
-<div>Цена: <%= sum%>
+<div>
 </div>
 </body>
 </html>

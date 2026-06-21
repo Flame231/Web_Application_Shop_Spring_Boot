@@ -55,7 +55,7 @@ public class ProductController {
     @PostMapping("/administrator/updateProduct")
     public String updateProduct(@ModelAttribute ProductDTO productDTO) {
         productService.updateProduct(productDTO);
-        return "redirect:editCatalog";
+        return "redirect:/editCatalog";
     }
 
     @PostMapping("/administrator/deleteProduct/{id}")
