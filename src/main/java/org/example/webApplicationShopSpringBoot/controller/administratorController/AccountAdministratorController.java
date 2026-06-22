@@ -2,15 +2,16 @@ package org.example.webApplicationShopSpringBoot.controller.administratorControl
 
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import static org.example.webApplicationShopSpringBoot.controller.ControllerUtil.ADMINISTRATOR_PREFIX;
 
 @Controller
 public class AccountAdministratorController {
 
 
-    @RequestMapping(value = "/administrator/accountAdministrator", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = ADMINISTRATOR_PREFIX + "accountAdministrator", method = {RequestMethod.GET, RequestMethod.POST})
     public String showAdministratorPage() {
         return "account/accountAdministrator";
     }

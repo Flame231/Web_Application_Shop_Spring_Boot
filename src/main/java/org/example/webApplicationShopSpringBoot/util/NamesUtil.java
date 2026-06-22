@@ -67,7 +67,7 @@ public class NamesUtil {
     public static final String REGISTRATION_JSP = "registration";
     public static final String USER_PROFILE_JSP = "/userProfile.html";
     //order
-    public static final String ORDERS_JSP = "/order/orders.jsp";
+    public static final String ORDERS_JSP = "/order/orders.html";
     public static final String SHOW_ORDER_POINT_ORDERS_JSP = "/order/showOrderPointOrders.jsp";
     public static final String SHOW_ARRIVED_ORDER_POINT_ORDERS_JSP = "/order/showArrivedOrderPointOrders.jsp";
     public static final String SHOW_ORDER_POINT_ORDER_PAGE_JSP = "/order/showOrderPointOrderPage.jsp";

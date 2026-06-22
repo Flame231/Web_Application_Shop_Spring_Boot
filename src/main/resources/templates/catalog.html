@@ -74,7 +74,8 @@
                 <th:block th:each="bagDTO:${bagDTOResponseList}">
                     <span th:if="${bagDTO.getProductDTO.getId()==productDTO.getId()}"
                           th:text="${bagDTO.getCount()}"></span>
-                    <input th:if="${bagDTO.getProductDTO.getId()==productDTO.getId()}" type="hidden" th:name="productId" th:value="${bagDTO.getProductDTO().getId()}">
+                    <input th:if="${bagDTO.getProductDTO.getId()==productDTO.getId()}" type="hidden" th:name="productId"
+                           th:value="${bagDTO.getProductDTO().getId()}">
                 </th:block>
                 <input type="submit" formmethod="post" th:formaction="@{/deleteProductFromBag}" value="-">
             </form>
@@ -133,5 +134,15 @@
        th:text="${i}"></a>
     </span>
 <a th:href="@{/client/catalog(page=${productDTOList.getTotalPages()-1})}">В конец</a>
+
+<form th:action="@{/client/catalog}">
+    <select name="pageSize">
+        <option th:each="pageSizelist:${pageSizeList}"
+                th:text="${pageSizelist}"
+                th:value="${pageSizelist}"
+                th:selected="${pageSizelist == pageSize}"></option>
+    </select>
+    <input type="submit" value="Подтвердить">
+</form>
 </body>
 </html>

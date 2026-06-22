@@ -19,7 +19,6 @@ public interface UserService {
 
     void passwordValidation(UserDTO userDTO);
 
-    User getUser(Long id);
-
+    UserDTO getUser();
 
 }

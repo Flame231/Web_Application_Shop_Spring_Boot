@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import static org.example.webApplicationShopSpringBoot.controller.ControllerUtil.ADMINISTRATOR_PREFIX;
+
 @Controller
 public class ProductCategoryController {
 
@@ -20,37 +22,37 @@ public class ProductCategoryController {
     }
 
 
-    @GetMapping("/administrator/editProductCategories")
+    @GetMapping(ADMINISTRATOR_PREFIX + "editProductCategories")
     public String showEditProductCategoriesPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Pageable pageable = PageRequest.of(page, 6, Sort.by("id").ascending());
         Page<ProductCategoryDTO> productCategoriesList = productCategoryService.getProductCategoryDTOList(pageable);
         model.addAttribute("productCategoriesList", productCategoriesList);
         return "superUser/productCategory/editProductCategories";
     }
-    @GetMapping("/administrator/addProductCategory")
+    @GetMapping(ADMINISTRATOR_PREFIX + "addProductCategory")
     public String showAddProductCategoryPage() {
         return "/superUser/productCategory/addProductCategory";
     }
 
-    @PostMapping("/administrator/addNewProductCategory")
+    @PostMapping(ADMINISTRATOR_PREFIX + "addNewProductCategory")
     public String addNewProductCategory(@ModelAttribute ProductCategoryDTO productCategoryDTO) {
         productCategoryService.addProductCategory(productCategoryDTO);
         return "redirect:editProductCategories";
     }
 
-    @PostMapping("/administrator/deleteProductCategory/{id}")
+    @PostMapping(ADMINISTRATOR_PREFIX + "deleteProductCategory/{id}")
     public String deleteProductCategory(@PathVariable Long id) {
         productCategoryService.deleteProductCategory(id);
         return "redirect:/editProductCategories";
     }
-    @GetMapping("/administrator/editProductCategory/{id}")
+    @GetMapping(ADMINISTRATOR_PREFIX + "editProductCategory/{id}")
     public String showEditProductCategoryPage(@PathVariable Long id, Model model) {
         ProductCategoryDTO productCategoryDTO = productCategoryService.findProductCategory(id);
         model.addAttribute("productCategoryDTO", productCategoryDTO);
         return "/superUser/productCategory/editProductCategory";
     }
 
-    @PostMapping("/administrator/updateProductCategory")
+    @PostMapping(ADMINISTRATOR_PREFIX + "updateProductCategory")
     public String updateProductCategory(@ModelAttribute ProductCategoryDTO productCategoryDTO) {
         productCategoryService.updateProductCategory(productCategoryDTO);
         return "redirect:/editProductCategories";

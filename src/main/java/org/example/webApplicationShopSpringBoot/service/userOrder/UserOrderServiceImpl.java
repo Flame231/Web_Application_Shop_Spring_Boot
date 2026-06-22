@@ -17,6 +17,7 @@ import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -76,7 +77,8 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public List<UserOrderDTO> showAllUserOrders() {
-        return userOrderRepository.getUserOrderList().stream().map(converterDTO::toDTO)
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userOrderRepository.getUserOrderList(user.getId()).stream().map(converterDTO::toDTO)
                 .toList();
     }
 
