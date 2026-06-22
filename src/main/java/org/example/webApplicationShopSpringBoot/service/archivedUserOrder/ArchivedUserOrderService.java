@@ -8,8 +8,6 @@ public interface ArchivedUserOrderService {
 
     void createArchivedUserOrder(Long userOrderId);
 
-    void readyUserOrder(Long userOrderId);
-
     void refuseUserOrder(Long userOrderId);
 
     List<ArchivedUserOrderDTO> showArchivedUserOrders(Long userId);

@@ -46,7 +46,7 @@ public class ArchivedUserOrder {
     @Column(updatable = false, nullable = false)
     private Timestamp userOrderCreateDateTime;
 
-    @OneToMany(mappedBy = "archivedUserOrder", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "archivedUserOrder", cascade = CascadeType.ALL)
     private Set<ArchivedUserOrderProduct> archivedUserOrderProducts = new HashSet<>();
 
     @CreationTimestamp

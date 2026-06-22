@@ -1,0 +1,89 @@
+
+<head>
+    <meta charset="UTF-8">
+    <title>Заказы на пункте выдачи</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        /* Исправлен синтаксис CSS (добавлено имя класса для сетки, если она нужна) */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 120px 300px;
+            gap: 15px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ПЕРЕНЕСЕНО: Форма теперь внутри body, где ей и место -->
+<form th:action="@{/operator/accountOperator}" method="get">
+    <input type="submit" value="Вернуться в личный кабинет">
+</form>
+
+<h1>Заказы на пункте выдачи</h1>
+
+<form th:action="@{/operator/readyOrders}" method="get">
+    <input type="submit" value="Доставленные заказы">
+</form>
+
+<!-- ИСПРАВЛЕНО: Безопасное отображение. Строка покажется только если список НЕ пустой -->
+<div th:if="${not #lists.isEmpty(userOrderDTOList)}">
+    Ваш пункт выдачи: <span th:text="${userOrderDTOList[0].getOrderPoint()}"></span>
+</div>
+
+<!-- Если заказов нет, выведем понятное сообщение вместо падения приложения -->
+<div th:if="${#lists.isEmpty(userOrderDTOList)}">
+    На данном пункте выдачи нет активных заказов.
+</div>
+<br>
+
+<th:block th:each="userOrderDTO: ${userOrderDTOList}">
+    <form method="post" th:action="@{/operator/changeUserOrderStatus}">
+        <div>Номер заказа: <span th:text="${userOrderDTO.getOrderId()}"></span></div>
+        <br>
+        <div>Статус заказа: <span th:text="${userOrderDTO.getOrderStatus().getDescription()}"></span></div>
+        <br>
+        <div>Пункт выдачи: <span th:text="${userOrderDTO.getOrderPoint()}"></span></div>
+        <br>
+        <div>Сумма заказа: <span th:text="${userOrderDTO.getOrderSum()}"></span></div>
+        <br>
+        <div>Дата создания: <span th:text="${userOrderDTO.getOrderCreateDateTime()}"></span></div>
+        <br>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Название товара</th>
+                <th>Цена</th>
+                <th>Количество</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="orderDTO : ${userOrderDTO.getUserOrderProducts()}">
+                <td><span th:text="${orderDTO.getProductDTO().getProductName()}"></span></td>
+                <td><span th:text="${orderDTO.getProductDTO().getPrice()}"></span></td>
+                <td><span th:text="${orderDTO.getProductCount()}"></span></td>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <input type="submit" value="Готов к выдаче"/>
+        <input type="hidden" th:value="${userOrderDTO.getOrderId()}" name="userOrderId">
+    </form>
+    <br><br><br><br>
+</th:block>
+
+</body>
+</html>

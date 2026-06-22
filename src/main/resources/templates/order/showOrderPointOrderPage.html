@@ -1,0 +1,63 @@
+<html>
+<head>
+    <form th:action="@{/operator/accountOperator}" method="get">
+        <input type="submit" value="Вернуться в личный кабинет">
+    </form>
+    <form th:action="@{/operator/readyOrders}" method="get">
+        <input type="submit" value="Назад">
+    </form>
+    <title>Страница заказа</title>
+
+</head>
+<body>
+<h1>Страница заказа</h1>
+Номер заказа: <span th:text="${userOrderDTO.getOrderId()}"></span>
+<br>
+Статус заказа: <span th:text="${userOrderDTO.getOrderStatus().getDescription()}"></span>
+<br>
+<table border="2">
+    <tr>
+        <th width="100">Номер товара</th>
+        <th width="100">Название товара</th>
+        <th width="100">Цена товара</th>
+        <th width="60">Заказано товара</th>
+        <th width="60">Изменить количество товара</th>
+    </tr>
+    <tr height="30" th:each="productDTO:${userOrderDTO.getUserOrderProducts()}">
+        <td><span th:text="${productDTO.getProductDTO().getId()}"></span>
+        </td>
+        <td><span th:text="${productDTO.getProductDTO().getProductName()}"></span>
+        </td>
+        <td><span th:text="${productDTO.getProductDTO().getPrice()}"></span>
+        </td>
+        <td>
+            <span th:text="${productDTO.getProductCount()}"></span>
+        </td>
+        <td>
+            <form th:action="@{/operator/addProductToOrder}" method="post">
+                <input type="submit" value="+">
+                <input type="hidden" name="userOrderId" th:value="${productDTO.getUserOrderId()}">
+                <input type="hidden" name="productId" th:value="${productDTO.getProductDTO().getId()}">
+                <input type="hidden" name="count" value="1">
+                <input type="hidden" name="id" th:value="${userOrderDTO.getOrderId()}">
+            </form>
+            <span th:text="${productDTO.getActualProductCount()}"></span>
+            <form th:action="@{/operator/addProductToOrder}" method="post">
+                <input type="submit" value="-">
+                <input type="hidden" name="userOrderId" th:value="${productDTO.getUserOrderId()}">
+                <input type="hidden" name="productId" th:value="${productDTO.getProductDTO().getId()}">
+                <input type="hidden" name="count" value="-1">
+                <input type="hidden" name="id" th:value="${userOrderDTO.getOrderId()}">
+            </form>
+        </td>
+    </tr>
+</table>
+<form th:action="@{/operator/refuseOrder(userOrderId=${userOrderDTO.getOrderId()})}" method="post">
+    <input type="submit" value="Отказ"/>
+</form>
+<form th:action="@{/operator/closeOrder(userOrderId=${userOrderDTO.getOrderId()})}" method="post">
+    <input type="submit" value="Закрыть заказ"/>
+</form>
+
+</body>
+</html>

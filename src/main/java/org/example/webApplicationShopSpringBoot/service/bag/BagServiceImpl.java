@@ -13,24 +13,28 @@ import org.example.webApplicationShopSpringBoot.model.Product;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUtil;
 import org.example.webApplicationShopSpringBoot.model.user.User;
+import org.springframework.boot.actuate.web.mappings.MappingsEndpoint;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
 public class BagServiceImpl implements BagService {
+    private final MappingsEndpoint mappingsEndpoint;
     private BagRepository bagRepository;
     private ProductRepository productRepository;
     private ConverterDTO<Bag, BagDTOResponse> converterDTO;
     private ConverterDTONew<Bag, BagDTORequest, BagDTOResponse> converterDTONew;
 
-    public BagServiceImpl(BagRepository bagRepository, ProductRepository productRepository, ConverterDTO<Bag, BagDTOResponse> converterDTO, ConverterDTONew<Bag, BagDTORequest, BagDTOResponse> converterDTONew) {
+    public BagServiceImpl(BagRepository bagRepository, ProductRepository productRepository, ConverterDTO<Bag, BagDTOResponse> converterDTO, ConverterDTONew<Bag, BagDTORequest, BagDTOResponse> converterDTONew, MappingsEndpoint mappingsEndpoint) {
         this.bagRepository = bagRepository;
         this.productRepository = productRepository;
         this.converterDTO = converterDTO;
         this.converterDTONew = converterDTONew;
+        this.mappingsEndpoint = mappingsEndpoint;
     }
 
     @Override
@@ -55,16 +59,24 @@ public class BagServiceImpl implements BagService {
         bag.setCount(--currentCount);
         if (currentCount < 1) {
             bagRepository.delete(bag);
-        }
-        else{
+        } else {
             bagRepository.save(bag);
         }
     }
-    
+
     public List<BagDTOResponse> showAllBags() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Bag> bagList = bagRepository.getBagList(user.getId());
         return bagList.stream().map(converterDTO::toDTO).toList();
+    }
+
+    @Override
+    public BigDecimal showBagSum() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        BigDecimal bagSum = bagRepository.getBagList(user.getId())
+                .stream().map(e -> new BigDecimal(e.getCount()).multiply(e.getProduct().getPrice()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return bagSum;
     }
 
     @Override

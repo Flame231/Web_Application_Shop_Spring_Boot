@@ -17,6 +17,7 @@ import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -76,23 +77,24 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public List<UserOrderDTO> showAllUserOrders() {
-        return userOrderRepository.getUserOrderList().stream().map(converterDTO::toDTO)
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userOrderRepository.findAllByUserId(user.getId()).stream().map(converterDTO::toDTO)
                 .toList();
     }
 
     @Override
-    public List<UserOrderDTO> showUserOrdersByOrderPoint(Long userId) {
-        User user = userDAO.findById(userId).get();
+    public List<UserOrderDTO> showUserOrdersByOrderPoint() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long orderPointId = user.getOrderPoint().getId();
-        List<UserOrder> userOrderList = userOrderRepository.getUserOrderByOrderPoint(orderPointId);
+        List<UserOrder> userOrderList = userOrderRepository.findAllByOrderPointId(orderPointId);
         return userOrderList.stream().map(converterDTO::toDTO).toList();
     }
 
     @Override
-    public List<UserOrderDTO> showArrivedUserOrdersByOrderPoint(Long userId) {
-        User user = userDAO.findById(userId).get();
+    public List<UserOrderDTO> showReadyUserOrdersByOrderPoint() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long orderPointId = user.getOrderPoint().getId();
-        List<UserOrder> userOrderList = userOrderRepository.getArrivedUserOrderByOrderPoint(orderPointId);
+        List<UserOrder> userOrderList = userOrderRepository.getReadyUserOrderByOrderPoint(orderPointId);
         return userOrderList.stream().map(converterDTO::toDTO).toList();
     }
 
@@ -102,4 +104,19 @@ public class UserOrderServiceImpl implements UserOrderService {
         return converterDTO.toDTO(userOrder);
     }
 
+
+    @Override
+    public void readyUserOrder(Long userOrderId) {
+        UserOrder userOrder = userOrderRepository.findById(userOrderId).get();
+        userOrder.setOrderStatus(OrderStatus.READY);
+        userOrderRepository.save(userOrder);
+    }
+
+    @Override
+    public List<UserOrderDTO> showCreatedUserOrders() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<UserOrder> userOrderList = userOrderRepository
+                .findAllCreatedUserOrder(user.getOrderPoint().getId());
+        return userOrderList.stream().map(converterDTO::toDTO).toList();
+    }
 }

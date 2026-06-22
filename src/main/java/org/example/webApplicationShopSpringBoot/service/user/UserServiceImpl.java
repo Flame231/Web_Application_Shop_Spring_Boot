@@ -12,6 +12,7 @@ import org.example.webApplicationShopSpringBoot.model.user.Role;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.BcryptUtil;
 import org.example.webApplicationShopSpringBoot.service.exceptions.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -73,13 +74,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(UserDTO userDTO) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         passwordValidation(userDTO);
-        User user = userRepository.findById(userDTO.getId()).get();
-        user.setName(userDTO.getName());
-        user.setLogin(userDTO.getLogin());
-        user.setPasswordHash(BcryptUtil.hashPassword(userDTO.getNewPassword()));
-        user.setBirthday(userDTO.getBirthday());
-        user.setPaymentMethods(userDTO.getPaymentMethods());
+        User userManaged = userRepository.findById(user.getId()).get();
+        userManaged.setName(userDTO.getName());
+        userManaged.setLogin(userDTO.getLogin());
+        userManaged.setPasswordHash(BcryptUtil.hashPassword(userDTO.getNewPassword()));
+        userManaged.setBirthday(userDTO.getBirthday());
+        userManaged.setPaymentMethods(userDTO.getPaymentMethods());
     }
 
     @Override
@@ -101,7 +103,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(Long id) {
-        return userRepository.findById(id).get();
+    public UserDTO getUser() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return converterDTO.toDTO(userRepository.findById(user.getId()).get());
     }
 }

@@ -1,6 +1,8 @@
 package org.example.webApplicationShopSpringBoot.service.userOrderProduct;
 
+import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderChangeCountDTO;
+
 public interface UserOrderProductService {
 
-    void changeProductCount(Long UserOrderId, Long productId, Long count);
+    void changeProductCount(UserOrderChangeCountDTO userOrderChangeCountDTO);
 }

@@ -1,0 +1,44 @@
+<html>
+<head>
+    <form th:action="@{/operator/accountOperator}" method="post">
+        <input type="submit" value="Вернуться в личный кабинет">
+    </form>
+    <form th:action="@{/operator/orders}" method="get">
+        <input type="submit" value="Назад">
+    </form>
+    <title>Готовые заказы на пункте выдачи</title>
+
+</head>
+<body>
+<h1>Готовые заказы на пункте выдачи</h1>
+
+<div>Ваш пункт выдачи: <span th:text="${userOrderDTOList[0].getOrderPoint()}"></span>
+</div>
+<br>
+<div>
+</div>
+<th:block th:each="userOrderDTO : ${userOrderDTOList}">
+   <a th:href="@{/operator/showOrder(id=${userOrderDTO.getOrderId()})}">Номер заказа: <span th:text="${userOrderDTO.getOrderId()}"/></a>
+
+
+    <br>
+    <table border="2">
+        <tr>
+            <th>Название товара</th>
+            <th>Цена товара</th>
+            <th>Количество товара</th>
+        </tr>
+        <tr th:each="userOrderDTOProduct : ${userOrderDTO.getUserOrderProducts()}">
+            <td th:text="${userOrderDTOProduct.getProductDTO().getProductName()}">
+            </td>
+            <td th:text="${userOrderDTOProduct.getProductDTO().getPrice()}">
+            </td>
+            <td th:text="${userOrderDTOProduct.getProductCount()}">
+            </td>
+        </tr>
+    </table>
+    <div>
+    </div>
+</th:block>
+</body>
+</html>

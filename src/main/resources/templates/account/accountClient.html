@@ -42,9 +42,9 @@
 </form>
 <form method="post">
     <input type="submit" formmethod="get" th:formaction="@{/client/catalog}" value="Просмотреть каталог товаров">
-    <input type="submit" value="Мои заказы">
+    <input type="submit" formmethod="get" th:formaction="@{/client/userOrders}" value="Мои заказы">
     <input type="submit" value="История заказов">
-    <input type="submit" value="Посмотреть профиль">
+    <input type="submit" formmethod="get" th:formaction="@{/client/userProfile}" value="Посмотреть профиль">
 </form>
 </body>
 </html>

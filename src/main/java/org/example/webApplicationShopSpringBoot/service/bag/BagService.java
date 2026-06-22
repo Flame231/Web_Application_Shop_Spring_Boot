@@ -4,6 +4,7 @@ package org.example.webApplicationShopSpringBoot.service.bag;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface BagService {
@@ -12,6 +13,8 @@ public interface BagService {
     void deleteProductFromBag(BagDTORequest bagDTORequest);
 
     List<BagDTOResponse> showAllBags();
+
+    BigDecimal showBagSum();
 
     void clearAllBags();
 
