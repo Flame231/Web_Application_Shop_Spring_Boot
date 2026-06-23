@@ -13,7 +13,7 @@ public interface UserOrderService {
 
     List<UserOrderDTO> showAllUserOrders();
 
-    List<UserOrderDTO> showUserOrdersByOrderPoint(Long userId);
+    List<UserOrderDTO> showUserOrdersByOrderPoint();
 
     List<UserOrderDTO> showArrivedUserOrdersByOrderPoint(Long userId);
 

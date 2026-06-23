@@ -78,15 +78,15 @@ public class UserOrderServiceImpl implements UserOrderService {
     @Override
     public List<UserOrderDTO> showAllUserOrders() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userOrderRepository.getUserOrderList(user.getId()).stream().map(converterDTO::toDTO)
+        return userOrderRepository.findAllByUserId(user.getId()).stream().map(converterDTO::toDTO)
                 .toList();
     }
 
     @Override
-    public List<UserOrderDTO> showUserOrdersByOrderPoint(Long userId) {
-        User user = userDAO.findById(userId).get();
+    public List<UserOrderDTO> showUserOrdersByOrderPoint() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long orderPointId = user.getOrderPoint().getId();
-        List<UserOrder> userOrderList = userOrderRepository.getUserOrderByOrderPoint(orderPointId);
+        List<UserOrder> userOrderList = userOrderRepository.findAllByOrderPointId(orderPointId);
         return userOrderList.stream().map(converterDTO::toDTO).toList();
     }
 

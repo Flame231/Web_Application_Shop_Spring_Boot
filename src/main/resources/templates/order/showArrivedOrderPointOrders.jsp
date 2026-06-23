@@ -1,14 +1,6 @@
-<%@ page import="java.util.List" %>
-<%@ page import="static org.example.util.NamesUtil.SHOW_ORDER_POINT_ORDER_PAGE" %>
-<%@ page import="static org.example.util.NamesUtil.*" %>
-<%@ page import="org.example.dto.dto.UserOrderDTO" %>
-<%@ page import="org.example.dto.dto.UserOrderProductDTO" %>
-<%@ page import="org.example.dto.dto.UserOrderProductDTO" %>
-<%@ page import="org.example.dto.dto.UserOrderDTO" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <form action="<%=request.getContextPath() + MAIN_PAGE_OPERATOR%>" method="post">
+    <form th:action="@{/operator/accountOperator}" method="post">
         <input type="submit" value="Вернуться в личный кабинет">
     </form>
     <title>Готовые заказы на пункте выдачи</title>
@@ -17,12 +9,7 @@
 <body>
 <h1>Готовые заказы на пункте выдачи</h1>
 
-<%
-    List<UserOrderDTO> userOrderDTOList = (List<UserOrderDTO>) request.getAttribute("userOrderDTOList");
-    if (userOrderDTOList != null && !userOrderDTOList.isEmpty()) {
-%>
-
-<div>Ваш пункт выдачи: <%=userOrderDTOList.get(0).getOrderPoint()%>
+<div>Ваш пункт выдачи: <span th:text="${userOrderDTOList[0]}">
 </div>
 <%for (UserOrderDTO userOrderDTO : userOrderDTOList) {%>
 <br>

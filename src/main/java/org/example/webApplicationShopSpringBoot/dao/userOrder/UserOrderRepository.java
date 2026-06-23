@@ -12,15 +12,9 @@ import java.util.List;
 @Repository
 public interface UserOrderRepository extends JpaRepository<UserOrder, Long> {
 
-    @Query("select distinct uo from UserOrder uo left join fetch uo.userOrderProduct uop left join fetch uop.product p" +
-            " left join fetch p.productCategory left join fetch p.seller WHERE uo.id=:userId" +
-            " ORDER BY uo.id DESC")
-    List<UserOrder> getUserOrderList(@Param(value = "userId") Long userId);
+    List<UserOrder> findAllByUserId( Long userId);
 
-    @Query("select distinct uo from UserOrder uo left join fetch uo.userOrderProduct uop left join fetch uop.product p" +
-            " left join fetch p.productCategory left join fetch p.seller where" +
-            " uo.orderPoint.id =:orderPointId")
-    List<UserOrder> getUserOrderByOrderPoint(Serializable orderPointId);
+    List<UserOrder> findAllByOrderPointId(Long orderPointId);
     @Query("select distinct uo from UserOrder uo left join fetch uo.userOrderProduct uop left join fetch uop.product p" +
             " left join fetch p.productCategory left join fetch p.seller where" +
             " uo.orderPoint.id =:orderPointId AND uo.orderStatus=:READY")
