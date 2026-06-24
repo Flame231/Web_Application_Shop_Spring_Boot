@@ -4,7 +4,6 @@ package org.example.webApplicationShopSpringBoot.controller.userController;
 import org.example.webApplicationShopSpringBoot.dto.dto.*;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
-import org.example.webApplicationShopSpringBoot.model.OrderPoint;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.bag.BagService;
 import org.example.webApplicationShopSpringBoot.service.orderPoint.OrderPointService;
@@ -23,11 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class UserController {
@@ -133,6 +128,6 @@ public class UserController {
     public String showUserOrders(Model model) {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showAllUserOrders();
         model.addAttribute("userOrderDTOList", userOrderDTOList);
-        return "/order/orders";
+        return "order/showClientOrders";
     }
 }

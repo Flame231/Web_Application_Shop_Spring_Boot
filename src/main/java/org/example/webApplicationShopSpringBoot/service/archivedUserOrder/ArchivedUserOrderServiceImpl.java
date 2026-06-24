@@ -13,23 +13,25 @@ import org.example.webApplicationShopSpringBoot.model.UserOrder.OrderStatus;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrder;
 import org.example.webApplicationShopSpringBoot.service.archivedUserOrderProduct.ArchivedUserOrderProductService;
 import org.example.webApplicationShopSpringBoot.service.archivedUserOrderProduct.ArchivedUserOrderProductServiceImpl;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
+@Service
 public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
     private ArchivedUserOrderRepository archivedUserOrderDAO;
     private ArchivedUserOrderProductRepository archivedUserOrderProductDAO;
     private UserOrderRepository userOrderDAO;
-    private ArchivedUserOrderProductService archivedUserOrderProductService = new ArchivedUserOrderProductServiceImpl();
+    private ArchivedUserOrderProductService archivedUserOrderProductService;
 
-    @Override
-    public void readyUserOrder(Long userOrderId) {
-        UserOrder userOrder = userOrderDAO.findById(userOrderId).get();
-        userOrder.setOrderStatus(OrderStatus.READY);
+    public ArchivedUserOrderServiceImpl(ArchivedUserOrderRepository archivedUserOrderDAO, ArchivedUserOrderProductRepository archivedUserOrderProductDAO, UserOrderRepository userOrderDAO, ArchivedUserOrderProductService archivedUserOrderProductService) {
+        this.archivedUserOrderDAO = archivedUserOrderDAO;
+        this.archivedUserOrderProductDAO = archivedUserOrderProductDAO;
+        this.userOrderDAO = userOrderDAO;
+        this.archivedUserOrderProductService = archivedUserOrderProductService;
     }
 
     @Override

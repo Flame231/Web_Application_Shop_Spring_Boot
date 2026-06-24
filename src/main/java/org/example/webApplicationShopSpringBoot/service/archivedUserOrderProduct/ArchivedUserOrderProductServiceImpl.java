@@ -4,13 +4,19 @@ import org.example.webApplicationShopSpringBoot.dao.archivedUserOrderProduct.Arc
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrder;
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Service
 public class ArchivedUserOrderProductServiceImpl implements ArchivedUserOrderProductService {
 
     private ArchivedUserOrderProductRepository archivedUserOrderProductDAO;
+
+    public ArchivedUserOrderProductServiceImpl(ArchivedUserOrderProductRepository archivedUserOrderProductDAO) {
+        this.archivedUserOrderProductDAO = archivedUserOrderProductDAO;
+    }
 
     @Override
     public Set<ArchivedUserOrderProduct> createUserOrderProduct(Set<UserOrderProduct> userOrderProducts, ArchivedUserOrder archivedUserOrder) {

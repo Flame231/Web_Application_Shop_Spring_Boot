@@ -91,10 +91,10 @@ public class UserOrderServiceImpl implements UserOrderService {
     }
 
     @Override
-    public List<UserOrderDTO> showArrivedUserOrdersByOrderPoint(Long userId) {
-        User user = userDAO.findById(userId).get();
+    public List<UserOrderDTO> showReadyUserOrdersByOrderPoint() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long orderPointId = user.getOrderPoint().getId();
-        List<UserOrder> userOrderList = userOrderRepository.getArrivedUserOrderByOrderPoint(orderPointId);
+        List<UserOrder> userOrderList = userOrderRepository.getReadyUserOrderByOrderPoint(orderPointId);
         return userOrderList.stream().map(converterDTO::toDTO).toList();
     }
 
@@ -104,4 +104,19 @@ public class UserOrderServiceImpl implements UserOrderService {
         return converterDTO.toDTO(userOrder);
     }
 
+
+    @Override
+    public void readyUserOrder(Long userOrderId) {
+        UserOrder userOrder = userOrderRepository.findById(userOrderId).get();
+        userOrder.setOrderStatus(OrderStatus.READY);
+        userOrderRepository.save(userOrder);
+    }
+
+    @Override
+    public List<UserOrderDTO> showCreatedUserOrders() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<UserOrder> userOrderList = userOrderRepository
+                .findAllCreatedUserOrder(user.getOrderPoint().getId());
+        return userOrderList.stream().map(converterDTO::toDTO).toList();
+    }
 }

@@ -4,7 +4,6 @@ package org.example.webApplicationShopSpringBoot.service.userOrder;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
 
-import java.io.Serializable;
 import java.util.List;
 
 public interface UserOrderService {
@@ -15,8 +14,11 @@ public interface UserOrderService {
 
     List<UserOrderDTO> showUserOrdersByOrderPoint();
 
-    List<UserOrderDTO> showArrivedUserOrdersByOrderPoint(Long userId);
+    List<UserOrderDTO> showReadyUserOrdersByOrderPoint();
 
     UserOrderDTO getUserOrderDTO(Long  id);
 
+    void readyUserOrder(Long userOrderId);
+
+    List<UserOrderDTO> showCreatedUserOrders();
 }

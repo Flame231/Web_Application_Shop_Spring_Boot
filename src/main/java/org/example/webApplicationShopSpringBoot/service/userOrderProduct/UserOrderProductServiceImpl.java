@@ -1,6 +1,7 @@
 package org.example.webApplicationShopSpringBoot.service.userOrderProduct;
 
 import org.example.webApplicationShopSpringBoot.dao.userOrderProduct.UserOrderProductRepository;
+import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderChangeCountDTO;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUtil;
@@ -16,8 +17,11 @@ public class UserOrderProductServiceImpl implements UserOrderProductService {
     }
 
     @Override
-    public void changeProductCount(Long userOrderId, Long productId,
-                                   Long count) {
+    public void changeProductCount(UserOrderChangeCountDTO userOrderChangeCountDTO) {
+        Long userOrderId = userOrderChangeCountDTO.getUserOrderId();
+        Long productId = userOrderChangeCountDTO.getProductId();
+        Long count = userOrderChangeCountDTO.getCount();
+        System.out.println(userOrderId + " " + productId + " " + count);
         PrimaryKeyUserOrderProduct primaryKeyUserOrderProduct =
                 PrimaryKeyUtil.getPrimaryKeyUserOrderProduct(userOrderId, productId);
         UserOrderProduct userOrderProduct = userOrderProductRepository.findById(primaryKeyUserOrderProduct).get();
