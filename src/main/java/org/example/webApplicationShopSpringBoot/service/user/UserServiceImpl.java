@@ -2,34 +2,30 @@ package org.example.webApplicationShopSpringBoot.service.user;
 
 import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTO;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ValidatorDTO;
+import org.example.webApplicationShopSpringBoot.dto.ValidatorDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserDTO;
 import org.example.webApplicationShopSpringBoot.model.user.Role;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.BcryptUtil;
-import org.example.webApplicationShopSpringBoot.service.exceptions.*;
+import org.example.webApplicationShopSpringBoot.service.exceptions.DifferentPasswordsRegistration;
+import org.example.webApplicationShopSpringBoot.service.exceptions.DifferentPasswordsUpdate;
+import org.example.webApplicationShopSpringBoot.service.exceptions.UserRegistrationException;
+import org.example.webApplicationShopSpringBoot.service.exceptions.WrongPassword;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 @Transactional
 public class UserServiceImpl implements UserService {
-
     private static final Logger logger = LogManager.getLogger(UserService.class);
-
-
     private UserRepository userRepository;
-    private ConverterDTO<User, UserDTO> converterDTO;
-
-
-    public UserServiceImpl(UserRepository userRepository, ConverterDTO<User, UserDTO> converterDTO) {
-        this.userRepository = userRepository;
-        this.converterDTO = converterDTO;
-    }
+    private ConversionService conversionService;
 
     @Override
     public void saveOrUpdateUser(UserDTO userDTO) {
@@ -38,7 +34,7 @@ public class UserServiceImpl implements UserService {
                 ValidatorDTO.validate(userDTO);
                 passwordValidation(userDTO);
                 userDTO.setRole(Role.CLIENT);
-                userRepository.save(converterDTO.toEntity(userDTO));
+                userRepository.save(conversionService.convert(userDTO, User.class));
                 logger.info("Пользователь {} успешно зарегистрирован!", userDTO.getLogin());
             } catch (PersistenceException e) {
                 logger.error("Ошибка регистрации пользователя {}", userDTO.getLogin(), e);
@@ -50,26 +46,8 @@ public class UserServiceImpl implements UserService {
         } else updateUser(userDTO);
     }
 
-/*    @Override
-    public UserDTO authorizeUser(LoginDTO loginDTO) {
-        User user = null;
-        try {
-            user = userDAO.findUser(loginDTO.getLogin());
-        } catch (NoResultException e) {
-            logger.info("Ошибка авторизации пользователя: логин не найден", e);
-            throw new WrongLoginOrPassword("Неверный логин или пароль!");
-        }
-        if (!BcryptUtil.checkPassword(loginDTO.getPassword(), user.getPasswordHash())) {
-            String userName = user.getName();
-            logger.info("Ошибка авторизации пользователя {}: введён неверный логин или пароль", userName);
-            throw new WrongLoginOrPassword("Неверный логин или пароль!");
-        }
-        logger.info("Успешная авторизация пользователя {}", loginDTO.getLogin());
-        return converterDTO.toDTO(user);
-    }*/
-
     public UserDTO getUserDTO(Long id) {
-        return converterDTO.toDTO(userRepository.findById(id).get());
+        return conversionService.convert(userRepository.findById(id).get(), UserDTO.class);
     }
 
     @Override
@@ -105,6 +83,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUser() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return converterDTO.toDTO(userRepository.findById(user.getId()).get());
+        return conversionService.convert(userRepository.findById(user.getId()).get(), UserDTO.class);
     }
 }

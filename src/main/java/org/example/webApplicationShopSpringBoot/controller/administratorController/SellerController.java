@@ -1,5 +1,6 @@
 package org.example.webApplicationShopSpringBoot.controller.administratorController;
 
+import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
 import org.example.webApplicationShopSpringBoot.service.seller.SellerService;
 import org.springframework.data.domain.Page;
@@ -11,15 +12,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("${admin.path}")
+@AllArgsConstructor
 public class SellerController {
-
     private SellerService sellerService;
 
-    public SellerController(SellerService sellerService) {
-        this.sellerService = sellerService;
-    }
-
-    @GetMapping("/administrator/editSellers")
+    @GetMapping("editSellers")
     public String showEditSellersPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Pageable pageable = PageRequest.of(page, 8, Sort.by("id").ascending());
         Page<SellerDTO> sellerDTOList = sellerService.getSellerDTOList(pageable);
@@ -27,18 +25,18 @@ public class SellerController {
         return "/superUser/seller/editSellers";
     }
 
-    @PostMapping("/administrator/deleteSeller/{id}")
+    @PostMapping("deleteSeller/{id}")
     public String deleteSeller(@PathVariable Long id) {
         sellerService.removeSeller(id);
         return "redirect:/editSellers";
     }
 
-    @GetMapping("/administrator/addSeller")
+    @GetMapping("addSeller")
     public String showAddSellerPage() {
         return "/superUser/seller/addSellerPage";
     }
 
-    @PostMapping("/administrator/addNewSeller")
+    @PostMapping("addNewSeller")
     public String addNewSeller(@ModelAttribute SellerDTO sellerDTO) {
         sellerService.addSeller(sellerDTO);
         return "redirect:editSellers";

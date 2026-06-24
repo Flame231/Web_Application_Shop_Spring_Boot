@@ -1,5 +1,6 @@
 package org.example.webApplicationShopSpringBoot.service.userOrderProduct;
 
+import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dao.userOrderProduct.UserOrderProductRepository;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderChangeCountDTO;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct;
@@ -8,13 +9,9 @@ import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.Pri
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class UserOrderProductServiceImpl implements UserOrderProductService {
     private UserOrderProductRepository userOrderProductRepository;
-
-
-    public UserOrderProductServiceImpl(UserOrderProductRepository userOrderProductRepository) {
-        this.userOrderProductRepository = userOrderProductRepository;
-    }
 
     @Override
     public void changeProductCount(UserOrderChangeCountDTO userOrderChangeCountDTO) {

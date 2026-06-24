@@ -1,5 +1,6 @@
 package org.example.webApplicationShopSpringBoot.controller.filter;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +14,15 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityFilterConfig {
 
     private final CustomSuccessHandler successHandler;
+
+    @Value("${admin.path}")
+    private String adminPath;
+
+    @Value("${client.path}")
+    private String clientPath;
+
+    @Value("${operator.path}")
+    private String operatorPath;
 
     public SecurityFilterConfig(CustomSuccessHandler successHandler) {
         this.successHandler = successHandler;
@@ -28,9 +38,9 @@ public class SecurityFilterConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/registration").permitAll()
-                        .requestMatchers("/administrator/**").hasRole("ADMINISTRATOR")
-                        .requestMatchers("/client/**").hasRole("CLIENT")
-                        .requestMatchers("/operator/**").hasRole("OPERATOR")
+                        .requestMatchers(adminPath + "**").hasRole("ADMINISTRATOR")
+                        .requestMatchers(clientPath + "**").hasRole("CLIENT")
+                        .requestMatchers(operatorPath + "**").hasRole("OPERATOR")
                         .anyRequest().authenticated()).formLogin(form -> form
                         .loginPage("/login")
                         .usernameParameter("login")
