@@ -1,5 +1,6 @@
 package org.example.webApplicationShopSpringBoot.service.userOrder;
 
+import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.webApplicationShopSpringBoot.dao.bag.BagRepository;
@@ -8,7 +9,6 @@ import org.example.webApplicationShopSpringBoot.dao.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
 import org.example.webApplicationShopSpringBoot.dao.userOrder.UserOrderRepository;
 import org.example.webApplicationShopSpringBoot.dao.userOrderProduct.UserOrderProductRepository;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.OrderStatus;
@@ -16,7 +16,7 @@ import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrder;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.user.User;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -24,38 +24,25 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class UserOrderServiceImpl implements UserOrderService {
 
     private static final Logger logger = LogManager.getLogger(UserOrderService.class);
+    private final ConversionService conversionService;
 
     private UserOrderRepository userOrderRepository;
-    private UserRepository userDAO;
-    private ConverterDTO<UserOrder, UserOrderDTO> converterDTO;
-    private OrderPointRepository orderPointDAO;
-    private BagRepository bagDAO;
+    private UserRepository userRepository;
+    private OrderPointRepository orderPointRepository;
+    private BagRepository bagRepository;
     private ProductRepository productRepository;
     private UserOrderProductRepository userOrderProductRepository;
-
-
-    public UserOrderServiceImpl(UserOrderRepository userOrderRepository, UserRepository userDAO,
-                                @Qualifier("converterDTO") ConverterDTO<UserOrder, UserOrderDTO> converterDTO,
-                                OrderPointRepository orderPointDAO, BagRepository bagDAO, ProductRepository productRepository,
-                                UserOrderProductRepository userOrderProductRepository) {
-        this.userOrderRepository = userOrderRepository;
-        this.userDAO = userDAO;
-        this.converterDTO = converterDTO;
-        this.orderPointDAO = orderPointDAO;
-        this.bagDAO = bagDAO;
-        this.productRepository = productRepository;
-        this.userOrderProductRepository = userOrderProductRepository;
-    }
 
     @Override
     public void confirmOrder(List<OrderDTO> list) {
         BigDecimal orderSum = BigDecimal.ZERO;
         UserOrder userOrder = UserOrder.builder().orderStatus(OrderStatus.CREATED)
-                .user(userDAO.findById(list.get(0).getUserId()).get())
-                .orderPoint(orderPointDAO.findById(list.get(0).getOrderPointId()).get())
+                .user(userRepository.findById(list.get(0).getUserId()).get())
+                .orderPoint(orderPointRepository.findById(list.get(0).getOrderPointId()).get())
                 .build();
         userOrderRepository.save(userOrder);
         for (int i = 0; i < list.size(); i++) {
@@ -68,7 +55,7 @@ public class UserOrderServiceImpl implements UserOrderService {
 
                 userOrderProductRepository.save(userOrderProduct);
                 PrimaryKeyBag primaryKeyBag = new PrimaryKeyBag(list.get(i).getUserId(), list.get(i).getProductId());
-                bagDAO.deleteById(primaryKeyBag);
+                bagRepository.deleteById(primaryKeyBag);
             }
         }
         userOrder.setOrderSum(orderSum);
@@ -78,7 +65,7 @@ public class UserOrderServiceImpl implements UserOrderService {
     @Override
     public List<UserOrderDTO> showAllUserOrders() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userOrderRepository.findAllByUserId(user.getId()).stream().map(converterDTO::toDTO)
+        return userOrderRepository.findAllByUserId(user.getId()).stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class))
                 .toList();
     }
 
@@ -87,7 +74,7 @@ public class UserOrderServiceImpl implements UserOrderService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.findAllByOrderPointId(orderPointId);
-        return userOrderList.stream().map(converterDTO::toDTO).toList();
+        return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
     }
 
     @Override
@@ -95,13 +82,13 @@ public class UserOrderServiceImpl implements UserOrderService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.getReadyUserOrderByOrderPoint(orderPointId);
-        return userOrderList.stream().map(converterDTO::toDTO).toList();
+        return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
     }
 
     @Override
     public UserOrderDTO getUserOrderDTO(Long id) {
         UserOrder userOrder = userOrderRepository.findById(id).get();
-        return converterDTO.toDTO(userOrder);
+        return conversionService.convert(userOrder, UserOrderDTO.class);
     }
 
 
@@ -117,6 +104,6 @@ public class UserOrderServiceImpl implements UserOrderService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<UserOrder> userOrderList = userOrderRepository
                 .findAllCreatedUserOrder(user.getOrderPoint().getId());
-        return userOrderList.stream().map(converterDTO::toDTO).toList();
+        return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
     }
 }

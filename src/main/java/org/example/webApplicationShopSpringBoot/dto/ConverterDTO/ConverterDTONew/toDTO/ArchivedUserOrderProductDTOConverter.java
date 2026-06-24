@@ -1,21 +1,16 @@
-package org.example.webApplicationShopSpringBoot.dto.ConverterDTO;
+package org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTONew.toDTO;
 
 
-import org.example.webApplicationShopSpringBoot.dto.dto.ArchivedUserOrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.ArchivedUserOrderProductDTO;
-import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrder;
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrderProduct;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
-public class ArchivedUserOrderProductDTOConverter implements ConverterDTO<ArchivedUserOrderProduct, ArchivedUserOrderProductDTO> {
-    private ConverterDTO<ArchivedUserOrder, ArchivedUserOrderDTO> converterDTO = new ArchivedUserOrderDTOConverter();
-
-    @Override
-    public ArchivedUserOrderProduct toEntity(ArchivedUserOrderProductDTO archivedUserOrderProductDTO) {
-        return null;
-    }
+@Component
+public class ArchivedUserOrderProductDTOConverter implements Converter<ArchivedUserOrderProduct, ArchivedUserOrderProductDTO> {
 
     @Override
-    public ArchivedUserOrderProductDTO toDTO(ArchivedUserOrderProduct archivedUserOrderProduct) {
+    public ArchivedUserOrderProductDTO convert(ArchivedUserOrderProduct archivedUserOrderProduct) {
         return ArchivedUserOrderProductDTO
                 .builder()
                 .archivedUserOrder(archivedUserOrderProduct.getArchivedUserOrder())

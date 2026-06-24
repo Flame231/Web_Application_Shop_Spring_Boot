@@ -1,11 +1,11 @@
 <html>
 <head>
-    <a th:href="@{/accountAdministrator}">Вернуться в личный кабинет</a>
+    <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
     <title>Редактировать продукт</title>
     <h1>Редактировать продукт</h1>
 
-    <a th:href="@{/editCatalog}">Назад</a>
-    <form th:action="@{/updateProduct}" th:object="${productDTO}" method="post">
+    <a th:href="@{|${adminPath}editCatalog|}">Назад</a>
+    <form th:action="@{|${adminPath}updateProduct|}" th:object="${productDTO}" method="post">
         Номер продукта:
         <label>
             <input type="text" th:field="*{id}" readonly/>

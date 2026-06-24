@@ -13,5 +13,5 @@ public class BagDTORequest {
 
     private Long productId;
 
-    private Integer count;
+    private Long count;
 }

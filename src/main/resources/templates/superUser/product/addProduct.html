@@ -1,11 +1,11 @@
 <html>
 <head>
     <title>Добавить товар в каталог</title>
-    <a th:href="@{/accountAdministrator}">Вернуться в личный кабинет</a>
+    <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
     <h1>Добавить товар в каталог</h1>
-    <a th:href="@{/editCatalog}">Назад</a>
+    <a th:href="@{|${adminPath}editCatalog|}">Назад</a>
     <br>
-    <form th:action="@{/addNewProduct}" method="post">
+    <form th:action="@{|${adminPath}addNewProduct|}" method="post">
         <div>
             Название продукта:
             <input type="text" name="productName">

@@ -2,11 +2,12 @@ package org.example.webApplicationShopSpringBoot.service.productCategory;
 
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dao.productCategory.ProductCategoryRepository;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTO;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ProductCategoryDTOConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductCategoryDTO;
 import org.example.webApplicationShopSpringBoot.model.ProductCategory;
+import org.example.webApplicationShopSpringBoot.service.PageResponse;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,46 +15,45 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 @Transactional
 public class ProductCategoryServiceImpl implements ProductCategoryService {
-    private ProductCategoryRepository productCategoryDAO;
-    private ConverterDTO<ProductCategory, ProductCategoryDTO> converterDTO;
+    private ProductCategoryRepository productCategoryRepository;
+    private ConversionService conversionService;
 
-    public ProductCategoryServiceImpl(ProductCategoryRepository productCategoryDAO, ConverterDTO<ProductCategory, ProductCategoryDTO> converterDTO) {
-        this.productCategoryDAO = productCategoryDAO;
-        this.converterDTO = converterDTO;
-    }
 
-    public Page<ProductCategoryDTO> getProductCategoryDTOList(Pageable pageable) {
-        Page<ProductCategory> productCategoryPage = productCategoryDAO.findAll(pageable);
-        return productCategoryPage.map(converterDTO::toDTO);
+    public PageResponse<ProductCategoryDTO> getProductCategoryDTOList(Pageable pageable) {
+        Page<ProductCategory> productCategoryPage = productCategoryRepository.findAll(pageable);
+        return new PageResponse(productCategoryPage.map(product -> conversionService
+                .convert(product, ProductCategoryDTO.class)));
     }
 
     public List<ProductCategoryDTO> getProductCategoryDTOList() {
-        return productCategoryDAO.findAll().stream()
-                .map(converterDTO::toDTO)
+        return productCategoryRepository.findAll().stream()
+                .map(product -> conversionService
+                        .convert(product, ProductCategoryDTO.class))
                 .toList();
     }
 
     public ProductCategoryDTO findProductCategory(Long id) {
-        return converterDTO.toDTO(productCategoryDAO.findById(id).get());
+        return conversionService.convert(productCategoryRepository.findById(id).get(), ProductCategoryDTO.class);
     }
 
     @Override
     public void addProductCategory(ProductCategoryDTO productCategoryDTO) {
-        ProductCategory productCategory = converterDTO.toEntity(productCategoryDTO);
-        productCategoryDAO.save(productCategory);
+        ProductCategory productCategory = conversionService.convert(productCategoryDTO, ProductCategory.class);
+        productCategoryRepository.save(productCategory);
     }
 
     @Override
     public void updateProductCategory(ProductCategoryDTO productCategoryDTO) {
-        ProductCategory productCategory = converterDTO.toEntity(productCategoryDTO);
-        productCategoryDAO.save(productCategory);
+        ProductCategory productCategory = conversionService.convert(productCategoryDTO, ProductCategory.class);
+        productCategoryRepository.save(productCategory);
     }
 
 
     @Override
     public void deleteProductCategory(Long id) {
-        productCategoryDAO.deleteById(id);
+        productCategoryRepository.deleteById(id);
     }
 }

@@ -29,13 +29,13 @@
 </style>
 <html>
 <head>
-    <a th:href="@{/administrator/accountAdministrator}">Вернуться в личный кабинет</a>
+    <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
     <title>Редактировать продавцов</title>
     <h1>Редактировать продавцов</h1>
 
 </head>
 <body>
-<a th:href="@{/administrator/addSeller}">Добавить продавца</a>
+<a th:href="@{|${adminPath}/addSeller|}">Добавить продавца</a>
 </form>
 <table>
     <thead>
@@ -47,7 +47,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="sellerDTO:${sellerDTOList}">
+    <tr th:each="sellerDTO:${sellerDTOList.content()}">
         <td th:text="${sellerDTO.getId()}">
         </td>
         <td th:text="${sellerDTO.getSellerName()}">
@@ -55,31 +55,32 @@
         <td th:text="${sellerDTO.getSellerAddress()}">
         </td>
         <td>
-            <form method="post">
-                <input type="submit" value="Редактировать"
-                       formaction="<%=request.getContextPath() + EDIT_PRODUCT_CATEGORY%>">
+            <form method="post" th:action="@{|${adminPath}editSeller/${sellerDTO.id}|}">
+                <input type="submit" value="Редактировать">
             </form>
-            <form method="post" th:action="@{/deleteSeller/{id}(id=${sellerDTO.id})}">
+       <!--     <form method="post" th:action="@{|${adminPath}deleteSeller/{id}|(id=${sellerDTO.id})}">
                 <input type="submit" value="удалить">
-            </form>
+            </form>-->
         </td>
     </tr>
     </tbody>
 </table>
 
-<a th:href="@{/administrator/editSellers(page=0)}">В начало</a>
-<span style="font-size: 20px" th:if="${sellerDTOList.getNumber()>0}"
-      th:each="i : ${#numbers.sequence((sellerDTOList.getNumber()-3>0?sellerDTOList.getNumber()-3:0),sellerDTOList.getNumber()-1)}">
-    <a th:href="@{/administrator/editSellers(page=${i})}"
-       th:text="${i}"></a>
-    </span>
-<span style="font-size: 24px" th:text="${sellerDTOList.getNumber()}"></span>
-<span style="font-size: 20px" th:if="${sellerDTOList.getNumber()<sellerDTOList.getTotalPages()-1}"
-      th:each="i : ${#numbers.sequence(sellerDTOList.getNumber()+1,(sellerDTOList.getNumber()+3<sellerDTOList.getTotalPages()-1?sellerDTOList.getNumber()+3:sellerDTOList.getTotalPages()-1))}">
-    <a th:href="@{/administrator/editSellers(page=${i})}"
-       th:text="${i}"></a>
-    </span>
-<a th:href="@{/administrator/editSellers(page=${sellerDTOList.getTotalPages()-1})}">В конец</a>
+<a th:href="@{|${adminPath}editSellers|(page=1)}">В начало</a>
+<span style="font-size: 20px"
+      th:if="${sellerDTOList.currentPage > 1}"
+      th:each="i : ${#numbers.sequence((sellerDTOList.currentPage - 3 > 1 ? sellerDTOList.currentPage - 3 : 1), sellerDTOList.currentPage - 1)}">
+    <a th:href="@{|${adminPath}editSellers|(page=${i})}" th:text="${i}"></a>
+</span>
+<span style="font-size: 24px" th:text="${sellerDTOList.currentPage}"></span>
+<span style="font-size: 20px"
+      th:if="${sellerDTOList.currentPage < sellerDTOList.totalPages}"
+      th:each="i : ${#numbers.sequence(sellerDTOList.currentPage + 1, (sellerDTOList.currentPage + 3 < sellerDTOList.totalPages ? sellerDTOList.currentPage + 3 : sellerDTOList.totalPages))}">
+    <a th:href="@{|${adminPath}editSellers|(page=${i})}" th:text="${i}"></a>
+</span>
+
+<a th:href="@{|${adminPath}editSellers|(page=${sellerDTOList.totalPages})}">В конец</a>
+
 
 </body>
 </html>

@@ -1,6 +1,7 @@
 package org.example.webApplicationShopSpringBoot.controller.operatorController;
 
 
+import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderChangeCountDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
 import org.example.webApplicationShopSpringBoot.service.archivedUserOrder.ArchivedUserOrderService;
@@ -14,71 +15,67 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
+@RequestMapping("${operatorPath}")
+@AllArgsConstructor
 public class OperatorController {
-
     private UserOrderService userOrderService;
     private UserOrderProductService userOrderProductService;
     private ArchivedUserOrderService archivedUserOrderService;
 
-    public OperatorController(UserOrderService userOrderService, UserOrderProductService userOrderProductService, ArchivedUserOrderService archivedUserOrderService) {
-        this.userOrderService = userOrderService;
-        this.userOrderProductService = userOrderProductService;
-        this.archivedUserOrderService = archivedUserOrderService;
-    }
-
-    @RequestMapping(value = "/operator/accountOperator", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "accountOperator", method = {RequestMethod.GET, RequestMethod.POST})
     public String showAdministratorPage() {
+
         return "account/accountOperator";
     }
 
-    @GetMapping("/operator/orders")
+    @GetMapping("orders")
     public String showCreatedOrders(Model model) {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showCreatedUserOrders();
         model.addAttribute("userOrderDTOList", userOrderDTOList);
         return "/order/showCreatedOrderPointOrders";
     }
 
-    @GetMapping("/operator/arrivedOrders")
+    @GetMapping("arrivedOrders")
     public String showArrivedOrders(Model model) {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showReadyUserOrdersByOrderPoint();
         model.addAttribute("userOrderDTOList", userOrderDTOList);
         return "/order/showReadyOrderPointOrders";
     }
 
-    @PostMapping("operator/changeUserOrderStatus")
+    @PostMapping("changeUserOrderStatus")
     public String changeUserOrderStatus(@RequestParam Long userOrderId) {
         userOrderService.readyUserOrder(userOrderId);
         return "redirect:/operator/orders";
     }
 
-    @GetMapping("/operator/readyOrders")
+    @GetMapping("readyOrders")
     public String showReadyOrders(Model model) {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showReadyUserOrdersByOrderPoint();
         model.addAttribute("userOrderDTOList", userOrderDTOList);
         return "/order/showReadyOrderPointOrders";
     }
 
-    @GetMapping("/operator/showOrder")
+    @GetMapping("showOrder")
     public String showOrder(@RequestParam Long id, Model model) {
         UserOrderDTO userOrderDTO = userOrderService.getUserOrderDTO(id);
         model.addAttribute("userOrderDTO", userOrderDTO);
         return "/order/showOrderPointOrderPage";
     }
 
-    @PostMapping("/operator/addProductToOrder")
+    @PostMapping("addProductToOrder")
     public String addProductToOrder(@ModelAttribute UserOrderChangeCountDTO userOrderChangeCountDTO, @RequestParam Long id, RedirectAttributes redirectAttributes) {
         userOrderProductService.changeProductCount(userOrderChangeCountDTO);
         redirectAttributes.addAttribute("id", id);
         return "redirect:/operator/showOrder";
     }
 
-    @PostMapping("/operator/refuseOrder")
+    @PostMapping("refuseOrder")
     public String refuseOrder(@RequestParam Long userOrderId) {
         archivedUserOrderService.refuseUserOrder(userOrderId);
         return "redirect:/operator/arrivedOrders";
     }
 
-    @PostMapping("/operator/closeOrder")
+    @PostMapping("closeOrder")
     public String closeOrder(@RequestParam Long userOrderId) {
         archivedUserOrderService.createArchivedUserOrder(userOrderId);
         return "redirect:/operator/arrivedOrders";

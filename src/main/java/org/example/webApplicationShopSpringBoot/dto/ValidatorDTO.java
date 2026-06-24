@@ -1,4 +1,4 @@
-package org.example.webApplicationShopSpringBoot.dto.ConverterDTO;
+package org.example.webApplicationShopSpringBoot.dto;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;

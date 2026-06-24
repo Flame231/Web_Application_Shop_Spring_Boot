@@ -1,8 +1,10 @@
 package org.example.webApplicationShopSpringBoot.controller.administratorController;
 
+import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductCategoryDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
+import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.product.ProductService;
 import org.example.webApplicationShopSpringBoot.service.productCategory.ProductCategoryService;
 import org.example.webApplicationShopSpringBoot.service.seller.SellerService;
@@ -17,26 +19,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@AllArgsConstructor
+@RequestMapping("${adminPath}")
 public class ProductController {
     private ProductService productService;
     private ProductCategoryService productCategoryService;
     private SellerService sellerService;
 
-    public ProductController(ProductService productService, ProductCategoryService productCategoryService, SellerService sellerService) {
-        this.productService = productService;
-        this.productCategoryService = productCategoryService;
-        this.sellerService = sellerService;
-    }
-
-    @GetMapping(value = "/administrator/editCatalog")
-    public String showEditCatalogPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Pageable pageable = PageRequest.of(page, 6, Sort.by("id").ascending());
-        Page<ProductDTO> productDTOList = productService.getAllProducts(pageable);
+    @GetMapping(value = "editCatalog")
+    public String showEditCatalogPage(@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
+        Pageable pageable = PageRequest.of(page - 1, 6, Sort.by("id").ascending());
+        PageResponse<ProductDTO> productDTOList = productService.getAllProducts(pageable);
         model.addAttribute("productDTOList", productDTOList);
         return "/superUser/product/editCatalog";
     }
 
-    @GetMapping(value = "/administrator/addProduct")
+    @GetMapping(value = "addProduct")
     public String showAddProductPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Pageable pageable = PageRequest.of(page, 8, Sort.by("id").ascending());
         List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getProductCategoryDTOList();
@@ -46,25 +44,25 @@ public class ProductController {
         return "/superUser/product/addProduct";
     }
 
-    @RequestMapping(value = "/administrator/addNewProduct", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "addNewProduct", method = {RequestMethod.GET, RequestMethod.POST})
     public String addNewProduct(@ModelAttribute ProductDTO productDTO) {
         productService.addProduct(productDTO);
-        return "redirect:/editCatalog";
+        return "redirect:/administrator/editCatalog";
     }
 
-    @PostMapping("/administrator/updateProduct")
+    @PostMapping("updateProduct")
     public String updateProduct(@ModelAttribute ProductDTO productDTO) {
         productService.updateProduct(productDTO);
-        return "redirect:/editCatalog";
+        return "redirect:/administrator/editCatalog";
     }
 
-    @PostMapping("/administrator/deleteProduct/{id}")
+    @PostMapping("deleteProduct/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productService.removeProduct(id);
-        return "redirect:/editCatalog";
+        return "redirect:/administrator/editCatalog";
     }
 
-    @GetMapping("/administrator/editProduct/{id}")
+    @GetMapping("editProduct/{id}")
     public String showEditProductPage(@PathVariable Long id, Model model) {
         ProductDTO productDTO = productService.findProduct(id);
         List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getProductCategoryDTOList();
@@ -75,7 +73,7 @@ public class ProductController {
         return "superUser/product/editProduct";
     }
 
-    @GetMapping("/administrator/productPage/{id}")
+    @GetMapping("productPage/{id}")
     public String showProductPage(@PathVariable Long id, Model model) {
         ProductDTO productDTO = productService.findProduct(id);
         model.addAttribute("productDTO", productDTO);
