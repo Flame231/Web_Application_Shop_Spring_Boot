@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dao.productCategory.ProductCategoryRepository;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductCategoryDTO;
 import org.example.webApplicationShopSpringBoot.model.ProductCategory;
+import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,10 +22,10 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     private ConversionService conversionService;
 
 
-    public Page<ProductCategoryDTO> getProductCategoryDTOList(Pageable pageable) {
+    public PageResponse<ProductCategoryDTO> getProductCategoryDTOList(Pageable pageable) {
         Page<ProductCategory> productCategoryPage = productCategoryRepository.findAll(pageable);
-        return productCategoryPage.map(product -> conversionService
-                .convert(product, ProductCategoryDTO.class));
+        return new PageResponse(productCategoryPage.map(product -> conversionService
+                .convert(product, ProductCategoryDTO.class)));
     }
 
     public List<ProductCategoryDTO> getProductCategoryDTOList() {

@@ -50,6 +50,8 @@
 <form method="post" th:action="@{/client/clearBag}">
     <input type="submit" value="Очистить корзину">
 </form>
+Сумма в корзине:
+<span th:text="${bagSum}"></span>
 <table>
     <thead>
     <tr>
@@ -71,11 +73,12 @@
         </td>
         <td>
             <span th:text="${bagDTO.getProductDTO.getPrice()}"></span>
-            <input type="hidden" name="productPrice" form="orderForm" th:value="${bagDTO.getProductDTO.getPrice()}"></input>
+            <input type="hidden" name="productPrice" form="orderForm"
+                   th:value="${bagDTO.getProductDTO.getPrice()}"/>
         </td>
         <td>
             <span th:text="${bagDTO.getProductDTO.getSeller().getSellerName()}"></span>
-            <input type="hidden" name="count" form="orderForm" th:value="${bagDTO.getCount()}"></input>
+            <input type="hidden" name="count" form="orderForm" th:value="${bagDTO.getCount()}"/>
         </td>
         <td>
             <form method="post">
@@ -89,8 +92,6 @@
     </tr>
     </tbody>
 </table>
-Сумма в корзине:
-<span th:text="${bagSum}">
 <div>
 </div>
 <div>

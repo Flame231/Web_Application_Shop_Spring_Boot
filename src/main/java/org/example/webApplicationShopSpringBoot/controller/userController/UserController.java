@@ -6,6 +6,7 @@ import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.dto.dto.*;
 import org.example.webApplicationShopSpringBoot.model.user.User;
+import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.bag.BagService;
 import org.example.webApplicationShopSpringBoot.service.orderPoint.OrderPointService;
 import org.example.webApplicationShopSpringBoot.service.product.ProductService;
@@ -27,7 +28,7 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("${client.path}")
+@RequestMapping("${clientPath}")
 public class UserController {
     public static final String PAGE_SIZE_30 = "30";
     public static final List<Integer> pageSizeList = List.of(30, 50, 100);
@@ -43,10 +44,12 @@ public class UserController {
     }
 
     @GetMapping("catalog")
-    public String showCatalog(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, @AuthenticationPrincipal User user) {
+    public String showCatalog(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, @AuthenticationPrincipal User user) {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id").ascending());
-        Page<ProductDTO> productDTOList = productService.getAllProducts(pageable);
+        PageResponse<ProductDTO> productDTOList = productService.getAllProducts(pageable);
         List<BagDTOResponse> bagDTOResponseList = bagService.showAllBags();
+        BigDecimal bagSum = bagService.showBagSum();
+        model.addAttribute("bagSum", bagSum);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("userId", user.getId());

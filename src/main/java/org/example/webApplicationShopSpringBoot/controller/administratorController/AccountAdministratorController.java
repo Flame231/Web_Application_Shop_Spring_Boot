@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("${admin.path}")
+@RequestMapping("${adminPath}")
 public class AccountAdministratorController {
 
     @RequestMapping(value ="accountAdministrator", method = {RequestMethod.GET, RequestMethod.POST})

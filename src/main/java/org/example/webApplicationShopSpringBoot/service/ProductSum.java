@@ -7,5 +7,4 @@ import java.util.stream.Stream;
 public interface ProductSum<T> {
     Long getCount();
     BigDecimal getPrice();
-    Stream<T> getStream();
 }

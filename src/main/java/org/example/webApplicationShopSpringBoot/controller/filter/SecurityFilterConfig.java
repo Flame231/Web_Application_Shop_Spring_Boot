@@ -15,13 +15,13 @@ public class SecurityFilterConfig {
 
     private final CustomSuccessHandler successHandler;
 
-    @Value("${admin.path}")
+    @Value("${adminPath}")
     private String adminPath;
 
-    @Value("${client.path}")
+    @Value("${clientPath}")
     private String clientPath;
 
-    @Value("${operator.path}")
+    @Value("${operatorPath}")
     private String operatorPath;
 
     public SecurityFilterConfig(CustomSuccessHandler successHandler) {

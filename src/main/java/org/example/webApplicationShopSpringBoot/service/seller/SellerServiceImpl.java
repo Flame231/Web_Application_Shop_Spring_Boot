@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dao.seller.SellerRepository;
 import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
 import org.example.webApplicationShopSpringBoot.model.Seller;
+import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +19,9 @@ public class SellerServiceImpl implements SellerService {
     private SellerRepository sellerRepository;
     private ConversionService conversionService;
 
-    public Page<SellerDTO> getSellerDTOList(Pageable pageable) {
+    public PageResponse<SellerDTO> getSellerDTOList(Pageable pageable) {
         Page<Seller> page = sellerRepository.findAll(pageable);
-        return page.map(seller -> conversionService.convert(seller, SellerDTO.class));
+        return new PageResponse(page.map(seller -> conversionService.convert(seller, SellerDTO.class)));
     }
 
     public List<SellerDTO> getSellerDTOList() {

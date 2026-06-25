@@ -3,6 +3,7 @@ package org.example.webApplicationShopSpringBoot.controller;
 import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserDTO;
+import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.product.ProductService;
 import org.example.webApplicationShopSpringBoot.service.user.UserService;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,7 @@ public class ShopController {
     @RequestMapping("/login")
     public String getList(Model model) {
         Pageable pageable = PageRequest.of(1, 10, Sort.by("id").ascending());
-        Page<ProductDTO> listDTO = productService.getAllProducts(pageable);
+        PageResponse<ProductDTO> listDTO = productService.getAllProducts(pageable);
         model.addAttribute("listDTO",listDTO);
         return "login";
     }

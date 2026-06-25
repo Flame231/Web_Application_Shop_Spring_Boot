@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductCategoryDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
+import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.product.ProductService;
 import org.example.webApplicationShopSpringBoot.service.productCategory.ProductCategoryService;
 import org.example.webApplicationShopSpringBoot.service.seller.SellerService;
@@ -19,16 +20,16 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("${admin.path}")
+@RequestMapping("${adminPath}")
 public class ProductController {
     private ProductService productService;
     private ProductCategoryService productCategoryService;
     private SellerService sellerService;
 
     @GetMapping(value = "editCatalog")
-    public String showEditCatalogPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Pageable pageable = PageRequest.of(page, 6, Sort.by("id").ascending());
-        Page<ProductDTO> productDTOList = productService.getAllProducts(pageable);
+    public String showEditCatalogPage(@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
+        Pageable pageable = PageRequest.of(page - 1, 6, Sort.by("id").ascending());
+        PageResponse<ProductDTO> productDTOList = productService.getAllProducts(pageable);
         model.addAttribute("productDTOList", productDTOList);
         return "/superUser/product/editCatalog";
     }
@@ -46,19 +47,19 @@ public class ProductController {
     @RequestMapping(value = "addNewProduct", method = {RequestMethod.GET, RequestMethod.POST})
     public String addNewProduct(@ModelAttribute ProductDTO productDTO) {
         productService.addProduct(productDTO);
-        return "redirect:/editCatalog";
+        return "redirect:/administrator/editCatalog";
     }
 
     @PostMapping("updateProduct")
     public String updateProduct(@ModelAttribute ProductDTO productDTO) {
         productService.updateProduct(productDTO);
-        return "redirect:/editCatalog";
+        return "redirect:/administrator/editCatalog";
     }
 
     @PostMapping("deleteProduct/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productService.removeProduct(id);
-        return "redirect:/editCatalog";
+        return "redirect:/administrator/editCatalog";
     }
 
     @GetMapping("editProduct/{id}")

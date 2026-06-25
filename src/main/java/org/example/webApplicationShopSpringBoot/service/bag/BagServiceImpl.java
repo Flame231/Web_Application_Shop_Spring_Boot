@@ -11,6 +11,7 @@ import org.example.webApplicationShopSpringBoot.model.Product;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUtil;
 import org.example.webApplicationShopSpringBoot.model.user.User;
+import org.example.webApplicationShopSpringBoot.service.Calculate;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,8 @@ public class BagServiceImpl implements BagService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Product product = productRepository.getReferenceById(bagDTORequest.getProductId());
         PrimaryKeyBag primaryKeyBag = PrimaryKeyUtil.getPrimaryKeyBag(user, product);
-        Bag bag = bagRepository.findById(primaryKeyBag).orElse(Bag.builder().user(user).product(product).count(0).build());
-        int currentCount = bag.getCount();
+        Bag bag = bagRepository.findById(primaryKeyBag).orElse(Bag.builder().user(user).product(product).count(0L).build());
+        Long currentCount = bag.getCount();
         bag.setCount(++currentCount);
         bagRepository.save(bag);
 
@@ -42,8 +43,8 @@ public class BagServiceImpl implements BagService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Product product = productRepository.getReferenceById(bagDTORequest.getProductId());
         PrimaryKeyBag primaryKeyBag = PrimaryKeyUtil.getPrimaryKeyBag(user, product);
-        Bag bag = bagRepository.findById(primaryKeyBag).orElse(Bag.builder().user(user).product(product).count(0).build());
-        int currentCount = bag.getCount();
+        Bag bag = bagRepository.findById(primaryKeyBag).orElse(Bag.builder().user(user).product(product).count(0L).build());
+        Long currentCount = bag.getCount();
         bag.setCount(--currentCount);
         if (currentCount < 1) {
             bagRepository.delete(bag);
@@ -61,10 +62,7 @@ public class BagServiceImpl implements BagService {
     @Override
     public BigDecimal showBagSum() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        BigDecimal bagSum = bagRepository.getBagList(user.getId())
-                .stream().map(e -> new BigDecimal(e.getCount()).multiply(e.getProduct().getPrice()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return bagSum;
+        return Calculate.calculateSum(bagRepository.getBagList(user.getId()).stream());
     }
 
     @Override

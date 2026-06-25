@@ -3,6 +3,7 @@ package org.example.webApplicationShopSpringBoot.service.productCategory;
 
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductCategoryDTO;
 import org.example.webApplicationShopSpringBoot.model.ProductCategory;
+import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 public interface ProductCategoryService {
 
-    Page<ProductCategoryDTO> getProductCategoryDTOList(Pageable pageable);
+    PageResponse<ProductCategoryDTO> getProductCategoryDTOList(Pageable pageable);
 
     List<ProductCategoryDTO> getProductCategoryDTOList();
 

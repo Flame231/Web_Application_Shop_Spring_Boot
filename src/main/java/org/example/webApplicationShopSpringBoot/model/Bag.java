@@ -6,11 +6,15 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.user.User;
+import org.example.webApplicationShopSpringBoot.service.ProductSum;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.stream.Stream;
 
 @Entity
 @SuperBuilder
@@ -19,7 +23,7 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @IdClass(PrimaryKeyBag.class)
-public class Bag {
+public class Bag implements ProductSum<Bag> {
 
     @Id
     @ManyToOne
@@ -32,7 +36,7 @@ public class Bag {
     private Product product;
 
     @Column
-    private Integer count;
+    private Long count;
 
     @CreationTimestamp
     @Column(updatable = false, nullable = false)
@@ -51,5 +55,10 @@ public class Bag {
                 ", createDateTime=" + createDateTime +
                 ", updateDateTime=" + updateDateTime +
                 '}';
+    }
+
+    @Override
+    public BigDecimal getPrice() {
+        return product.getPrice();
     }
 }

@@ -29,12 +29,12 @@
 </style>
 <html>
 <head>
-    <a th:href="@{/administrator/accountAdministrator}">Вернуться в личный кабинет</a>
+    <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
     <title>Редактировать категории товаров</title>
     <h1>Категории</h1>
 </head>
 <body>
-<a th:href="@{/administrator/addProductCategory}">
+<a th:href="@{|${adminPath}addProductCategory}">
     Добавить категорию
 </a>
 <table>
@@ -46,11 +46,11 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="productCategoryDTO:${productCategoriesList}">
+    <tr th:each="productCategoryDTO:${productCategoriesList.content()}">
         <td th:text="${productCategoryDTO.getId()}">
         </td>
 
-        <td th:text="${productCategoryDTO.getCategory()}">>
+        <td th:text="${productCategoryDTO.getCategory()}">
         </td>
 
         <td>
@@ -66,19 +66,26 @@
 </table>
 
 
-<a th:href="@{/administrator/editProductCategories(page=0)}">В начало</a>
-<span style="font-size: 20px" th:if="${productCategoriesList.getNumber()>0}"
-      th:each="i : ${#numbers.sequence((productCategoriesList.getNumber()-3>0?productCategoriesList.getNumber()-3:0),productCategoriesList.getNumber()-1)}">
-    <a th:href="@{/administrator/editProductCategories(page=${i})}"
-       th:text="${i}"></a>
-    </span>
-<span style="font-size: 24px" th:text="${productCategoriesList.getNumber()}"></span>
-<span style="font-size: 20px" th:if="${productCategoriesList.getNumber()<productCategoriesList.getTotalPages()-1}"
-      th:each="i : ${#numbers.sequence(productCategoriesList.getNumber()+1,(productCategoriesList.getNumber()+3<productCategoriesList.getTotalPages()-1?productCategoriesList.getNumber()+3:productCategoriesList.getTotalPages()-1))}">
-    <a th:href="@{/administrator/editProductCategories(page=${i})}"
-       th:text="${i}"></a>
-    </span>
-<a th:href="@{/administrator/editProductCategories(page=${productCategoriesList.getTotalPages()-1})}">В конец</a>
+<a th:href="@{|${adminPath}editCategories|(page=1)}">В начало</a>
+
+<!-- Левая часть: вывод предыдущих 3-х страниц (если мы не на 1-й странице) -->
+<span style="font-size: 20px"
+      th:if="${productDTOCategoriesList.currentPage > 1}"
+      th:each="i : ${#numbers.sequence((productDTOCategoriesList.currentPage - 3 > 1 ? productDTOCategoriesList.currentPage - 3 : 1), productDTOCategoriesList.currentPage - 1)}">
+    <a th:href="@{|${adminPath}editCategories|(page=${i})}" th:text="${i}"></a>
+</span>
+
+<!-- Текущая страница (выводится крупным шрифтом) -->
+<span style="font-size: 24px" th:text="${productDTOCategoriesList.currentPage}"></span>
+
+<!-- Правая часть: вывод следующих 3-х страниц (если мы не на последней) -->
+<span style="font-size: 20px"
+      th:if="${productDTOCategoriesList.currentPage < productDTOCategoriesList.totalPages}"
+      th:each="i : ${#numbers.sequence(productDTOCategoriesList.currentPage + 1, (productDTOCategoriesList.currentPage + 3 < productDTOCategoriesList.totalPages ? productDTOCategoriesList.currentPage + 3 : productDTOCategoriesList.totalPages))}">
+    <a th:href="@{|${adminPath}editCategories|(page=${i})}" th:text="${i}">productDTOCategoriesList
+</span>
+<a th:href="@{|${adminPath}editCategories|(page=${productDTOCategoriesList.totalPages})}">В конец</a>
+
 
 </body>
 </html>

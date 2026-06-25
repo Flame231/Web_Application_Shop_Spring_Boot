@@ -14,5 +14,5 @@ public class BagDTOResponse {
 
     private ProductDTO productDTO;
 
-    private Integer count;
+    private Long count;
 }
