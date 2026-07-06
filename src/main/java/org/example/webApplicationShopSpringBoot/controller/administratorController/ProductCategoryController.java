@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProductCategoryController {
     private ProductCategoryService productCategoryService;
 
-    @GetMapping("editProductCategories")
+    @GetMapping(value = "editProductCategories")
     public String showEditProductCategoriesPage(@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
         Pageable pageable = PageRequest.of(page - 1, 6, Sort.by("id").ascending());
         PageResponse<ProductCategoryDTO> productCategoriesList = productCategoryService.getProductCategoryDTOList(pageable);
@@ -28,7 +28,6 @@ public class ProductCategoryController {
 
     @GetMapping("addProductCategory")
     public String showAddProductCategoryPage() {
-
         return "/superUser/productCategory/addProductCategory";
     }
 
@@ -41,7 +40,7 @@ public class ProductCategoryController {
     @PostMapping("deleteProductCategory/{id}")
     public String deleteProductCategory(@PathVariable Long id) {
         productCategoryService.deleteProductCategory(id);
-        return "redirect:/editProductCategories";
+        return "redirect:/administrator/editProductCategories";
     }
 
     @GetMapping("editProductCategory/{id}")
@@ -54,6 +53,6 @@ public class ProductCategoryController {
     @PostMapping("updateProductCategory")
     public String updateProductCategory(@ModelAttribute ProductCategoryDTO productCategoryDTO) {
         productCategoryService.updateProductCategory(productCategoryDTO);
-        return "redirect:/editProductCategories";
+        return "redirect:editProductCategories";
     }
 }

@@ -5,7 +5,7 @@
     <h1>Добавить товар в каталог</h1>
     <a th:href="@{|${adminPath}editCatalog|}">Назад</a>
     <br>
-    <form th:action="@{|${adminPath}/addNewProduct|}" method="post">
+    <form th:action="@{|${adminPath}addNewProduct|}" method="post">
         <div>
             Название продукта:
             <input type="text" name="productName">

@@ -8,7 +8,7 @@
 
 <a th:href="@{/editProductCategories}">Назад</a>
 <body>
-<form th:object="${productCategoryDTO}" th:action="@{/updateProductCategory}" method="post">
+<form th:object="${productCategoryDTO}" th:action="@{${adminPath}updateProductCategory}" method="post">
     <div>
         Номер категории:
         <label>
