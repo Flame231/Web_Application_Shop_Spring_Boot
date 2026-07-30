@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.*;
 public class SellerController {
     private SellerService sellerService;
 
-    @GetMapping("editSellers")
+    @RequestMapping(value = "editSellers", method = {RequestMethod.GET, RequestMethod.POST})
     public String showEditSellersPage(@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
-        Pageable pageable = PageRequest.of(page -1, 8, Sort.by("id").ascending());
+        Pageable pageable = PageRequest.of(page - 1, 8, Sort.by("id").ascending());
         PageResponse<SellerDTO> sellerDTOList = sellerService.getSellerDTOList(pageable);
         model.addAttribute("sellerDTOList", sellerDTOList);
         return "/superUser/seller/editSellers";
@@ -40,6 +40,19 @@ public class SellerController {
     @PostMapping("addNewSeller")
     public String addNewSeller(@ModelAttribute SellerDTO sellerDTO) {
         sellerService.addSeller(sellerDTO);
+        return "redirect:editSellers";
+    }
+
+    @PostMapping("editSeller/{id}")
+    public String editSeller(@PathVariable Long id, Model model) {
+        SellerDTO sellerDTO = sellerService.getSeller(id);
+        model.addAttribute(sellerDTO);
+        return "/superUser/seller/editSeller";
+    }
+
+    @PostMapping("updateSeller")
+    public String updateSeller(@ModelAttribute SellerDTO sellerDTO){
+        sellerService.updateSeller(sellerDTO);
         return "redirect:editSellers";
     }
 }

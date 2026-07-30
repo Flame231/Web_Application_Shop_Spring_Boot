@@ -74,17 +74,14 @@
 </table>
 <a th:href="@{|${adminPath}editCatalog|(page=1)}">В начало</a>
 
-<!-- Левая часть: вывод предыдущих 3-х страниц (если мы не на 1-й странице) -->
 <span style="font-size: 20px"
       th:if="${productDTOList.currentPage > 1}"
       th:each="i : ${#numbers.sequence((productDTOList.currentPage - 3 > 1 ? productDTOList.currentPage - 3 : 1), productDTOList.currentPage - 1)}">
     <a th:href="@{|${adminPath}editCatalog|(page=${i})}" th:text="${i}"></a>
 </span>
 
-<!-- Текущая страница (выводится крупным шрифтом) -->
 <span style="font-size: 24px" th:text="${productDTOList.currentPage}"></span>
 
-<!-- Правая часть: вывод следующих 3-х страниц (если мы не на последней) -->
 <span style="font-size: 20px"
       th:if="${productDTOList.currentPage < productDTOList.totalPages}"
       th:each="i : ${#numbers.sequence(productDTOList.currentPage + 1, (productDTOList.currentPage + 3 < productDTOList.totalPages ? productDTOList.currentPage + 3 : productDTOList.totalPages))}">

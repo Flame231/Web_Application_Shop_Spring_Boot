@@ -55,9 +55,8 @@
         <td th:text="${sellerDTO.getSellerAddress()}">
         </td>
         <td>
-            <form method="post">
-                <input type="submit" value="Редактировать"
-                       formaction="">
+            <form method="post" th:action="@{|${adminPath}editSeller/${sellerDTO.id}|}">
+                <input type="submit" value="Редактировать">
             </form>
        <!--     <form method="post" th:action="@{|${adminPath}deleteSeller/{id}|(id=${sellerDTO.id})}">
                 <input type="submit" value="удалить">

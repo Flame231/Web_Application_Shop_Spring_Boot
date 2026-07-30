@@ -8,7 +8,7 @@
     <form th:action="@{|${adminPath}updateProduct|}" th:object="${productDTO}" method="post">
         Номер продукта:
         <label>
-            <span type="text" th:text="*{id}"></span>
+            <input type="text" th:field="*{id}" readonly/>
         </label>
         <div>
             Название продукта:

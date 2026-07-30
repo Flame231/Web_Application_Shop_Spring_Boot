@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-@Transactional
+
 public class ProductServiceImpl implements ProductService {
     private ConversionService conversionService;
     private ProductRepository productRepository;

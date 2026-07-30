@@ -2,11 +2,11 @@
 <head>
     <title>Редактировать категорию</title>
 </head>
-<a th:href="@{/accountAdministrator}">Вернуться в личный кабинет</a>
+<a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
 <title>Редактировать категорию</title>
 <h1>Редактировать категорию</h1>
 
-<a th:href="@{/editProductCategories}">Назад</a>
+<a th:href="@{|${adminPath}editProductCategories|}">Назад</a>
 <body>
 <form th:object="${productCategoryDTO}" th:action="@{${adminPath}updateProductCategory}" method="post">
     <div>

@@ -3,10 +3,10 @@
     <title>Редактировать категорию</title>
 </head>
 <body>
-<a th:href="@{/administrator/accountAdministrator}">Вернуться в личный кабинет</a>
+<a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
 <h1>Добавить категорию</h1>
-<a th:href="@{/administrator/editProductCategories}">Назад</a>
-<form method="post" th:action="@{/administrator/addNewProductCategory}">
+<a th:href="@{|${adminPath}editCatalog|}">Назад</a>
+<form method="post" th:action="@{|${adminPath}addNewProductCategory|}">
     <div>
         Название категории:
         <input type="text" name="category"/>
