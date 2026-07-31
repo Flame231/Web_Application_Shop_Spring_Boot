@@ -10,8 +10,11 @@ import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrder;
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.OrderStatus;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrder;
+import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.archivedUserOrderProduct.ArchivedUserOrderProductService;
+import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -77,10 +80,14 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
 
 
     @Override
-    public List<ArchivedUserOrderDTO> showArchivedUserOrders(Long userId) {
-        return archivedUserOrderRepository
-                .getArchivedUserOrders(userId)
-                .stream()
-                .map(archivedUserOrder -> conversionService.convert(archivedUserOrder, ArchivedUserOrderDTO.class)).collect(Collectors.toCollection(ArrayList::new));
+    public List<ArchivedUserOrderDTO> showArchivedUserOrders() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<ArchivedUserOrder> archivedUserOrders = archivedUserOrderRepository.getArchivedUserOrders(user.getId());
+        if (archivedUserOrders.size() == 0) {
+            throw new EmptyList("История заказов пуста");
+        }
+        return
+                archivedUserOrders.stream()
+                        .map(archivedUserOrder -> conversionService.convert(archivedUserOrder, ArchivedUserOrderDTO.class)).collect(Collectors.toCollection(ArrayList::new));
     }
 }

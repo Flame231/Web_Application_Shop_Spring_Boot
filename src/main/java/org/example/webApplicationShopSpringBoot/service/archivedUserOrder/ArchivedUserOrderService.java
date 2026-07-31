@@ -10,6 +10,6 @@ public interface ArchivedUserOrderService {
 
     void refuseUserOrder(Long userOrderId);
 
-    List<ArchivedUserOrderDTO> showArchivedUserOrders(Long userId);
+    List<ArchivedUserOrderDTO> showArchivedUserOrders();
 
 }

@@ -8,11 +8,12 @@
 
 <a th:href="@{|${adminPath}editProductCategories|}">Назад</a>
 <body>
-<form th:object="${productCategoryDTO}" th:action="@{${adminPath}updateProductCategory}" method="post">
+<form th:object="${productCategoryDTO}" th:action="@{|${adminPath}updateProductCategory|}" method="post">
     <div>
         Номер категории:
+        <span th:text="${productCategoryDTO.id}"></span>
         <label>
-            <input type="text" th:field="*{id}" readonly/>
+            <input type="hidden" th:field="*{id}" readonly/>
         </label>
     </div>
     <div>

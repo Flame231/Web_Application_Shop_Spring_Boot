@@ -7,8 +7,9 @@
     <a th:href="@{|${adminPath}editCatalog|}">Назад</a>
     <form th:action="@{|${adminPath}updateProduct|}" th:object="${productDTO}" method="post">
         Номер продукта:
+        <span th:text="${productDTO.id}"></span>
         <label>
-            <input type="text" th:field="*{id}" readonly/>
+            <input type="hidden" th:field="*{id}" readonly/>
         </label>
         <div>
             Название продукта:

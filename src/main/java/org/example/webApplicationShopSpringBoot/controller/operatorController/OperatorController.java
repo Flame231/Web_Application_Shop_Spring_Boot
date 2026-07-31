@@ -45,7 +45,7 @@ public class OperatorController {
     @PostMapping("changeUserOrderStatus")
     public String changeUserOrderStatus(@RequestParam Long userOrderId) {
         userOrderService.readyUserOrder(userOrderId);
-        return "redirect:/operator/orders";
+        return "redirect:readyOrders";
     }
 
     @GetMapping("readyOrders")

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("${adminPath}")
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProductCategoryController {
     private ProductCategoryService productCategoryService;
 
-    @GetMapping(value = "editProductCategories")
+    @RequestMapping(value = "editProductCategories", method = {RequestMethod.GET, RequestMethod.POST})
     public String showEditProductCategoriesPage(@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
         Pageable pageable = PageRequest.of(page - 1, 6, Sort.by("id").ascending());
         PageResponse<ProductCategoryDTO> productCategoriesList = productCategoryService.getProductCategoryDTOList(pageable);
@@ -32,14 +33,16 @@ public class ProductCategoryController {
     }
 
     @PostMapping("addNewProductCategory")
-    public String addNewProductCategory(@ModelAttribute ProductCategoryDTO productCategoryDTO) {
+    public String addNewProductCategory(@ModelAttribute ProductCategoryDTO productCategoryDTO, RedirectAttributes redirectAttributes) {
         productCategoryService.addProductCategory(productCategoryDTO);
+        redirectAttributes.addFlashAttribute("successMessage", "категория успешно добавлена!");
         return "redirect:editProductCategories";
     }
 
     @PostMapping("deleteProductCategory/{id}")
-    public String deleteProductCategory(@PathVariable Long id) {
+    public String deleteProductCategory(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         productCategoryService.deleteProductCategory(id);
+        redirectAttributes.addFlashAttribute("successMessage", "категория успешно удалена!");
         return "redirect:/administrator/editProductCategories";
     }
 
@@ -51,8 +54,9 @@ public class ProductCategoryController {
     }
 
     @PostMapping("updateProductCategory")
-    public String updateProductCategory(@ModelAttribute ProductCategoryDTO productCategoryDTO) {
+    public String updateProductCategory(@ModelAttribute ProductCategoryDTO productCategoryDTO, RedirectAttributes redirectAttributes) {
         productCategoryService.updateProductCategory(productCategoryDTO);
+        redirectAttributes.addFlashAttribute("successMessage", "категория успешно обновлена!");
         return "redirect:editProductCategories";
     }
 }

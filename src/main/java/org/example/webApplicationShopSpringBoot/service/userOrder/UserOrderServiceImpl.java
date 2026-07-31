@@ -16,6 +16,7 @@ import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrder;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.user.User;
+import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,9 @@ public class UserOrderServiceImpl implements UserOrderService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.getReadyUserOrderByOrderPoint(orderPointId);
+        if (userOrderList.isEmpty()) {
+            throw new EmptyList("Готовые заказы отсутствуют!");
+        }
         return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
     }
 
@@ -104,6 +108,9 @@ public class UserOrderServiceImpl implements UserOrderService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<UserOrder> userOrderList = userOrderRepository
                 .findAllCreatedUserOrder(user.getOrderPoint().getId());
-        return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
+        if (userOrderList.isEmpty()){
+            throw new EmptyList("Заказы \"в пути\" отсутствуют!");
+        }
+            return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
     }
 }

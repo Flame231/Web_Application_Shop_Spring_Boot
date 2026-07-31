@@ -7,6 +7,7 @@ import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.dto.dto.*;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
+import org.example.webApplicationShopSpringBoot.service.archivedUserOrder.ArchivedUserOrderService;
 import org.example.webApplicationShopSpringBoot.service.bag.BagService;
 import org.example.webApplicationShopSpringBoot.service.orderPoint.OrderPointService;
 import org.example.webApplicationShopSpringBoot.service.product.ProductService;
@@ -37,6 +38,7 @@ public class UserController {
     private BagService bagService;
     private OrderPointService orderPointService;
     private UserOrderService userOrderService;
+    private ArchivedUserOrderService archivedUserOrderService;
 
     @RequestMapping(value = "accountClient", method = {RequestMethod.GET, RequestMethod.POST})
     public String showAdministratorPage() {
@@ -126,5 +128,12 @@ public class UserController {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showAllUserOrders();
         model.addAttribute("userOrderDTOList", userOrderDTOList);
         return "order/showClientOrders";
+    }
+
+    @GetMapping("ordersHistory")
+    public String showOrdersHistory(Model model){
+        List<ArchivedUserOrderDTO> archivedUserOrderDTOList = archivedUserOrderService.showArchivedUserOrders();
+        model.addAttribute("archivedUserOrderDTOList",archivedUserOrderDTOList);
+        return "/order/showArchivedOrders";
     }
 }

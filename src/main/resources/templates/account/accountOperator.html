@@ -40,6 +40,9 @@
 <form method="post" th:action="@{/logout}">
     <input type="submit" value="выйти из кабинета">
 </form>
+<form th:action="@{/operator/readyOrders}" method="get">
+    <input type="submit" value="Доставленные заказы">
+</form>
 <form th:action="@{/operator/orders}" method="get">
     <input type="submit" value="Заказы">
 </form>
