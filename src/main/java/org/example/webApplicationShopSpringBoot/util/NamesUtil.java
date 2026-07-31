@@ -71,7 +71,7 @@ public class NamesUtil {
     public static final String SHOW_ORDER_POINT_ORDERS_JSP = "/order/showCreatedOrderPointOrders.html";
     public static final String SHOW_ARRIVED_ORDER_POINT_ORDERS_JSP = "/order/showReadyOrderPointOrders.html";
     public static final String SHOW_ORDER_POINT_ORDER_PAGE_JSP = "/order/showOrderPointOrderPage.html";
-    public static final String SHOW_ARCHIVED_ORDERS_JSP = "/order/showArchivedOrders.jsp";
+    public static final String SHOW_ARCHIVED_ORDERS_JSP = "/order/showArchivedOrders.html";
     //product
     public static final String ADD_PRODUCT_JSP = "/superUser/product/addProduct.html";
     public static final String EDIT_CATALOG_JSP = "/superUser/product/editCatalog.html";

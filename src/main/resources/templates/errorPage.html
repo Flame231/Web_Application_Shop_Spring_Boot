@@ -1,0 +1,19 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Ошибка</title>
+</head>
+<body>
+<h2>Ошибка</h2>
+<div sec:authorize="hasRole('ADMINISTRATOR')">
+    <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться на главную страницу</a>
+</div>
+<div sec:authorize="hasRole('OPERATOR')">
+    <a th:href="@{|${operatorPath}accountOperator|}">Вернуться на главную страницу</a>
+</div>
+<div sec:authorize="hasRole('CLIENT')">
+    <a th:href="@{|${clientPath}accountClient|}">Вернуться на главную страницу</a>
+</div>
+<span th:text="${message}"></span>
+</body>
+</html>

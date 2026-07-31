@@ -1,0 +1,54 @@
+<html>
+<head>
+    <a th:href="@{/client/accountClient}">Вернуться в личный кабинет</a>
+    <title>История заказов</title>
+</head>
+<body>
+
+<h1>История заказов</h1>
+<th:block th:each="archivedUserOrderDTO : ${archivedUserOrderDTOList}">
+
+    <div>Номер заказа: <span th:text="${archivedUserOrderDTO.getUserOrderId()}"></span>
+    </div>
+
+    <div>
+        Сумма заказа: <span th:text="${archivedUserOrderDTO.getOrderSum()}"></span>
+    </div>
+
+    <div>
+        Сумма выкупленных товаров: <span th:text="${archivedUserOrderDTO.getFinalOrderSum()}"></span>
+    </div>
+
+    <div>
+        Дата создания заказа: <span th:text="${archivedUserOrderDTO.getUserOrderCreateDateTime()}"></span>
+    </div>
+    <div>
+        Дата закрытия заказа: <span th:text="${archivedUserOrderDTO.getCreateDateTime()}"></span>
+    </div>
+
+    <table border="2">
+        <thead>
+        <tr>
+            <th>Название продукта</th>
+            <th>Заказанное количество продукта</th>
+            <th>Выкупленное количество продукта</th>
+            <th>Цена продукта на момент заказа</th>
+        </tr>
+        </thead>
+
+        <tr th:each="orderDTO : ${archivedUserOrderDTO.getArchivedUserOrderProducts()}">
+            <td><span th:text="${orderDTO.getProductName()}"></span>
+            </td>
+            <td><span th:text="${orderDTO.getFinalProductCount()}"></span>
+            </td>
+            <td><span th:text="${orderDTO.getFinalProductCount()}"></span>
+            </td>
+            <td><span th:text="${orderDTO.getPrice()}"></span>
+            </td>
+        </tr>
+    </table>
+    <br>
+</th:block>
+<br>
+</body>
+</html>

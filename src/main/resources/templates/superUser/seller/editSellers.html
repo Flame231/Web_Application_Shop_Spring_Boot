@@ -58,9 +58,9 @@
             <form method="post" th:action="@{|${adminPath}editSeller/${sellerDTO.id}|}">
                 <input type="submit" value="Редактировать">
             </form>
-       <!--     <form method="post" th:action="@{|${adminPath}deleteSeller/{id}|(id=${sellerDTO.id})}">
+            <form method="post" th:action="@{|${adminPath}deleteSeller/${sellerDTO.id}|}">
                 <input type="submit" value="удалить">
-            </form>-->
+            </form>
         </td>
     </tr>
     </tbody>
@@ -80,7 +80,5 @@
 </span>
 
 <a th:href="@{|${adminPath}editSellers|(page=${sellerDTOList.totalPages})}">В конец</a>
-
-
 </body>
 </html>
