@@ -10,7 +10,8 @@
 
 <form th:object="${sellerDTO}" th:action="@{|${adminPath}updateSeller|}" method="post">
     Номер продавца:
-    <input type="text" name="sellerId" th:field="*{id}">
+    <input type="hidden" name="sellerId" th:field="*{id}">
+    <span th:text="${sellerDTO.id}"></span>
     <br>
     Название продавца:
     <input type="text" name="sellerName" th:field="*{sellerName}">

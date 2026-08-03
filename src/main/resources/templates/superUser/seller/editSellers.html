@@ -35,7 +35,10 @@
 
 </head>
 <body>
-<a th:href="@{|${adminPath}/addSeller|}">Добавить продавца</a>
+<a th:href="@{|${adminPath}addSeller|}">Добавить продавца</a>
+<br>
+<br>
+<a style="color: #069e29" th:if="${successMessage}" th:text="${successMessage}"></a>
 </form>
 <table>
     <thead>

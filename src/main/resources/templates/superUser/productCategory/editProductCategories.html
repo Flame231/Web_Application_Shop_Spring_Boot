@@ -33,6 +33,9 @@
 
 <a th:href="@{|${adminPath}addProductCategory|}">Добавить категорию</a>
 
+<br>
+<br>
+<a style="color: #069e29" th:if="${successMessage}" th:text="${successMessage}"></a>
 <table>
     <thead>
     <tr>

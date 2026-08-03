@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -45,20 +46,23 @@ public class ProductController {
     }
 
     @RequestMapping(value = "addNewProduct", method = {RequestMethod.GET, RequestMethod.POST})
-    public String addNewProduct(@ModelAttribute ProductDTO productDTO) {
+    public String addNewProduct(@ModelAttribute ProductDTO productDTO, RedirectAttributes redirectAttributes) {
         productService.addProduct(productDTO);
+        redirectAttributes.addFlashAttribute("successMessage", "продукт успешно сохранён!");
         return "redirect:/administrator/editCatalog";
     }
 
     @PostMapping("updateProduct")
-    public String updateProduct(@ModelAttribute ProductDTO productDTO) {
+    public String updateProduct(@ModelAttribute ProductDTO productDTO, RedirectAttributes redirectAttributes) {
         productService.updateProduct(productDTO);
+        redirectAttributes.addFlashAttribute("successMessage", "продукт успешно обновлён!");
         return "redirect:/administrator/editCatalog";
     }
 
     @PostMapping("deleteProduct/{id}")
-    public String deleteProduct(@PathVariable Long id) {
+    public String deleteProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         productService.removeProduct(id);
+        redirectAttributes.addFlashAttribute("successMessage", "продукт успешно удалён!");
         return "redirect:/administrator/editCatalog";
     }
 

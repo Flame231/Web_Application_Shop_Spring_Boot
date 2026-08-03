@@ -18,7 +18,6 @@ public class UserOrderProductServiceImpl implements UserOrderProductService {
         Long userOrderId = userOrderChangeCountDTO.getUserOrderId();
         Long productId = userOrderChangeCountDTO.getProductId();
         Long count = userOrderChangeCountDTO.getCount();
-        System.out.println(userOrderId + " " + productId + " " + count);
         PrimaryKeyUserOrderProduct primaryKeyUserOrderProduct =
                 PrimaryKeyUtil.getPrimaryKeyUserOrderProduct(userOrderId, productId);
         UserOrderProduct userOrderProduct = userOrderProductRepository.findById(primaryKeyUserOrderProduct).get();
@@ -26,7 +25,6 @@ public class UserOrderProductServiceImpl implements UserOrderProductService {
         if (userOrderProduct.getActualProductCount() + count >= 0) {
             if (userOrderProduct.getActualProductCount() + count <= userOrderProduct.getProductCount()) {
                 Long newCount = userOrderProduct.getActualProductCount() + count;
-
                 userOrderProduct.setActualProductCount(newCount);
                 userOrderProductRepository.flush();
             }

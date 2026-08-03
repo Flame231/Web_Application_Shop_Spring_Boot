@@ -83,7 +83,7 @@ public class UserOrderServiceImpl implements UserOrderService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.getReadyUserOrderByOrderPoint(orderPointId);
-        if (userOrderList.size() == 0) {
+        if (userOrderList.isEmpty()) {
             throw new EmptyList("Готовые заказы отсутствуют!");
         }
         return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
@@ -108,6 +108,9 @@ public class UserOrderServiceImpl implements UserOrderService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<UserOrder> userOrderList = userOrderRepository
                 .findAllCreatedUserOrder(user.getOrderPoint().getId());
-        return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
+        if (userOrderList.isEmpty()){
+            throw new EmptyList("Заказы \"в пути\" отсутствуют!");
+        }
+            return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
     }
 }

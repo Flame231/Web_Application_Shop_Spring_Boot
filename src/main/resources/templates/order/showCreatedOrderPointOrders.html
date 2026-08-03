@@ -34,18 +34,9 @@
 
 <h1>Заказы на пункте выдачи</h1>
 
-<form th:action="@{/operator/readyOrders}" method="get">
-    <input type="submit" value="Доставленные заказы">
-</form>
-
 <!-- ИСПРАВЛЕНО: Безопасное отображение. Строка покажется только если список НЕ пустой -->
 <div th:if="${not #lists.isEmpty(userOrderDTOList)}">
     Ваш пункт выдачи: <span th:text="${userOrderDTOList[0].getOrderPoint()}"></span>
-</div>
-
-<!-- Если заказов нет, выведем понятное сообщение вместо падения приложения -->
-<div th:if="${#lists.isEmpty(userOrderDTOList)}">
-    На данном пункте выдачи нет активных заказов.
 </div>
 <br>
 

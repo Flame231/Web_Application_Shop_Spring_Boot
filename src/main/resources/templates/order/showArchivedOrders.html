@@ -39,7 +39,7 @@
         <tr th:each="orderDTO : ${archivedUserOrderDTO.getArchivedUserOrderProducts()}">
             <td><span th:text="${orderDTO.getProductName()}"></span>
             </td>
-            <td><span th:text="${orderDTO.getFinalProductCount()}"></span>
+            <td><span th:text="${orderDTO.getProductCount()}"></span>
             </td>
             <td><span th:text="${orderDTO.getFinalProductCount()}"></span>
             </td>

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("${adminPath}")
@@ -27,8 +28,9 @@ public class SellerController {
     }
 
     @PostMapping("deleteSeller/{id}")
-    public String deleteSeller(@PathVariable Long id) {
+    public String deleteSeller(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         sellerService.removeSeller(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Продавец успешно удалён!");
         return "redirect:/administrator/editSellers";
     }
 
@@ -38,8 +40,9 @@ public class SellerController {
     }
 
     @PostMapping("addNewSeller")
-    public String addNewSeller(@ModelAttribute SellerDTO sellerDTO) {
+    public String addNewSeller(@ModelAttribute SellerDTO sellerDTO, RedirectAttributes redirectAttributes) {
         sellerService.addSeller(sellerDTO);
+        redirectAttributes.addFlashAttribute("successMessage", "Продавец успешно добавлен!");
         return "redirect:editSellers";
     }
 
@@ -51,8 +54,9 @@ public class SellerController {
     }
 
     @PostMapping("updateSeller")
-    public String updateSeller(@ModelAttribute SellerDTO sellerDTO){
+    public String updateSeller(@ModelAttribute SellerDTO sellerDTO, RedirectAttributes redirectAttributes) {
         sellerService.updateSeller(sellerDTO);
+        redirectAttributes.addFlashAttribute("successMessage", "Продавец успешно обновлён!");
         return "redirect:editSellers";
     }
 }
