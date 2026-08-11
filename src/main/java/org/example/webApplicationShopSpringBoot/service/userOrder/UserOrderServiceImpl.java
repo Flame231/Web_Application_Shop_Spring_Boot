@@ -66,8 +66,12 @@ public class UserOrderServiceImpl implements UserOrderService {
     @Override
     public List<UserOrderDTO> showAllUserOrders() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userOrderRepository.findAllByUserId(user.getId()).stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class))
+        List<UserOrderDTO> userOrderList = userOrderRepository.findAllByUserId(user.getId()).stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class))
                 .toList();
+        if (userOrderList.isEmpty()) {
+            throw new EmptyList("Активные заказы отсутствуют!");
+        }
+        return userOrderList;
     }
 
     @Override
@@ -108,9 +112,9 @@ public class UserOrderServiceImpl implements UserOrderService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<UserOrder> userOrderList = userOrderRepository
                 .findAllCreatedUserOrder(user.getOrderPoint().getId());
-        if (userOrderList.isEmpty()){
+        if (userOrderList.isEmpty()) {
             throw new EmptyList("Заказы \"в пути\" отсутствуют!");
         }
-            return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
+        return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
     }
 }

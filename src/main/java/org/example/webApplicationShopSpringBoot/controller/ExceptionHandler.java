@@ -1,14 +1,13 @@
 package org.example.webApplicationShopSpringBoot.controller;
 
-import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
+import org.example.webApplicationShopSpringBoot.service.exceptions.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 @ControllerAdvice
-public class GlobalPath {
+public class ExceptionHandler {
 
     @Value("${adminPath}")
     private String adminPath;
@@ -34,8 +33,10 @@ public class GlobalPath {
         return operatorPath;
     }
 
-    @ExceptionHandler(EmptyList.class)
-    public String handleBusinessError(EmptyList e, Model model) {
+    @org.springframework.web.bind.annotation.ExceptionHandler({DifferentPasswordsRegistration.class,
+            DifferentPasswordsUpdate.class, EmptyList.class, UserRegistrationException.class,
+            WrongPassword.class, WrongLoginOrPassword.class, WrongPassword.class})
+    public String handleBusinessError(Exception e, Model model) {
         model.addAttribute("message", e.getMessage());
         model.addAttribute("adminPath", adminPath);
         model.addAttribute("clientPath", clientPath);

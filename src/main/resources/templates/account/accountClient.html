@@ -1,4 +1,4 @@
-<html>
+<html xmlns:th="http://www.w3.org/1999/html">
 <head>
     <title>Личный кабинет</title>
     <style>
@@ -37,14 +37,21 @@
 
 <h1>Интернет-магазин</h1>
 <h2>Пользователь</h2>
+<th:block th:if="${successMessage}">
+    <span style="color: #069e29" th:text="${successMessage}"></span>
+    <br>
+    <br>
+</th:block>
 <form method="post" th:action="@{/logout}">
     <input type="submit" value="выйти из кабинета">
 </form>
-<form method="post">
-    <input type="submit" formmethod="get" th:formaction="@{|${clientPath}catalog|}" value="Просмотреть каталог товаров">
-    <input type="submit" formmethod="get" th:formaction="@{|${clientPath}userOrders|}" value="Мои заказы">
-    <input type="submit" formmethod="get" th:formaction="@{|${clientPath}ordersHistory|}" value="История заказов">
-    <input type="submit" formmethod="get" th:formaction="@{|${clientPath}userProfile|}" value="Посмотреть профиль">
-</form>
+<a style="font-size: 20px" th:href="@{|${clientPath}catalog|}">Просмотреть каталог товаров</a>
+<span style="font-weight: bold; margin: 0 10px;">|</span>
+<a style="font-size: 20px" th:href="@{|${clientPath}userOrders|}">Мои заказы</a>
+<span style="font-weight: bold; margin: 0 10px;">|</span>
+<a style="font-size: 20px" th:href="@{|${clientPath}ordersHistory|}">История заказов</a>
+<span style="font-weight: bold; margin: 0 10px;">|</span>
+<a style="font-size: 20px" th:href="@{|${clientPath}userProfile|}">Посмотреть профиль</a>
+
 </body>
 </html>

@@ -37,15 +37,14 @@
 
 <h1>Интернет-магазин</h1>
 <h2>Администратор</h2>
+<a  style="font-size: 20px"  th:href="@{/administrator/editCatalog}">Редактировать каталог</a>
+<span style="font-weight: bold; margin: 0 10px;">|</span>
+<a  style="font-size: 20px"  th:href="@{/administrator/editProductCategories}">Редактировать Категории товаров</a>
+<span style="font-weight: bold; margin: 0 10px;">|</span>
+<a  style="font-size: 20px"  th:href="@{/administrator/editSellers}">Редактировать продавцов</a>
 <form method="post" th:action="@{/logout}">
+    <br>
     <input type="submit" value="выйти из кабинета">
 </form>
-<form method="get">
-    <input type="submit" value="Редактировать каталог" th:formaction="@{/administrator/editCatalog}">
-    <input type="submit" value="Редактировать Категории товаров"
-           th:formaction="@{/administrator/editProductCategories}">
-    <input type="submit" value="Редактировать продавцов" th:formaction="@{/administrator/editSellers}">
-</form>
-
 </body>
 </html>

@@ -34,9 +34,9 @@ public class UserServiceImpl implements UserService {
                 ValidatorDTO.validate(userDTO);
                 passwordValidation(userDTO);
                 userDTO.setRole(Role.CLIENT);
-                userRepository.save(conversionService.convert(userDTO, User.class));
+                userRepository.saveAndFlush(conversionService.convert(userDTO, User.class));
                 logger.info("Пользователь {} успешно зарегистрирован!", userDTO.getLogin());
-            } catch (PersistenceException e) {
+            } catch (org.springframework.dao.DataIntegrityViolationException e) {
                 logger.error("Ошибка регистрации пользователя {}", userDTO.getLogin(), e);
                 throw new UserRegistrationException("Ошибка регистрации пользователя: пользователь с таким логином уже зарегистрирован");
             } catch (Exception e) {
@@ -65,14 +65,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public void passwordValidation(UserDTO userDTO) {
         if (userDTO.getId() != null) {
+
+
             User user = userRepository.findById(userDTO.getId()).get();
             if (BcryptUtil.checkPassword(userDTO.getOldPassword(), user.getPasswordHash())) {
+
                 if (!userDTO.getNewPassword().equals(userDTO.getNewPasswordRepeat())) {
                     throw new DifferentPasswordsUpdate("Введенные пароли не совпадают!");
                 }
             } else {
                 throw new WrongPassword("Неверный пароль!");
             }
+
         } else {
             if (!userDTO.getNewPassword().equals(userDTO.getNewPasswordRepeat())) {
                 throw new DifferentPasswordsRegistration("Введенные пароли не совпадают!");

@@ -37,7 +37,11 @@
 <a th:href="@{|${adminPath}addProduct|}">Добавить товар</a>
 <br>
 <br>
-<a style="color: #069e29" th:if="${successMessage}" th:text="${successMessage}"></a>
+<th:block th:if="${successMessage}">
+    <span style="color: #069e29" th:text="${successMessage}"></span>
+    <br>
+    <br>
+</th:block>
 <table>
     <thead>
     <tr>

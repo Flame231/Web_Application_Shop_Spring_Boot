@@ -47,10 +47,11 @@ public class UserController {
 
     @GetMapping("catalog")
     public String showCatalog(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, @AuthenticationPrincipal User user) {
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id").ascending());
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         PageResponse<ProductDTO> productDTOList = productService.getAllProducts(pageable);
         List<BagDTOResponse> bagDTOResponseList = bagService.showAllBags();
         BigDecimal bagSum = bagService.showBagSum();
+        model.addAttribute("page", page);
         model.addAttribute("bagSum", bagSum);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
@@ -61,14 +62,14 @@ public class UserController {
     }
 
     @PostMapping("addProductToBag")
-    public String addProductToBag(@ModelAttribute BagDTORequest bagDTORequest, int page, RedirectAttributes redirectAttributes) {
+    public String addProductToBag(@ModelAttribute BagDTORequest bagDTORequest,@RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
         bagService.addProductToBag(bagDTORequest);
         redirectAttributes.addAttribute("page", page);
         return "redirect:/client/catalog";
     }
 
     @PostMapping("deleteProductFromBag")
-    public String deleteProductFromBag(@ModelAttribute BagDTORequest bagDTORequest, int page, RedirectAttributes redirectAttributes) {
+    public String deleteProductFromBag(@ModelAttribute BagDTORequest bagDTORequest,@RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
         bagService.deleteProductFromBag(bagDTORequest);
         redirectAttributes.addAttribute("page", page);
         return "redirect:/client/catalog";
@@ -104,9 +105,10 @@ public class UserController {
     }
 
     @PostMapping("confirmOrder")
-    public String confirmOrder(@ModelAttribute BagForm bagForm) {
+    public String confirmOrder(@ModelAttribute BagForm bagForm, RedirectAttributes redirectAttributes) {
         List<OrderDTO> list = bagForm.toNewOrderDTO();
         userOrderService.confirmOrder(list);
+        redirectAttributes.addFlashAttribute("successMessage", "Заказ успешно оформлен");
         return "redirect:/client/catalog";
     }
 
@@ -118,9 +120,10 @@ public class UserController {
     }
 
     @PostMapping("updateUser")
-    public String updateUser(@ModelAttribute UserDTO userDTO) {
+    public String updateUser(@ModelAttribute UserDTO userDTO, RedirectAttributes redirectAttributes) {
         userService.updateUser(userDTO);
-        return "/account/accountClient";
+        redirectAttributes.addFlashAttribute("successMessage", "Данные пользователя успешно обновлены!");
+        return "redirect:/client/accountClient";
     }
 
     @GetMapping("userOrders")

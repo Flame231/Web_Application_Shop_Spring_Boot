@@ -1,12 +1,12 @@
 package org.example.webApplicationShopSpringBoot.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor; // ИСПРАВЛЕНО
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserDTO;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.product.ProductService;
 import org.example.webApplicationShopSpringBoot.service.user.UserService;
-import org.springframework.data.domain.Page;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,17 +17,43 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor // ИСПРАВЛЕНО: Генерирует конструктор ТОЛЬКО для final-полей
 public class ShopController {
-    private ProductService productService;
-    private UserService userService;
+
+    // ИСПРАВЛЕНО: Добавлено ключевое слово final, чтобы Lombok добавил их в конструктор
+    private final ProductService productService;
+    private final UserService userService;
+
+    // Эти поля НЕ final, Lombok их проигнорирует, а Spring внедрит через @Value
+    @Value("${adminPath}")
+    private String adminPath;
+
+    @Value("${clientPath}")
+    private String clientPath;
+
+    @Value("${operatorPath}")
+    private String operatorPath;
+
+    @ModelAttribute("adminPath")
+    public String getAdminPath() {
+        return adminPath;
+    }
+
+    @ModelAttribute("clientPath")
+    public String getClientPath() {
+        return clientPath;
+    }
 
     @RequestMapping("/login")
     public String getList(Model model) {
         Pageable pageable = PageRequest.of(1, 10, Sort.by("id").ascending());
         PageResponse<ProductDTO> listDTO = productService.getAllProducts(pageable);
-        model.addAttribute("listDTO",listDTO);
+        model.addAttribute("listDTO", listDTO);
         return "login";
     }
 
@@ -36,12 +62,20 @@ public class ShopController {
         return "registration";
     }
 
-
-
     @PostMapping("/saveOrUpdateUser")
-    public String saveOrUpdateUser(@ModelAttribute UserDTO userDTO){
+    public String saveOrUpdateUser(@ModelAttribute UserDTO userDTO) {
         userService.saveOrUpdateUser(userDTO);
         return "login";
     }
 
+    @GetMapping("/errorPage")
+    public String showAccessDeniedPage(Model model) {
+        model.addAttribute("message", "У вас нет прав для доступа к этому разделу сайта!");
+
+        model.addAttribute("adminPath", adminPath);
+        model.addAttribute("clientPath", clientPath);
+        model.addAttribute("operatorPath", operatorPath);
+
+        return "errorPage";
+    }
 }

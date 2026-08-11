@@ -1,11 +1,10 @@
 <html>
 <body>
-<form th:action="@{/client/accountClient}" method="post">
-    <input type="submit" value="Вернуться в личный кабинет">
-</form>
+<a th:href="@{/client/accountClient}">Вернуться в личный кабинет</a>
 <h1>Профиль пользователя</h1>
 <form th:method="post" th:action="@{/client/updateUser}" th:object="${userDTO}" method="post">
     <p>
+        <input type="hidden" th:field="*{id}"/>
         Имя:
         <input type="text" th:field="*{name}" required/>
     </p>

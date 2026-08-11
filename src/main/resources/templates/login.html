@@ -57,7 +57,12 @@
     <form th:action="@{/login}" method="post">
         Логин: <p><input name="login" type="text"/></p>
         Пароль: <p><input name="password" type="password"/></p>
-        <p><input type="submit" value="Войти" /></p>
+
+        <div th:if="${param.error}" class="alert alert-danger" style="color: red;">
+            Неверный логин или пароль!
+        </div>
+
+        <p><input type="submit" value="Войти"/></p>
     </form>
     <a th:href="@{/registration}">Регистрация нового пользователя</a>
 </head>
