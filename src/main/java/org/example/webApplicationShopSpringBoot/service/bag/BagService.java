@@ -12,10 +12,11 @@ public interface BagService {
 
     void deleteProductFromBag(BagDTORequest bagDTORequest);
 
-    List<BagDTOResponse> showAllBags();
+    List<BagDTOResponse> getAllBags();
 
     BigDecimal showBagSum();
 
     void clearAllBags();
 
+    List<BagDTOResponse> openBag();
 }

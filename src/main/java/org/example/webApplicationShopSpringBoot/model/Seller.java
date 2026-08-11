@@ -27,6 +27,10 @@ public class Seller extends DataEntity {
     @Column
     private String sellerAddress;
 
-    @OneToMany(mappedBy = "seller", cascade = CascadeType.REMOVE)
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ItemStatus status;
+
+    @OneToMany(mappedBy = "seller")
     private Set<Product> product = new HashSet<>();
 }

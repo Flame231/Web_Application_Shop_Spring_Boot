@@ -47,17 +47,6 @@ public class Bag implements ProductSum<Bag> {
     private Timestamp updateDateTime;
 
     @Override
-    public String toString() {
-        return "Bag{" +
-                "user=" + user +
-                ", product=" + product +
-                ", count=" + count +
-                ", createDateTime=" + createDateTime +
-                ", updateDateTime=" + updateDateTime +
-                '}';
-    }
-
-    @Override
     public BigDecimal getPrice() {
         return product.getPrice();
     }

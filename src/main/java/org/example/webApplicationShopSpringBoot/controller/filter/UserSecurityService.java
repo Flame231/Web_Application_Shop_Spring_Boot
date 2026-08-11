@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserSecurityService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserSecurityService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -18,6 +18,6 @@ public class UserSecurityService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByLogin(username)
-                .orElseThrow(()->new UsernameNotFoundException("Пользователь " + username +" не найден"));
+                .orElseThrow(()->new UsernameNotFoundException("Пользователь " + username +" не найден!"));
     }
 }

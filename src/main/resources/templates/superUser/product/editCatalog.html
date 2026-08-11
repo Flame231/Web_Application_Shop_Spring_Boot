@@ -1,7 +1,7 @@
 <style>
 
     table {
-        width: 50%;
+        width: max-content;
         border-collapse: collapse;
         margin-top: 20px;
     }
@@ -30,14 +30,18 @@
 <html>
 <head>
     <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
-    <title>Редактировать каталог</title>
+    <title>Редактировать каталог товаров</title>
     <h1>Редактировать каталог товаров</h1>
 </head>
 <body>
 <a th:href="@{|${adminPath}addProduct|}">Добавить товар</a>
 <br>
 <br>
-<a style="color: #069e29" th:if="${successMessage}" th:text="${successMessage}"></a>
+<th:block th:if="${successMessage}">
+    <span style="color: #069e29" th:text="${successMessage}"></span>
+    <br>
+    <br>
+</th:block>
 <table>
     <thead>
     <tr>
@@ -46,6 +50,7 @@
         <th>Категория</th>
         <th>Цена</th>
         <th>Продавец</th>
+        <th>Статус</th>
         <th>Редактировать</th>
     </tr>
     </thead>
@@ -63,23 +68,34 @@
         </td>
         <td th:text="${productDTO.getSeller().getSellerName()}">
         </td>
+        <td th:text="${productDTO.getStatus().getDescription()}">
+        </td>
         <td>
-            <form method="get" th:action="@{|${adminPath}editProduct/${productDTO.id}|}">
-                <input type="submit" value="Редактировать"/>
-            </form>
-            <form method="post" th:action="@{|${adminPath}deleteProduct/${productDTO.id}|}">
-                <input type="submit" value="Удалить"/>
+            <form method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <th:block th:if="${productDTO.getStatus().name()=='ACTIVE'}">
+                    <input th:formmethod="get" th:formaction="@{|${adminPath}editProduct/${productDTO.id}|}"
+                           type="submit"
+                           value="Редактировать"/>
+                    <input th:formaction="@{|${adminPath}deleteProduct/${productDTO.id}|}" type="submit"
+                           value="Удалить"/>
+                </th:block>
+                <th:block th:unless="${productDTO.getStatus().name()=='ACTIVE'}">
+                    <input th:formaction="@{|${adminPath}recoverProduct/${productDTO.id}|}" type="submit"
+                           value="Восстановить"/>
+                </th:block>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
-<a th:href="@{|${adminPath}editCatalog|(page=1)}">В начало</a>
+
+<a th:href="@{|${adminPath}editCatalog|(page=1, pageSize=${pageSize})}">В начало</a>
 
 <span style="font-size: 20px"
       th:if="${productDTOList.currentPage > 1}"
       th:each="i : ${#numbers.sequence((productDTOList.currentPage - 3 > 1 ? productDTOList.currentPage - 3 : 1), productDTOList.currentPage - 1)}">
-    <a th:href="@{|${adminPath}editCatalog|(page=${i})}" th:text="${i}"></a>
+    <a th:href="@{|${adminPath}editCatalog|(page=${i}, pageSize=${pageSize})}" th:text="${i}"></a>
 </span>
 
 <span style="font-size: 24px" th:text="${productDTOList.currentPage}"></span>
@@ -87,9 +103,21 @@
 <span style="font-size: 20px"
       th:if="${productDTOList.currentPage < productDTOList.totalPages}"
       th:each="i : ${#numbers.sequence(productDTOList.currentPage + 1, (productDTOList.currentPage + 3 < productDTOList.totalPages ? productDTOList.currentPage + 3 : productDTOList.totalPages))}">
-    <a th:href="@{|${adminPath}editCatalog|(page=${i})}" th:text="${i}"></a>
+    <a th:href="@{|${adminPath}editCatalog|(page=${i}, pageSize=${pageSize})}" th:text="${i}"></a>
 </span>
-<a th:href="@{|${adminPath}editCatalog|(page=${productDTOList.totalPages})}">В конец</a>
+<a th:href="@{|${adminPath}editCatalog|(page=${productDTOList.totalPages}, pageSize=${pageSize})}">В конец</a>
+
+
+<form th:action="@{/administrator/editCatalog}">
+    <select name="pageSize">
+        <option th:each="pageSizelist : ${pageSizeList}"
+                th:text="${pageSizelist}"
+                th:value="${pageSizelist}"
+                th:selected="${pageSizelist == pageSize}"></option>
+    </select>
+    <input type="submit" value="Подтвердить">
+    <input type="hidden" name="page" value="1"/>
+</form>
 
 </body>
 </html>

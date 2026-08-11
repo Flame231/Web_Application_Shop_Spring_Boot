@@ -3,7 +3,8 @@ package org.example.webApplicationShopSpringBoot.service.userOrder;
 import lombok.Setter;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderDTO;
 import org.example.webApplicationShopSpringBoot.model.user.User;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
+import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -16,7 +17,12 @@ public class BagForm {
     private List<Long> count;
 
     public List<OrderDTO> toNewOrderDTO() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (productId == null || productPrice == null || count == null) {
+            throw new EmptyList("Данные корзины некорректны!"); // или throw new IllegalArgumentException("Данные корзины повреждены");
+        } else if (productId.size() != productPrice.size() || productId.size() != count.size()) {
+            throw new EmptyList("Данные корзины некорректны!");
+        }
+        User user = PrincipalProvider.getUserFromSecurityContext();
         List<OrderDTO> list = new ArrayList<>();
         for (int i = 0; i < this.productId.size(); i++) {
             OrderDTO orderDTO = OrderDTO.builder()

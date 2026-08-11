@@ -3,12 +3,14 @@ package org.example.webApplicationShopSpringBoot.service.userOrder;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
 import org.example.webApplicationShopSpringBoot.dao.bag.BagRepository;
 import org.example.webApplicationShopSpringBoot.dao.orderPoint.OrderPointRepository;
 import org.example.webApplicationShopSpringBoot.dao.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
 import org.example.webApplicationShopSpringBoot.dao.userOrder.UserOrderRepository;
 import org.example.webApplicationShopSpringBoot.dao.userOrderProduct.UserOrderProductRepository;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.UserOrderConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.OrderStatus;
@@ -17,19 +19,19 @@ import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import static org.example.webApplicationShopSpringBoot.service.PrincipalProvider.getUserFromSecurityContext;
 
 @Service
 @AllArgsConstructor
 public class UserOrderServiceImpl implements UserOrderService {
 
     private static final Logger logger = LogManager.getLogger(UserOrderService.class);
-    private final ConversionService conversionService;
 
     private UserOrderRepository userOrderRepository;
     private UserRepository userRepository;
@@ -37,9 +39,13 @@ public class UserOrderServiceImpl implements UserOrderService {
     private BagRepository bagRepository;
     private ProductRepository productRepository;
     private UserOrderProductRepository userOrderProductRepository;
+    private UserOrderConverter userOrderConverter;
 
     @Override
     public void confirmOrder(List<OrderDTO> list) {
+        if (list.isEmpty()) {
+            throw new EmptyList("Корзина товаров пуста!");
+        }
         BigDecimal orderSum = BigDecimal.ZERO;
         UserOrder userOrder = UserOrder.builder().orderStatus(OrderStatus.CREATED)
                 .user(userRepository.findById(list.get(0).getUserId()).get())
@@ -65,52 +71,58 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public List<UserOrderDTO> showAllUserOrders() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userOrderRepository.findAllByUserId(user.getId()).stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class))
+        User user = getUserFromSecurityContext();
+        List<UserOrder> userOrderList = userOrderRepository.findAllByUserId(user.getId());
+        if (userOrderList.isEmpty()) {
+            throw new EmptyList("Активные заказы отсутствуют!");
+        }
+        return userOrderList.stream().map(userOrder -> userOrderConverter.toDTO(userOrder))
                 .toList();
     }
 
     @Override
     public List<UserOrderDTO> showUserOrdersByOrderPoint() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = getUserFromSecurityContext();
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.findAllByOrderPointId(orderPointId);
-        return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
+        return userOrderList.stream().map(userOrder -> userOrderConverter.toDTO(userOrder)).toList();
     }
 
     @Override
     public List<UserOrderDTO> showReadyUserOrdersByOrderPoint() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = getUserFromSecurityContext();
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.getReadyUserOrderByOrderPoint(orderPointId);
         if (userOrderList.isEmpty()) {
             throw new EmptyList("Готовые заказы отсутствуют!");
         }
-        return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
+        return userOrderList.stream().map(userOrder -> userOrderConverter.toDTO(userOrder)).toList();
     }
 
     @Override
     public UserOrderDTO getUserOrderDTO(Long id) {
-        UserOrder userOrder = userOrderRepository.findById(id).get();
-        return conversionService.convert(userOrder, UserOrderDTO.class);
+        UserOrder userOrder = userOrderRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Заказ не найден!"));
+        return userOrderConverter.toDTO(userOrder);
     }
-
 
     @Override
     public void readyUserOrder(Long userOrderId) {
-        UserOrder userOrder = userOrderRepository.findById(userOrderId).get();
+        UserOrder userOrder = userOrderRepository.findById(userOrderId)
+                .orElseThrow(() -> new ResourceNotFound("Пользователь не найден!"));
         userOrder.setOrderStatus(OrderStatus.READY);
         userOrderRepository.save(userOrder);
     }
 
     @Override
     public List<UserOrderDTO> showCreatedUserOrders() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = PrincipalProvider.getUserFromSecurityContext();
         List<UserOrder> userOrderList = userOrderRepository
                 .findAllCreatedUserOrder(user.getOrderPoint().getId());
-        if (userOrderList.isEmpty()){
+        if (userOrderList.isEmpty()) {
             throw new EmptyList("Заказы \"в пути\" отсутствуют!");
         }
-            return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
+        return userOrderList.stream().map(userOrder -> userOrderConverter.toDTO(userOrder)).toList();
     }
+
+
 }

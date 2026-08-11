@@ -34,10 +34,10 @@ public class SecurityFilterConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/registration").permitAll()
+                        .requestMatchers("/login", "/registration", "/saveOrUpdateUser").permitAll()
                         .requestMatchers(adminPath + "**").hasRole("ADMINISTRATOR")
                         .requestMatchers(clientPath + "**").hasRole("CLIENT")
                         .requestMatchers(operatorPath + "**").hasRole("OPERATOR")
@@ -46,7 +46,7 @@ public class SecurityFilterConfig {
                         .usernameParameter("login")
                         .passwordParameter("password")
                         .successHandler(successHandler)
-                        .permitAll())
+                        .permitAll()).exceptionHandling(exception ->exception.accessDeniedPage("/errorPage"))
                 .logout(logout -> logout.logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
                         .invalidateHttpSession(true)

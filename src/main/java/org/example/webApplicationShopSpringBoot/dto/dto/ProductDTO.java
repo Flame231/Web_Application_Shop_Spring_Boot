@@ -1,8 +1,7 @@
 package org.example.webApplicationShopSpringBoot.dto.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.example.webApplicationShopSpringBoot.model.ItemStatus;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -10,6 +9,8 @@ import java.sql.Timestamp;
 @Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductDTO {
 
     private Long id;
@@ -22,17 +23,8 @@ public class ProductDTO {
 
     private SellerDTO seller;
 
+    private ItemStatus status;
+
     private Timestamp updateDateTime;
 
-    @Override
-    public String toString() {
-        return "NewProductDTO{" +
-                "id=" + id +
-                ", productName='" + productName + '\'' +
-                ", productCategory=" + productCategory +
-                ", price=" + price +
-                ", seller=" + seller +
-                ", updateDateTime=" + updateDateTime +
-                '}';
-    }
 }

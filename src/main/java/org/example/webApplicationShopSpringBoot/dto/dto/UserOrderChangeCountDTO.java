@@ -9,4 +9,13 @@ public class UserOrderChangeCountDTO {
     private Long userOrderId;
     private Long productId;
     private Long count;
+
+    @Override
+    public String toString() {
+        return "UserOrderChangeCountDTO{" +
+                "userOrderId=" + userOrderId +
+                ", productId=" + productId +
+                ", count=" + count +
+                '}';
+    }
 }

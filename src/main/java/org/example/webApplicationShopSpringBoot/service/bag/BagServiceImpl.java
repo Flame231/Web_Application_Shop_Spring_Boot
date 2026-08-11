@@ -4,6 +4,7 @@ package org.example.webApplicationShopSpringBoot.service.bag;
 import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dao.bag.BagRepository;
 import org.example.webApplicationShopSpringBoot.dao.product.ProductRepository;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.BagConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.model.Bag;
@@ -12,8 +13,8 @@ import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.Pri
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUtil;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.Calculate;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
+import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,11 +25,11 @@ import java.util.List;
 public class BagServiceImpl implements BagService {
     private BagRepository bagRepository;
     private ProductRepository productRepository;
-    private ConversionService conversionService;
+    private BagConverter bagConverter;
 
     @Override
     public void addProductToBag(BagDTORequest bagDTORequest) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = PrincipalProvider.getUserFromSecurityContext();
         Product product = productRepository.getReferenceById(bagDTORequest.getProductId());
         PrimaryKeyBag primaryKeyBag = PrimaryKeyUtil.getPrimaryKeyBag(user, product);
         Bag bag = bagRepository.findById(primaryKeyBag).orElse(Bag.builder().user(user).product(product).count(0L).build());
@@ -40,7 +41,7 @@ public class BagServiceImpl implements BagService {
 
     @Override
     public void deleteProductFromBag(BagDTORequest bagDTORequest) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = PrincipalProvider.getUserFromSecurityContext();
         Product product = productRepository.getReferenceById(bagDTORequest.getProductId());
         PrimaryKeyBag primaryKeyBag = PrimaryKeyUtil.getPrimaryKeyBag(user, product);
         Bag bag = bagRepository.findById(primaryKeyBag).orElse(Bag.builder().user(user).product(product).count(0L).build());
@@ -53,21 +54,31 @@ public class BagServiceImpl implements BagService {
         }
     }
 
-    public List<BagDTOResponse> showAllBags() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public List<BagDTOResponse> getAllBags() {
+        User user = PrincipalProvider.getUserFromSecurityContext();
         List<Bag> bagList = bagRepository.getBagList(user.getId());
-        return bagList.stream().map(bag -> conversionService.convert(bag, BagDTOResponse.class)).toList();
+        return bagList.stream().map(bag -> bagConverter.toDTO(bag)).toList();
     }
 
     @Override
     public BigDecimal showBagSum() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = PrincipalProvider.getUserFromSecurityContext();
         return Calculate.calculateSum(bagRepository.getBagList(user.getId()).stream());
     }
 
     @Override
     public void clearAllBags() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = PrincipalProvider.getUserFromSecurityContext();
         bagRepository.deleteAllByUserId(user.getId());
+    }
+
+    @Override
+    public List<BagDTOResponse> openBag() {
+        User user = PrincipalProvider.getUserFromSecurityContext();
+        List<Bag> bagList = bagRepository.getBagList(user.getId());
+        if (bagList.isEmpty()) {
+            throw new EmptyList("Корзина пуста!");
+        }
+        return bagList.stream().map(bag -> bagConverter.toDTO(bag)).toList();
     }
 }

@@ -14,6 +14,9 @@
 <div sec:authorize="hasRole('CLIENT')">
     <a th:href="@{|${clientPath}accountClient|}">Вернуться на главную страницу</a>
 </div>
+<div sec:authorize="isAnonymous()">
+    <a th:href="@{/login}">Вернуться на главную страницу</a>
+</div>
 <span th:text="${message}"></span>
 </body>
 </html>

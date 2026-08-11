@@ -35,7 +35,7 @@ public class ArchivedUserOrder {
     private Long userId;
 
     @Column(updatable = false)
-    private String OrderPoint;
+    private String orderPoint;
 
     @Column(updatable = false)
     private BigDecimal orderSum;
@@ -52,4 +52,18 @@ public class ArchivedUserOrder {
     @CreationTimestamp
     @Column(updatable = false, nullable = false)
     private Timestamp CreateDateTime;
+
+    @Override
+    public String toString() {
+        return "ArchivedUserOrder{" +
+                "userOrderId=" + userOrderId +
+                ", orderStatus=" + orderStatus +
+                ", userId=" + userId +
+                ", orderPoint='" + orderPoint + '\'' +
+                ", orderSum=" + orderSum +
+                ", finalOrderSum=" + finalOrderSum +
+                ", userOrderCreateDateTime=" + userOrderCreateDateTime +
+                ", CreateDateTime=" + CreateDateTime +
+                '}';
+    }
 }

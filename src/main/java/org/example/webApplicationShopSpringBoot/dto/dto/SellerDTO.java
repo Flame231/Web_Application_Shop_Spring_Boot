@@ -1,6 +1,7 @@
 package org.example.webApplicationShopSpringBoot.dto.dto;
 
 import lombok.*;
+import org.example.webApplicationShopSpringBoot.model.ItemStatus;
 
 @Builder
 @NoArgsConstructor
@@ -14,4 +15,6 @@ public class SellerDTO {
     private String sellerName;
 
     private String sellerAddress;
+
+    private ItemStatus status;
 }

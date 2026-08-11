@@ -8,7 +8,6 @@ import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.product.ProductService;
 import org.example.webApplicationShopSpringBoot.service.productCategory.ProductCategoryService;
 import org.example.webApplicationShopSpringBoot.service.seller.SellerService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,14 +22,18 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("${adminPath}")
 public class ProductController {
+    public static final String PAGE_SIZE_30 = "30";
+    public static final List<Integer> pageSizeList = List.of(30, 50, 100);
     private ProductService productService;
     private ProductCategoryService productCategoryService;
     private SellerService sellerService;
 
     @GetMapping(value = "editCatalog")
-    public String showEditCatalogPage(@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
-        Pageable pageable = PageRequest.of(page - 1, 6, Sort.by("id").ascending());
+    public String showEditCatalogPage(@RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, Model model) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         PageResponse<ProductDTO> productDTOList = productService.getAllProducts(pageable);
+        model.addAttribute("pageSizeList", pageSizeList);
+        model.addAttribute("pageSize", pageSize);
         model.addAttribute("productDTOList", productDTOList);
         return "/superUser/product/editCatalog";
     }
@@ -38,8 +41,8 @@ public class ProductController {
     @GetMapping(value = "addProduct")
     public String showAddProductPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Pageable pageable = PageRequest.of(page, 8, Sort.by("id").ascending());
-        List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getProductCategoryDTOList();
-        List<SellerDTO> sellerDTOList = sellerService.getSellerDTOList();
+        List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getActiveProductCategoryDTOList();
+        List<SellerDTO> sellerDTOList = sellerService.getActiveSellerDTOList();
         model.addAttribute("productCategoryDTOList", productCategoryDTOList);
         model.addAttribute("sellerDTOList", sellerDTOList);
         return "/superUser/product/addProduct";
@@ -66,10 +69,17 @@ public class ProductController {
         return "redirect:/administrator/editCatalog";
     }
 
+    @PostMapping("recoverProduct/{id}")
+    public String recoverProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        productService.recoverProduct(id);
+        redirectAttributes.addFlashAttribute("successMessage", "продукт успешно восстановлен!");
+        return "redirect:/administrator/editCatalog";
+    }
+
     @GetMapping("editProduct/{id}")
     public String showEditProductPage(@PathVariable Long id, Model model) {
         ProductDTO productDTO = productService.findProduct(id);
-        List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getProductCategoryDTOList();
+        List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getActiveProductCategoryDTOList();
         List<SellerDTO> sellerDTOList = sellerService.getSellerDTOList();
         model.addAttribute("productDTO", productDTO);
         model.addAttribute("productCategoryDTOList", productCategoryDTOList);

@@ -1,24 +1,15 @@
 package org.example.webApplicationShopSpringBoot.service.user;
 
 
-import org.example.webApplicationShopSpringBoot.dto.dto.LoginDTO;
-import org.example.webApplicationShopSpringBoot.dto.dto.UserDTO;
-import org.example.webApplicationShopSpringBoot.model.user.User;
-
-import java.io.Serializable;
+import org.example.webApplicationShopSpringBoot.dto.dto.UserProfileDTO;
+import org.example.webApplicationShopSpringBoot.dto.dto.UserRegistrationDTO;
 
 public interface UserService {
 
-    void saveOrUpdateUser(UserDTO userDTO);
+    void saveNewUser(UserRegistrationDTO userRegistrationDTO);
 
-    /*UserDTO authorizeUser(LoginDTO loginDTO);*/
+    void updateUser(UserProfileDTO userProfileDTO);
 
-    UserDTO getUserDTO(Long id);
-
-    void updateUser(UserDTO userDTO);
-
-    void passwordValidation(UserDTO userDTO);
-
-    UserDTO getUser();
+    UserProfileDTO getUser();
 
 }

@@ -1,23 +1,23 @@
 package org.example.webApplicationShopSpringBoot.service.user;
 
-import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.webApplicationShopSpringBoot.dao.discount.DiscountRepository;
 import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
-import org.example.webApplicationShopSpringBoot.dto.ValidatorDTO;
-import org.example.webApplicationShopSpringBoot.dto.dto.UserDTO;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.UserProfileConverter;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.UserRegistrationConverter;
+import org.example.webApplicationShopSpringBoot.dto.dto.UserProfileDTO;
+import org.example.webApplicationShopSpringBoot.dto.dto.UserRegistrationDTO;
 import org.example.webApplicationShopSpringBoot.model.user.Role;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.BcryptUtil;
-import org.example.webApplicationShopSpringBoot.service.exceptions.DifferentPasswordsRegistration;
-import org.example.webApplicationShopSpringBoot.service.exceptions.DifferentPasswordsUpdate;
-import org.example.webApplicationShopSpringBoot.service.exceptions.UserRegistrationException;
-import org.example.webApplicationShopSpringBoot.service.exceptions.WrongPassword;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
+import org.example.webApplicationShopSpringBoot.service.exceptions.*;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @Service
 @AllArgsConstructor
@@ -25,64 +25,71 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserService.class);
     private UserRepository userRepository;
-    private ConversionService conversionService;
+    private UserProfileConverter userProfileConverter;
+    private UserRegistrationConverter userRegistrationConverter;
+    private DiscountRepository discountRepository;
+
 
     @Override
-    public void saveOrUpdateUser(UserDTO userDTO) {
-        if (userDTO.getId() == null) {
-            try {
-                ValidatorDTO.validate(userDTO);
-                passwordValidation(userDTO);
-                userDTO.setRole(Role.CLIENT);
-                userRepository.save(conversionService.convert(userDTO, User.class));
-                logger.info("Пользователь {} успешно зарегистрирован!", userDTO.getLogin());
-            } catch (PersistenceException e) {
-                logger.error("Ошибка регистрации пользователя {}", userDTO.getLogin(), e);
-                throw new UserRegistrationException("Ошибка регистрации пользователя: пользователь с таким логином уже зарегистрирован");
-            } catch (Exception e) {
-                logger.error("Ошибка регистрации пользователя", e);
-                throw new UserRegistrationException("Ошибка регистрации пользователя: " + e.getMessage());
-            }
-        } else updateUser(userDTO);
+    public void saveNewUser(UserRegistrationDTO userRegistrationDTO) {
+        passwordCheck(userRegistrationDTO.getNewPassword(), userRegistrationDTO.getNewPasswordRepeat());
+        if (!userRepository.findByLogin(userRegistrationDTO.getLogin()).isEmpty()) {
+            throw new UserRegistrationException("Пользователь с таким логином уже зарегистрирован!");
+        }
+        User user = userRegistrationConverter.toEntity(userRegistrationDTO);
+        String passwordHash = BcryptUtil.hashPassword(userRegistrationDTO.getNewPassword());
+        user.setPasswordHash(passwordHash);
+        user.setSumOfPurchases(BigDecimal.ZERO);
+        user.setRole(Role.CLIENT);
+        user.setDiscount(discountRepository.findById(1L).orElseThrow(() -> new UserRegistrationException("Ошибка регистрации!")));
+        userRepository.save(user);
     }
 
-    public UserDTO getUserDTO(Long id) {
-        return conversionService.convert(userRepository.findById(id).get(), UserDTO.class);
-    }
-
-    @Override
-    public void updateUser(UserDTO userDTO) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        passwordValidation(userDTO);
-        User userManaged = userRepository.findById(user.getId()).get();
-        userManaged.setName(userDTO.getName());
-        userManaged.setLogin(userDTO.getLogin());
-        userManaged.setPasswordHash(BcryptUtil.hashPassword(userDTO.getNewPassword()));
-        userManaged.setBirthday(userDTO.getBirthday());
-        userManaged.setPaymentMethods(userDTO.getPaymentMethods());
-    }
-
-    @Override
-    public void passwordValidation(UserDTO userDTO) {
-        if (userDTO.getId() != null) {
-            User user = userRepository.findById(userDTO.getId()).get();
-            if (BcryptUtil.checkPassword(userDTO.getOldPassword(), user.getPasswordHash())) {
-                if (!userDTO.getNewPassword().equals(userDTO.getNewPasswordRepeat())) {
-                    throw new DifferentPasswordsUpdate("Введенные пароли не совпадают!");
-                }
-            } else {
-                throw new WrongPassword("Неверный пароль!");
-            }
-        } else {
-            if (!userDTO.getNewPassword().equals(userDTO.getNewPasswordRepeat())) {
-                throw new DifferentPasswordsRegistration("Введенные пароли не совпадают!");
+    private void passwordCheck(String newPassword, String newPasswordRepeat) {
+        if (!newPassword.equals(newPasswordRepeat)) {
+            {
+                throw new DifferentUserPasswords("Введённые пароли не совпадают!");
             }
         }
     }
 
     @Override
-    public UserDTO getUser() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return conversionService.convert(userRepository.findById(user.getId()).get(), UserDTO.class);
+    public void updateUser(UserProfileDTO userProfileDTO) {
+        User user = PrincipalProvider.getUserFromSecurityContext();
+        User userManaged = userRepository.findById(user.getId()).orElseThrow(() -> new ResourceNotFound("Пользователь не найден!"));
+
+        String newPass = userProfileDTO.getNewPassword();
+        String repeatPass = userProfileDTO.getNewPasswordRepeat();
+
+        String oldPass = userProfileDTO.getOldPassword();
+
+        boolean hasNewPass = newPass != null && !newPass.isBlank();
+        boolean hasRepeatPass = repeatPass != null && !repeatPass.isBlank();
+        boolean hasOldPass = oldPass != null && !oldPass.isBlank();
+        userProfileConverter.updateUser(userProfileDTO, userManaged);
+
+        if (hasNewPass && hasRepeatPass) { //если новые пароли заполнены
+
+            if (hasOldPass) {
+
+                if (!BcryptUtil.checkPassword(userProfileDTO.getOldPassword(), userManaged.getPasswordHash())) {
+                    throw new WrongPassword("Неверный пароль!");
+                }
+                passwordCheck(userProfileDTO.getNewPassword(), userProfileDTO.getNewPasswordRepeat());
+                userManaged.setPasswordHash(BcryptUtil.hashPassword(userProfileDTO.getNewPassword()));
+            } else {
+                throw new WrongPassword("Пароль не заполнен!");
+            }
+
+
+        } else if (hasNewPass || hasRepeatPass) {
+            throw new DifferentUserPasswords("Не заполнены формы нового пароля");
+        }
+    }
+
+    @Override
+    public UserProfileDTO getUser() {
+        User user = PrincipalProvider.getUserFromSecurityContext();
+        return userProfileConverter.toDTO(userRepository.findById(user.getId()).get());
     }
 }

@@ -1,6 +1,7 @@
 package org.example.webApplicationShopSpringBoot.controller.userController;
 
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
@@ -14,7 +15,6 @@ import org.example.webApplicationShopSpringBoot.service.product.ProductService;
 import org.example.webApplicationShopSpringBoot.service.user.UserService;
 import org.example.webApplicationShopSpringBoot.service.userOrder.BagForm;
 import org.example.webApplicationShopSpringBoot.service.userOrder.UserOrderService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -47,10 +47,11 @@ public class UserController {
 
     @GetMapping("catalog")
     public String showCatalog(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, @AuthenticationPrincipal User user) {
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id").ascending());
-        PageResponse<ProductDTO> productDTOList = productService.getAllProducts(pageable);
-        List<BagDTOResponse> bagDTOResponseList = bagService.showAllBags();
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
+        PageResponse<ProductDTO> productDTOList = productService.getActiveProducts(pageable);
+        List<BagDTOResponse> bagDTOResponseList = bagService.getAllBags();
         BigDecimal bagSum = bagService.showBagSum();
+        model.addAttribute("page", page);
         model.addAttribute("bagSum", bagSum);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
@@ -60,15 +61,15 @@ public class UserController {
         return "catalog";
     }
 
-    @PostMapping("addProductToBag")
-    public String addProductToBag(@ModelAttribute BagDTORequest bagDTORequest, int page, RedirectAttributes redirectAttributes) {
+    @PostMapping("addProductToCatalogBag")
+    public String addProductToCatalogBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
         bagService.addProductToBag(bagDTORequest);
         redirectAttributes.addAttribute("page", page);
         return "redirect:/client/catalog";
     }
 
-    @PostMapping("deleteProductFromBag")
-    public String deleteProductFromBag(@ModelAttribute BagDTORequest bagDTORequest, int page, RedirectAttributes redirectAttributes) {
+    @PostMapping("deleteProductFromCatalogBag")
+    public String deleteProductFromCatalogBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
         bagService.deleteProductFromBag(bagDTORequest);
         redirectAttributes.addAttribute("page", page);
         return "redirect:/client/catalog";
@@ -76,7 +77,7 @@ public class UserController {
 
     @GetMapping("bag")
     public String showBag(Model model) {
-        List<BagDTOResponse> bagDTOResponseList = bagService.showAllBags();
+        List<BagDTOResponse> bagDTOResponseList = bagService.openBag();
         BigDecimal bagSum = bagService.showBagSum();
         List<OrderPointDTO> orderPointDTOList = orderPointService.getAllOrderPoints();
         model.addAttribute("bagSum", bagSum);
@@ -85,42 +86,45 @@ public class UserController {
         return "/bag";
     }
 
-    @PostMapping("addProductToBag1")
-    public String addProductToBag1(@ModelAttribute BagDTORequest bagDTORequest) {
+    @PostMapping("addProductToBag")
+    public String addProductToBag(@ModelAttribute BagDTORequest bagDTORequest) {
         bagService.addProductToBag(bagDTORequest);
         return "redirect:/client/bag";
     }
 
-    @PostMapping("deleteProductFromBag1")
-    public String deleteProductFromBag1(@ModelAttribute BagDTORequest bagDTORequest) {
+    @PostMapping("deleteProductFromBag")
+    public String deleteProductFromBag(@ModelAttribute BagDTORequest bagDTORequest) {
         bagService.deleteProductFromBag(bagDTORequest);
         return "redirect:/client/bag";
     }
 
     @PostMapping("clearBag")
-    public String clearAllBags() {
+    public String clearAllBags(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("successMessage", "Корзина очищена!");
         bagService.clearAllBags();
         return "redirect:/client/bag";
     }
 
     @PostMapping("confirmOrder")
-    public String confirmOrder(@ModelAttribute BagForm bagForm) {
+    public String confirmOrder(@ModelAttribute BagForm bagForm, RedirectAttributes redirectAttributes) {
         List<OrderDTO> list = bagForm.toNewOrderDTO();
         userOrderService.confirmOrder(list);
+        redirectAttributes.addFlashAttribute("successMessage", "Заказ успешно оформлен");
         return "redirect:/client/catalog";
     }
 
     @GetMapping("userProfile")
     public String showUserProfile(Model model) {
-        UserDTO userDTO = userService.getUser();
-        model.addAttribute("userDTO", userDTO);
+        UserProfileDTO userProfileDTO = userService.getUser();
+        model.addAttribute("userProfileDTO", userProfileDTO);
         return "userProfile";
     }
 
     @PostMapping("updateUser")
-    public String updateUser(@ModelAttribute UserDTO userDTO) {
-        userService.updateUser(userDTO);
-        return "/account/accountClient";
+    public String updateUser(@ModelAttribute @Valid UserProfileDTO userProfileDTO, RedirectAttributes redirectAttributes) {
+        userService.updateUser(userProfileDTO);
+        redirectAttributes.addFlashAttribute("successMessage", "Данные пользователя успешно обновлены!");
+        return "redirect:/client/accountClient";
     }
 
     @GetMapping("userOrders")
@@ -131,9 +135,13 @@ public class UserController {
     }
 
     @GetMapping("ordersHistory")
-    public String showOrdersHistory(Model model){
-        List<ArchivedUserOrderDTO> archivedUserOrderDTOList = archivedUserOrderService.showArchivedUserOrders();
-        model.addAttribute("archivedUserOrderDTOList",archivedUserOrderDTOList);
+    public String showOrdersHistory(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
+        PageResponse<ArchivedUserOrderDTO> archivedUserOrderDTOList = archivedUserOrderService.showArchivedUserOrders(pageable);
+        model.addAttribute("archivedUserOrderDTOList", archivedUserOrderDTOList);
+        model.addAttribute("page", page);
+        model.addAttribute("pageSizeList", pageSizeList);
+        model.addAttribute("pageSize", pageSize);
         return "/order/showArchivedOrders";
     }
 }

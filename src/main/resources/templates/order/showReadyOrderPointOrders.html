@@ -1,16 +1,11 @@
 <html>
 <head>
-    <form th:action="@{/operator/accountOperator}" method="post">
-        <input type="submit" value="Вернуться в личный кабинет">
-    </form>
-    <form th:action="@{/operator/orders}" method="get">
-        <input type="submit" value="Назад">
-    </form>
+    <a th:href="@{/operator/accountOperator}">Вернуться в личный кабинет</a>
+    <h1>Готовые заказы на пункте выдачи</h1>
     <title>Готовые заказы на пункте выдачи</title>
-
 </head>
 <body>
-<h1>Готовые заказы на пункте выдачи</h1>
+
 
 <div>Ваш пункт выдачи: <span th:text="${userOrderDTOList[0].getOrderPoint()}"></span>
 </div>

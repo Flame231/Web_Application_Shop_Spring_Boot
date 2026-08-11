@@ -1,7 +1,7 @@
 <style>
 
     table {
-        width: 50%;
+        width: max-content;
         border-collapse: collapse;
         margin-top: 20px;
     }
@@ -38,7 +38,11 @@
 <a th:href="@{|${adminPath}addSeller|}">Добавить продавца</a>
 <br>
 <br>
-<a style="color: #069e29" th:if="${successMessage}" th:text="${successMessage}"></a>
+<th:block th:if="${successMessage}">
+    <span style="color: #069e29" th:text="${successMessage}"></span>
+    <br>
+    <br>
+</th:block>
 </form>
 <table>
     <thead>
@@ -46,6 +50,7 @@
         <th>Номер продавца</th>
         <th>Название продавца</th>
         <th>Адрес</th>
+        <th>Статус</th>
         <th>Редактировать</th>
     </tr>
     </thead>
@@ -57,31 +62,51 @@
         </td>
         <td th:text="${sellerDTO.getSellerAddress()}">
         </td>
-        <td>
-            <form method="post" th:action="@{|${adminPath}editSeller/${sellerDTO.id}|}">
-                <input type="submit" value="Редактировать">
-            </form>
-            <form method="post" th:action="@{|${adminPath}deleteSeller/${sellerDTO.id}|}">
-                <input type="submit" value="удалить">
-            </form>
+        <td th:text="${sellerDTO.getStatus.getDescription()}">
         </td>
+        <td>
+            <form method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <th:block th:if="${sellerDTO.getStatus().name()=='ACTIVE'}">
+                    <input th:formmethod="get"
+                           th:formaction="@{|${adminPath}editSeller/${sellerDTO.id}|}" type="submit"
+                           value="Редактировать"/>
+                    <input th:formaction="@{|${adminPath}deleteSeller/${sellerDTO.id}|}" type="submit"
+                           value="Удалить"/>
+                </th:block>
+                <th:block th:unless="${sellerDTO.getStatus().name()=='ACTIVE'}">
+                    <input th:formaction="@{|${adminPath}recoverSeller/${sellerDTO.id}|}" type="submit"
+                           value="Восстановить"/>
+                </th:block>
+            </form>
     </tr>
     </tbody>
 </table>
 
-<a th:href="@{|${adminPath}editSellers|(page=1)}">В начало</a>
+<a th:href="@{|${adminPath}editSellers|(page=1, pageSize=${pageSize})}">В начало</a>
 <span style="font-size: 20px"
       th:if="${sellerDTOList.currentPage > 1}"
       th:each="i : ${#numbers.sequence((sellerDTOList.currentPage - 3 > 1 ? sellerDTOList.currentPage - 3 : 1), sellerDTOList.currentPage - 1)}">
-    <a th:href="@{|${adminPath}editSellers|(page=${i})}" th:text="${i}"></a>
+    <a th:href="@{|${adminPath}editSellers|(page=${i}, pageSize=${pageSize})}" th:text="${i}"></a>
 </span>
 <span style="font-size: 24px" th:text="${sellerDTOList.currentPage}"></span>
 <span style="font-size: 20px"
       th:if="${sellerDTOList.currentPage < sellerDTOList.totalPages}"
       th:each="i : ${#numbers.sequence(sellerDTOList.currentPage + 1, (sellerDTOList.currentPage + 3 < sellerDTOList.totalPages ? sellerDTOList.currentPage + 3 : sellerDTOList.totalPages))}">
-    <a th:href="@{|${adminPath}editSellers|(page=${i})}" th:text="${i}"></a>
+    <a th:href="@{|${adminPath}editSellers|(page=${i}, pageSize=${pageSize})}" th:text="${i}"></a>
 </span>
 
-<a th:href="@{|${adminPath}editSellers|(page=${sellerDTOList.totalPages})}">В конец</a>
+<a th:href="@{|${adminPath}editSellers|(page=${sellerDTOList.totalPages}, pageSize=${pageSize})}">В конец</a>
+
+<form th:action="@{/administrator/editSellers}">
+    <select name="pageSize">
+        <option th:each="pageSizelist : ${pageSizeList}"
+                th:text="${pageSizelist}"
+                th:value="${pageSizelist}"
+                th:selected="${pageSizelist == pageSize}"></option>
+    </select>
+    <input type="submit" value="Подтвердить">
+    <input type="hidden" name="page" value="1"/>
+</form>
 </body>
 </html>
