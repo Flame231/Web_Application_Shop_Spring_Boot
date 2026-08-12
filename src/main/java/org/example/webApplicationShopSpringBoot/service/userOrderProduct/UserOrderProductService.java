@@ -4,5 +4,7 @@ import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderChangeCountDTO;
 
 public interface UserOrderProductService {
 
-    void changeProductCount(UserOrderChangeCountDTO userOrderChangeCountDTO);
+    void addProductToOrder(UserOrderChangeCountDTO userOrderChangeCountDTO);
+
+    void deleteProductFromOrder(UserOrderChangeCountDTO userOrderChangeCountDTO);
 }

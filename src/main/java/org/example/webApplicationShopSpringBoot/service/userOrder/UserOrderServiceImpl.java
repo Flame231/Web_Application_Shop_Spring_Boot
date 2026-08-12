@@ -40,7 +40,11 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public void confirmOrder(List<OrderDTO> list) {
-        BigDecimal orderSum = BigDecimal.ZERO;
+        System.out.println(list.size());
+        if (list.isEmpty()){
+            throw new EmptyList("Корзина товаров пуста!");
+        }
+            BigDecimal orderSum = BigDecimal.ZERO;
         UserOrder userOrder = UserOrder.builder().orderStatus(OrderStatus.CREATED)
                 .user(userRepository.findById(list.get(0).getUserId()).get())
                 .orderPoint(orderPointRepository.findById(list.get(0).getOrderPointId()).get())

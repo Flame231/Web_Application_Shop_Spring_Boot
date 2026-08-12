@@ -50,6 +50,11 @@
 <form method="post" th:action="@{/client/clearBag}">
     <input type="submit" value="Очистить корзину">
 </form>
+<th:block th:if="${successMessage}">
+    <span style="color: #069e29" th:text="${successMessage}"></span>
+    <br>
+    <br>
+</th:block>
 Сумма в корзине:
 <span th:text="${bagSum}"></span>
 <table>

@@ -14,7 +14,6 @@ import org.example.webApplicationShopSpringBoot.service.product.ProductService;
 import org.example.webApplicationShopSpringBoot.service.user.UserService;
 import org.example.webApplicationShopSpringBoot.service.userOrder.BagForm;
 import org.example.webApplicationShopSpringBoot.service.userOrder.UserOrderService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -49,7 +48,7 @@ public class UserController {
     public String showCatalog(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, @AuthenticationPrincipal User user) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         PageResponse<ProductDTO> productDTOList = productService.getAllProducts(pageable);
-        List<BagDTOResponse> bagDTOResponseList = bagService.showAllBags();
+        List<BagDTOResponse> bagDTOResponseList = bagService.getAllBags();
         BigDecimal bagSum = bagService.showBagSum();
         model.addAttribute("page", page);
         model.addAttribute("bagSum", bagSum);
@@ -62,14 +61,14 @@ public class UserController {
     }
 
     @PostMapping("addProductToBag")
-    public String addProductToBag(@ModelAttribute BagDTORequest bagDTORequest,@RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
+    public String addProductToBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
         bagService.addProductToBag(bagDTORequest);
         redirectAttributes.addAttribute("page", page);
         return "redirect:/client/catalog";
     }
 
     @PostMapping("deleteProductFromBag")
-    public String deleteProductFromBag(@ModelAttribute BagDTORequest bagDTORequest,@RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
+    public String deleteProductFromBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
         bagService.deleteProductFromBag(bagDTORequest);
         redirectAttributes.addAttribute("page", page);
         return "redirect:/client/catalog";
@@ -77,7 +76,7 @@ public class UserController {
 
     @GetMapping("bag")
     public String showBag(Model model) {
-        List<BagDTOResponse> bagDTOResponseList = bagService.showAllBags();
+        List<BagDTOResponse> bagDTOResponseList = bagService.openBag();
         BigDecimal bagSum = bagService.showBagSum();
         List<OrderPointDTO> orderPointDTOList = orderPointService.getAllOrderPoints();
         model.addAttribute("bagSum", bagSum);
@@ -99,7 +98,8 @@ public class UserController {
     }
 
     @PostMapping("clearBag")
-    public String clearAllBags() {
+    public String clearAllBags(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("successMessage", "Корзина очищена!");
         bagService.clearAllBags();
         return "redirect:/client/bag";
     }
@@ -134,9 +134,13 @@ public class UserController {
     }
 
     @GetMapping("ordersHistory")
-    public String showOrdersHistory(Model model){
-        List<ArchivedUserOrderDTO> archivedUserOrderDTOList = archivedUserOrderService.showArchivedUserOrders();
-        model.addAttribute("archivedUserOrderDTOList",archivedUserOrderDTOList);
+    public String showOrdersHistory(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
+        PageResponse<ArchivedUserOrderDTO> archivedUserOrderDTOList = archivedUserOrderService.showArchivedUserOrders(pageable);
+        model.addAttribute("archivedUserOrderDTOList", archivedUserOrderDTOList);
+        model.addAttribute("page", page);
+        model.addAttribute("pageSizeList", pageSizeList);
+        model.addAttribute("pageSize", pageSize);
         return "/order/showArchivedOrders";
     }
 }

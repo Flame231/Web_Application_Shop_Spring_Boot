@@ -8,7 +8,6 @@ import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.product.ProductService;
 import org.example.webApplicationShopSpringBoot.service.productCategory.ProductCategoryService;
 import org.example.webApplicationShopSpringBoot.service.seller.SellerService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,14 +22,18 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("${adminPath}")
 public class ProductController {
+    public static final String PAGE_SIZE_30 = "30";
+    public static final List<Integer> pageSizeList = List.of(30, 50, 100);
     private ProductService productService;
     private ProductCategoryService productCategoryService;
     private SellerService sellerService;
 
     @GetMapping(value = "editCatalog")
-    public String showEditCatalogPage(@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
-        Pageable pageable = PageRequest.of(page - 1, 6, Sort.by("id").ascending());
+    public String showEditCatalogPage(@RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, Model model) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         PageResponse<ProductDTO> productDTOList = productService.getAllProducts(pageable);
+        model.addAttribute("pageSizeList", pageSizeList);
+        model.addAttribute("pageSize", pageSize);
         model.addAttribute("productDTOList", productDTOList);
         return "/superUser/product/editCatalog";
     }

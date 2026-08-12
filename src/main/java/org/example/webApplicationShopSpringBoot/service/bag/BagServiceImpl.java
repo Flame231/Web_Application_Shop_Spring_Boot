@@ -12,6 +12,7 @@ import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.Pri
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUtil;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.Calculate;
+import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,7 @@ public class BagServiceImpl implements BagService {
         }
     }
 
-    public List<BagDTOResponse> showAllBags() {
+    public List<BagDTOResponse> getAllBags() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Bag> bagList = bagRepository.getBagList(user.getId());
         return bagList.stream().map(bag -> conversionService.convert(bag, BagDTOResponse.class)).toList();
@@ -69,5 +70,15 @@ public class BagServiceImpl implements BagService {
     public void clearAllBags() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         bagRepository.deleteAllByUserId(user.getId());
+    }
+
+    @Override
+    public List<BagDTOResponse> openBag(){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Bag> bagList = bagRepository.getBagList(user.getId());
+        if(bagList.isEmpty()){
+            throw new EmptyList("Корзина пуста!");
+        }
+        return bagList.stream().map(bag -> conversionService.convert(bag, BagDTOResponse.class)).toList();
     }
 }

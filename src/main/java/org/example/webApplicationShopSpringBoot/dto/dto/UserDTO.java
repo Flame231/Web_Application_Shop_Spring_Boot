@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.example.webApplicationShopSpringBoot.model.Discount;
 import org.example.webApplicationShopSpringBoot.model.user.Role;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -41,6 +42,7 @@ public class UserDTO {
             message = "новый пароль должен содержать только буквы латинского алфавита/цифры/спец. символы")*/
     private String newPasswordRepeat;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @NotNull(message = "не указана дата рождения")
     private LocalDate birthday;
 

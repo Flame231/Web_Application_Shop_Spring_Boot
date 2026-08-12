@@ -14,20 +14,32 @@ public class UserOrderProductServiceImpl implements UserOrderProductService {
     private UserOrderProductRepository userOrderProductRepository;
 
     @Override
-    public void changeProductCount(UserOrderChangeCountDTO userOrderChangeCountDTO) {
+    public void addProductToOrder(UserOrderChangeCountDTO userOrderChangeCountDTO) {
         Long userOrderId = userOrderChangeCountDTO.getUserOrderId();
         Long productId = userOrderChangeCountDTO.getProductId();
         Long count = userOrderChangeCountDTO.getCount();
         PrimaryKeyUserOrderProduct primaryKeyUserOrderProduct =
                 PrimaryKeyUtil.getPrimaryKeyUserOrderProduct(userOrderId, productId);
         UserOrderProduct userOrderProduct = userOrderProductRepository.findById(primaryKeyUserOrderProduct).get();
-
-        if (userOrderProduct.getActualProductCount() + count >= 0) {
             if (userOrderProduct.getActualProductCount() + count <= userOrderProduct.getProductCount()) {
                 Long newCount = userOrderProduct.getActualProductCount() + count;
                 userOrderProduct.setActualProductCount(newCount);
                 userOrderProductRepository.flush();
             }
+    }
+
+    @Override
+    public void deleteProductFromOrder(UserOrderChangeCountDTO userOrderChangeCountDTO) {
+        Long userOrderId = userOrderChangeCountDTO.getUserOrderId();
+        Long productId = userOrderChangeCountDTO.getProductId();
+        Long count = userOrderChangeCountDTO.getCount();
+        PrimaryKeyUserOrderProduct primaryKeyUserOrderProduct =
+                PrimaryKeyUtil.getPrimaryKeyUserOrderProduct(userOrderId, productId);
+        UserOrderProduct userOrderProduct = userOrderProductRepository.findById(primaryKeyUserOrderProduct).get();
+        if (userOrderProduct.getActualProductCount() - count >= 0) {
+                Long newCount = userOrderProduct.getActualProductCount() - count;
+                userOrderProduct.setActualProductCount(newCount);
+                userOrderProductRepository.flush();
         }
     }
 }

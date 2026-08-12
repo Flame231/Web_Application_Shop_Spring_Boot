@@ -13,16 +13,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("${adminPath}")
 @AllArgsConstructor
 public class ProductCategoryController {
+    public static final String PAGE_SIZE_30 = "30";
+    public static final List<Integer> pageSizeList = List.of(30, 50, 100);
     private ProductCategoryService productCategoryService;
 
     @RequestMapping(value = "editProductCategories", method = {RequestMethod.GET, RequestMethod.POST})
-    public String showEditProductCategoriesPage(@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
-        Pageable pageable = PageRequest.of(page - 1, 6, Sort.by("id").ascending());
+    public String showEditProductCategoriesPage(@RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, Model model) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         PageResponse<ProductCategoryDTO> productCategoriesList = productCategoryService.getProductCategoryDTOList(pageable);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("productCategoriesList", productCategoriesList);
         return "superUser/productCategory/editProductCategories";
     }

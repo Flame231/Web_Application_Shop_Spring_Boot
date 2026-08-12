@@ -1,12 +1,12 @@
 <html>
 <head>
-    <a th:href="@{/client/accountClient}">Вернуться в личный кабинет</a>
     <title>История заказов</title>
 </head>
 <body>
+<a th:href="@{/client/accountClient}">Вернуться в личный кабинет</a>
 
 <h1>История заказов</h1>
-<th:block th:each="archivedUserOrderDTO : ${archivedUserOrderDTOList}">
+<th:block th:each="archivedUserOrderDTO : ${archivedUserOrderDTOList.content()}">
 
     <div>Номер заказа: <span th:text="${archivedUserOrderDTO.getUserOrderId()}"></span>
     </div>
@@ -50,5 +50,36 @@
     <br>
 </th:block>
 <br>
+
+<a th:href="@{|${clientPath}ordersHistory|(page=1, pageSize=${pageSize})}">В начало</a>
+
+<span style="font-size: 20px"
+      th:if="${archivedUserOrderDTOList.currentPage > 1}"
+      th:each="i : ${#numbers.sequence((archivedUserOrderDTOList.currentPage - 3 > 1 ? archivedUserOrderDTOList.currentPage - 3 : 1), archivedUserOrderDTOList.currentPage - 1)}">
+    <a th:href="@{|${clientPath}ordersHistory|(page=${i}, pageSize=${pageSize})}" th:text="${i}"></a>
+</span>
+
+<span style="font-size: 24px" th:text="${archivedUserOrderDTOList.currentPage}"></span>
+
+<span style="font-size: 20px"
+      th:if="${archivedUserOrderDTOList.currentPage < archivedUserOrderDTOList.totalPages}"
+      th:each="i : ${#numbers.sequence(archivedUserOrderDTOList.currentPage + 1, (archivedUserOrderDTOList.currentPage + 3 < archivedUserOrderDTOList.totalPages ? archivedUserOrderDTOList.currentPage + 3 : archivedUserOrderDTOList.totalPages))}">
+    <a th:href="@{|${clientPath}ordersHistory|(page=${i}, pageSize=${pageSize})}" th:text="${i}"></a>
+</span>
+<a th:href="@{|${clientPath}ordersHistory|(page=${archivedUserOrderDTOList.totalPages}, pageSize=${pageSize})}">В конец</a>
+
+
+
+<form th:action="@{/client/ordersHistory}">
+    <select name="pageSize">
+        <option th:each="pageSizelist : ${pageSizeList}"
+                th:text="${pageSizelist}"
+                th:value="${pageSizelist}"
+                th:selected="${pageSizelist == pageSize}"></option>
+    </select>
+    <input type="submit" value="Подтвердить">
+    <input type="hidden" name="page" value="1"/>
+</form>
+
 </body>
 </html>

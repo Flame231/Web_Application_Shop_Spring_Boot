@@ -30,7 +30,7 @@
 <html>
 <head>
     <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
-    <title>Редактировать каталог</title>
+    <title>Редактировать каталог товаров</title>
     <h1>Редактировать каталог товаров</h1>
 </head>
 <body>
@@ -78,12 +78,12 @@
     </tr>
     </tbody>
 </table>
-<a th:href="@{|${adminPath}editCatalog|(page=1)}">В начало</a>
+<a th:href="@{|${adminPath}editCatalog|(page=1, pageSize=${pageSize})}">В начало</a>
 
 <span style="font-size: 20px"
       th:if="${productDTOList.currentPage > 1}"
       th:each="i : ${#numbers.sequence((productDTOList.currentPage - 3 > 1 ? productDTOList.currentPage - 3 : 1), productDTOList.currentPage - 1)}">
-    <a th:href="@{|${adminPath}editCatalog|(page=${i})}" th:text="${i}"></a>
+    <a th:href="@{|${adminPath}editCatalog|(page=${i}, pageSize=${pageSize})}" th:text="${i}"></a>
 </span>
 
 <span style="font-size: 24px" th:text="${productDTOList.currentPage}"></span>
@@ -91,9 +91,22 @@
 <span style="font-size: 20px"
       th:if="${productDTOList.currentPage < productDTOList.totalPages}"
       th:each="i : ${#numbers.sequence(productDTOList.currentPage + 1, (productDTOList.currentPage + 3 < productDTOList.totalPages ? productDTOList.currentPage + 3 : productDTOList.totalPages))}">
-    <a th:href="@{|${adminPath}editCatalog|(page=${i})}" th:text="${i}"></a>
+    <a th:href="@{|${adminPath}editCatalog|(page=${i}, pageSize=${pageSize})}" th:text="${i}"></a>
 </span>
-<a th:href="@{|${adminPath}editCatalog|(page=${productDTOList.totalPages})}">В конец</a>
+<a th:href="@{|${adminPath}editCatalog|(page=${productDTOList.totalPages}, pageSize=${pageSize})}">В конец</a>
+
+
+
+<form th:action="@{/administrator/editCatalog}">
+    <select name="pageSize">
+        <option th:each="pageSizelist : ${pageSizeList}"
+                th:text="${pageSizelist}"
+                th:value="${pageSizelist}"
+                th:selected="${pageSizelist == pageSize}"></option>
+    </select>
+    <input type="submit" value="Подтвердить">
+    <input type="hidden" name="page" value="1"/>
+</form>
 
 </body>
 </html>

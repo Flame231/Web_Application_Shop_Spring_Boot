@@ -1,6 +1,5 @@
 package org.example.webApplicationShopSpringBoot.service.user;
 
-import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;

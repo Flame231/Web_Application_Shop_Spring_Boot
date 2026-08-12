@@ -34,20 +34,15 @@
             <span th:text="${productDTO.getProductCount()}"></span>
         </td>
         <td>
-            <form th:action="@{/operator/addProductToOrder}" method="post">
-                <input type="submit" value="+">
+            <form method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" th:if="${_csrf}"/>
+                <input type="submit" th:formaction="@{/operator/addProductToOrder}" value="+">
                 <input type="hidden" name="userOrderId" th:value="${productDTO.getUserOrderId()}">
                 <input type="hidden" name="productId" th:value="${productDTO.getProductDTO().getId()}">
                 <input type="hidden" name="count" value="1">
                 <input type="hidden" name="id" th:value="${userOrderDTO.getOrderId()}">
-            </form>
-            <span th:text="${productDTO.getActualProductCount()}"></span>
-            <form th:action="@{/operator/addProductToOrder}" method="post">
-                <input type="submit" value="-">
-                <input type="hidden" name="userOrderId" th:value="${productDTO.getUserOrderId()}">
-                <input type="hidden" name="productId" th:value="${productDTO.getProductDTO().getId()}">
-                <input type="hidden" name="count" value="-1">
-                <input type="hidden" name="id" th:value="${userOrderDTO.getOrderId()}">
+                <span th:text="${productDTO.getActualProductCount()}"></span>
+                <input type="submit" th:formaction="@{/operator/deleteProductFromOrder}" value="-">
             </form>
         </td>
     </tr>

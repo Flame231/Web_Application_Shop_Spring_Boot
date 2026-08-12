@@ -64,7 +64,14 @@ public class OperatorController {
 
     @PostMapping("addProductToOrder")
     public String addProductToOrder(@ModelAttribute UserOrderChangeCountDTO userOrderChangeCountDTO, @RequestParam Long id, RedirectAttributes redirectAttributes) {
-        userOrderProductService.changeProductCount(userOrderChangeCountDTO);
+        userOrderProductService.addProductToOrder(userOrderChangeCountDTO);
+        redirectAttributes.addAttribute("id", id);
+        return "redirect:/operator/showOrder";
+    }
+
+    @PostMapping("deleteProductFromOrder")
+    public String deleteProductFromOrder(@ModelAttribute UserOrderChangeCountDTO userOrderChangeCountDTO, @RequestParam Long id, RedirectAttributes redirectAttributes) {
+        userOrderProductService.deleteProductFromOrder(userOrderChangeCountDTO);
         redirectAttributes.addAttribute("id", id);
         return "redirect:/operator/showOrder";
     }
