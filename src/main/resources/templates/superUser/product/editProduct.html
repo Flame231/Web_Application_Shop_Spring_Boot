@@ -1,47 +1,59 @@
-<html>
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
 <head>
-    <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
+    <meta charset="UTF-8">
     <title>Редактировать продукт</title>
-    <h1>Редактировать продукт</h1>
-
-    <a th:href="@{|${adminPath}editCatalog|}">Назад</a>
-    <form th:action="@{|${adminPath}updateProduct|}" th:object="${productDTO}" method="post">
-        Номер продукта:
-        <span th:text="${productDTO.id}"></span>
-        <label>
-            <input type="hidden" th:field="*{id}" readonly/>
-        </label>
-        <div>
-            Название продукта:
-            <input type="text" th:field="*{productName}"/>
-        </div>
-
-        <div>
-            Категория продукта:
-            <select th:field="*{productCategory.id}">
-                <option th:each="productCategoryDTO:${productCategoryDTOList}"
-                        th:value="${productCategoryDTO.getId()}"
-                        th:text="${productCategoryDTO.getCategory()}">
-                </option>
-            </select>
-        </div>
-        <div>
-            Цена:
-            <input type="text" th:field="*{price}"/>
-        </div>
-
-        <div>
-            Продавец:
-            <select th:field="*{seller.id}">
-                <option th:each="sellerDTO:${sellerDTOList}"
-                        th:value="${sellerDTO.getId()}"
-                        th:text="${sellerDTO.getSellerName()}">
-                </option>
-            </select>
-        </div>
-        <input type="submit" value="Подтвердить">
-    </form>
 </head>
 <body>
+
+<a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
+<h1>Редактировать продукт</h1>
+<a th:href="@{|${adminPath}editCatalog|}">Назад</a>
+
+<form th:action="@{|${adminPath}updateProduct|}" th:object="${productDTO}" method="post">
+
+    <!-- Скрытые системные поля (Связаны через th:field, без конфликтов value) -->
+    <input type="hidden" th:field="*{id}" />
+    <input type="hidden" th:field="*{status}" />
+    <input type="hidden" th:field="*{updateDateTime}" /> <!-- Защищает дату от зануления -->
+
+    <div>
+        Номер продукта:
+        <span th:text="*{id}"></span>
+    </div>
+
+    <div>
+        Название продукта:
+        <input type="text" th:field="*{productName}"/>
+    </div>
+
+    <div>
+        Категория продукта:
+        <select th:field="*{productCategory.id}">
+            <option th:each="productCategoryDTO : ${productCategoryDTOList}"
+                    th:value="${productCategoryDTO.id}"
+                    th:text="${productCategoryDTO.category}">
+            </option>
+        </select>
+    </div>
+
+    <div>
+        Цена:
+        <input type="text" th:field="*{price}"/>
+    </div>
+
+    <div>
+        Продавец:
+        <select th:field="*{seller.id}">
+            <option th:each="sellerDTO : ${sellerDTOList}"
+                    th:value="${sellerDTO.id}"
+                    th:text="${sellerDTO.sellerName}">
+            </option>
+        </select>
+    </div>
+
+    <input type="submit" value="Подтвердить">
+</form>
+
 </body>
 </html>

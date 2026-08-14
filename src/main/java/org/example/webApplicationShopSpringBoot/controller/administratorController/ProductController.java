@@ -41,8 +41,8 @@ public class ProductController {
     @GetMapping(value = "addProduct")
     public String showAddProductPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Pageable pageable = PageRequest.of(page, 8, Sort.by("id").ascending());
-        List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getProductCategoryDTOList();
-        List<SellerDTO> sellerDTOList = sellerService.getSellerDTOList();
+        List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getActiveProductCategoryDTOList();
+        List<SellerDTO> sellerDTOList = sellerService.getActiveSellerDTOList();
         model.addAttribute("productCategoryDTOList", productCategoryDTOList);
         model.addAttribute("sellerDTOList", sellerDTOList);
         return "/superUser/product/addProduct";
@@ -69,10 +69,17 @@ public class ProductController {
         return "redirect:/administrator/editCatalog";
     }
 
+    @PostMapping("recoverProduct/{id}")
+    public String recoverProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        productService.recoverProduct(id);
+        redirectAttributes.addFlashAttribute("successMessage", "продукт успешно восстановлен!");
+        return "redirect:/administrator/editCatalog";
+    }
+
     @GetMapping("editProduct/{id}")
     public String showEditProductPage(@PathVariable Long id, Model model) {
         ProductDTO productDTO = productService.findProduct(id);
-        List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getProductCategoryDTOList();
+        List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getActiveProductCategoryDTOList();
         List<SellerDTO> sellerDTOList = sellerService.getSellerDTOList();
         model.addAttribute("productDTO", productDTO);
         model.addAttribute("productCategoryDTOList", productCategoryDTOList);

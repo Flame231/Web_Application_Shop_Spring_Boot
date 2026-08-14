@@ -11,6 +11,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="category" type="varchar(255)"/>
+            <column name="status" type="varchar(20)"/>
             <column name="createDateTime" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="updateDateTime" type="TIMESTAMP"
                     defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>

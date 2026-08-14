@@ -52,6 +52,13 @@ public class ProductCategoryController {
         return "redirect:/administrator/editProductCategories";
     }
 
+    @PostMapping("recoverProductCategory/{id}")
+    public String recoverProductCategory(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        productCategoryService.recoverProductCategory(id);
+        redirectAttributes.addFlashAttribute("successMessage", "категория успешно удалена!");
+        return "redirect:/administrator/editProductCategories";
+    }
+
     @GetMapping("editProductCategory/{id}")
     public String showEditProductCategoryPage(@PathVariable Long id, Model model) {
         ProductCategoryDTO productCategoryDTO = productCategoryService.findProductCategory(id);

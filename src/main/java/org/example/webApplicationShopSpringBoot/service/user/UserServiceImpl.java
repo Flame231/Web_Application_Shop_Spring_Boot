@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTONew.toEntity.UserConverter;
 import org.example.webApplicationShopSpringBoot.dto.ValidatorDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserDTO;
 import org.example.webApplicationShopSpringBoot.model.user.Role;
@@ -14,7 +15,6 @@ import org.example.webApplicationShopSpringBoot.service.exceptions.DifferentPass
 import org.example.webApplicationShopSpringBoot.service.exceptions.DifferentPasswordsUpdate;
 import org.example.webApplicationShopSpringBoot.service.exceptions.UserRegistrationException;
 import org.example.webApplicationShopSpringBoot.service.exceptions.WrongPassword;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserService.class);
     private UserRepository userRepository;
-    private ConversionService conversionService;
+    private UserConverter userConverter;
 
     @Override
     public void saveOrUpdateUser(UserDTO userDTO) {
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
                 ValidatorDTO.validate(userDTO);
                 passwordValidation(userDTO);
                 userDTO.setRole(Role.CLIENT);
-                userRepository.saveAndFlush(conversionService.convert(userDTO, User.class));
+                userRepository.saveAndFlush(userConverter.toEntity(userDTO));
                 logger.info("Пользователь {} успешно зарегистрирован!", userDTO.getLogin());
             } catch (org.springframework.dao.DataIntegrityViolationException e) {
                 logger.error("Ошибка регистрации пользователя {}", userDTO.getLogin(), e);
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserDTO getUserDTO(Long id) {
-        return conversionService.convert(userRepository.findById(id).get(), UserDTO.class);
+        return userConverter.toDTO(userRepository.findById(id).get());
     }
 
     @Override
@@ -86,6 +86,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUser() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return conversionService.convert(userRepository.findById(user.getId()).get(), UserDTO.class);
+        return userConverter.toDTO(userRepository.findById(user.getId()).get());
     }
 }

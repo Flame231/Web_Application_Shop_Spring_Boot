@@ -4,6 +4,7 @@ package org.example.webApplicationShopSpringBoot.service.bag;
 import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dao.bag.BagRepository;
 import org.example.webApplicationShopSpringBoot.dao.product.ProductRepository;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTONew.toEntity.BagConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.model.Bag;
@@ -13,7 +14,6 @@ import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.Pri
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.Calculate;
 import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ import java.util.List;
 public class BagServiceImpl implements BagService {
     private BagRepository bagRepository;
     private ProductRepository productRepository;
-    private ConversionService conversionService;
+    private BagConverter bagConverter;
 
     @Override
     public void addProductToBag(BagDTORequest bagDTORequest) {
@@ -57,7 +57,7 @@ public class BagServiceImpl implements BagService {
     public List<BagDTOResponse> getAllBags() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Bag> bagList = bagRepository.getBagList(user.getId());
-        return bagList.stream().map(bag -> conversionService.convert(bag, BagDTOResponse.class)).toList();
+        return bagList.stream().map(bag -> bagConverter.toDTO(bag)).toList();
     }
 
     @Override
@@ -79,6 +79,6 @@ public class BagServiceImpl implements BagService {
         if(bagList.isEmpty()){
             throw new EmptyList("Корзина пуста!");
         }
-        return bagList.stream().map(bag -> conversionService.convert(bag, BagDTOResponse.class)).toList();
+        return bagList.stream().map(bag -> bagConverter.toDTO(bag)).toList();
     }
 }

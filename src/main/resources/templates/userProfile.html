@@ -1,37 +1,87 @@
 <html>
+<head>
+    <title>Профиль пользователя</title>
+    <style>
+        /* Стиль для всей формы */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;           /* Вертикальный отступ между строками */
+            max-width: 500px;    /* Максимальная ширина формы */
+            margin-top: 20px;
+        }
+
+        /* Сетка для каждой строки: делает из нее две ровные колонки */
+        .form-row {
+            display: grid;
+            /* 180px отдаем под названия, всё оставшееся место (1fr) под поля ввода */
+            grid-template-columns: 180px 1fr;
+            align-items: center; /* Центрируем текст и инпут по вертикали */
+        }
+
+        /* Красивые отступы внутри самих полей ввода */
+        .form-row input {
+            padding: 6px 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Чтобы кнопка отправки не растягивалась на всю ширину */
+        input[type="submit"] {
+            width: max-content;
+            padding: 8px 25px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
 <body>
+
 <a th:href="@{/client/accountClient}">Вернуться в личный кабинет</a>
 <h1>Профиль пользователя</h1>
-<form th:method="post" th:action="@{/client/updateUser}" th:object="${userDTO}" method="post">
-    <p>
-        <input type="hidden" th:field="*{id}"/>
-        Имя:
+
+<form th:action="@{/client/updateUser}" th:object="${userDTO}" method="post">
+    <!-- Скрытое поле ID лежит отдельно, чтобы не ломать сетку -->
+    <input type="hidden" th:field="*{id}"/>
+
+    <div class="form-row">
+        <label>Имя:</label>
         <input type="text" th:field="*{name}" required/>
-    </p>
-    <p>
-        Логин:
+    </div>
+
+    <div class="form-row">
+        <label>Логин:</label>
         <input type="text" th:field="*{login}" required/>
-    </p>
-    <p>
-        Старый пароль:
+    </div>
+
+    <div class="form-row">
+        <label>Старый пароль:</label>
         <input type="password" th:field="*{oldPassword}" required/>
-    </p>
-    <p>
-        Новый пароль:
+    </div>
+
+    <div class="form-row">
+        <label>Новый пароль:</label>
         <input type="password" th:field="*{newPassword}" required/>
-    </p>
-    <p>
-        Повторите новый пароль:
+    </div>
+
+    <div class="form-row">
+        <label>Повторите новый пароль:</label>
         <input type="password" th:field="*{newPasswordRepeat}" required/>
-    </p>
-    <p>
-        День Рождения:
+    </div>
+
+    <div class="form-row">
+        <label>День Рождения:</label>
         <input type="date" th:field="*{birthday}" required/>
-    </p>
-    <p>
-        Способ Оплаты:
-        <input type="text" th:field="*{paymentMethods}" required/></p>
+    </div>
+
+    <div class="form-row">
+        <label>Способ Оплаты:</label>
+        <input type="text" th:field="*{paymentMethods}" required/>
+    </div>
+
     <input type="submit" value="Сохранить">
 </form>
+
 </body>
 </html>

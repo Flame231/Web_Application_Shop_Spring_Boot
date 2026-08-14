@@ -16,6 +16,8 @@ public interface ProductCategoryService {
 
     List<ProductCategoryDTO> getProductCategoryDTOList();
 
+    List<ProductCategoryDTO> getActiveProductCategoryDTOList();
+
     void addProductCategory(ProductCategoryDTO productCategoryDTO);
 
     void updateProductCategory(ProductCategoryDTO productCategoryDTO);
@@ -23,4 +25,6 @@ public interface ProductCategoryService {
     ProductCategoryDTO findProductCategory(Long id);
 
     void deleteProductCategory(Long id);
+
+    void recoverProductCategory(Long id);
 }

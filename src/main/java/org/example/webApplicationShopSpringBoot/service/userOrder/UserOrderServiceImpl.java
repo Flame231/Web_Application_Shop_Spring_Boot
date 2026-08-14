@@ -9,6 +9,7 @@ import org.example.webApplicationShopSpringBoot.dao.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
 import org.example.webApplicationShopSpringBoot.dao.userOrder.UserOrderRepository;
 import org.example.webApplicationShopSpringBoot.dao.userOrderProduct.UserOrderProductRepository;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTONew.toDTO.UserOrderConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.OrderStatus;
@@ -17,7 +18,6 @@ import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,6 @@ import java.util.List;
 public class UserOrderServiceImpl implements UserOrderService {
 
     private static final Logger logger = LogManager.getLogger(UserOrderService.class);
-    private final ConversionService conversionService;
 
     private UserOrderRepository userOrderRepository;
     private UserRepository userRepository;
@@ -37,10 +36,10 @@ public class UserOrderServiceImpl implements UserOrderService {
     private BagRepository bagRepository;
     private ProductRepository productRepository;
     private UserOrderProductRepository userOrderProductRepository;
+    private UserOrderConverter userOrderConverter;
 
     @Override
     public void confirmOrder(List<OrderDTO> list) {
-        System.out.println(list.size());
         if (list.isEmpty()){
             throw new EmptyList("Корзина товаров пуста!");
         }
@@ -70,7 +69,7 @@ public class UserOrderServiceImpl implements UserOrderService {
     @Override
     public List<UserOrderDTO> showAllUserOrders() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<UserOrderDTO> userOrderList = userOrderRepository.findAllByUserId(user.getId()).stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class))
+        List<UserOrderDTO> userOrderList = userOrderRepository.findAllByUserId(user.getId()).stream().map(userOrder -> userOrderConverter.toDTO(userOrder))
                 .toList();
         if (userOrderList.isEmpty()) {
             throw new EmptyList("Активные заказы отсутствуют!");
@@ -83,7 +82,7 @@ public class UserOrderServiceImpl implements UserOrderService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.findAllByOrderPointId(orderPointId);
-        return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
+        return userOrderList.stream().map(userOrder -> userOrderConverter.toDTO(userOrder)).toList();
     }
 
     @Override
@@ -94,13 +93,13 @@ public class UserOrderServiceImpl implements UserOrderService {
         if (userOrderList.isEmpty()) {
             throw new EmptyList("Готовые заказы отсутствуют!");
         }
-        return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
+        return userOrderList.stream().map(userOrder -> userOrderConverter.toDTO(userOrder)).toList();
     }
 
     @Override
     public UserOrderDTO getUserOrderDTO(Long id) {
         UserOrder userOrder = userOrderRepository.findById(id).get();
-        return conversionService.convert(userOrder, UserOrderDTO.class);
+        return userOrderConverter.toDTO(userOrder);
     }
 
 
@@ -119,6 +118,6 @@ public class UserOrderServiceImpl implements UserOrderService {
         if (userOrderList.isEmpty()) {
             throw new EmptyList("Заказы \"в пути\" отсутствуют!");
         }
-        return userOrderList.stream().map(userOrder -> conversionService.convert(userOrder, UserOrderDTO.class)).toList();
+        return userOrderList.stream().map(userOrder -> userOrderConverter.toDTO(userOrder)).toList();
     }
 }

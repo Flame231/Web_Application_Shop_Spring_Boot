@@ -47,7 +47,7 @@ public class UserController {
     @GetMapping("catalog")
     public String showCatalog(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, @AuthenticationPrincipal User user) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
-        PageResponse<ProductDTO> productDTOList = productService.getAllProducts(pageable);
+        PageResponse<ProductDTO> productDTOList = productService.getActiveProducts(pageable);
         List<BagDTOResponse> bagDTOResponseList = bagService.getAllBags();
         BigDecimal bagSum = bagService.showBagSum();
         model.addAttribute("page", page);
@@ -60,15 +60,15 @@ public class UserController {
         return "catalog";
     }
 
-    @PostMapping("addProductToBag")
-    public String addProductToBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
+    @PostMapping("addProductToCatalogBag")
+    public String addProductToCatalogBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
         bagService.addProductToBag(bagDTORequest);
         redirectAttributes.addAttribute("page", page);
         return "redirect:/client/catalog";
     }
 
-    @PostMapping("deleteProductFromBag")
-    public String deleteProductFromBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
+    @PostMapping("deleteProductFromCatalogBag")
+    public String deleteProductFromCatalogBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
         bagService.deleteProductFromBag(bagDTORequest);
         redirectAttributes.addAttribute("page", page);
         return "redirect:/client/catalog";
@@ -85,14 +85,14 @@ public class UserController {
         return "/bag";
     }
 
-    @PostMapping("addProductToBag1")
-    public String addProductToBag1(@ModelAttribute BagDTORequest bagDTORequest) {
+    @PostMapping("addProductToBag")
+    public String addProductToBag(@ModelAttribute BagDTORequest bagDTORequest) {
         bagService.addProductToBag(bagDTORequest);
         return "redirect:/client/bag";
     }
 
-    @PostMapping("deleteProductFromBag1")
-    public String deleteProductFromBag1(@ModelAttribute BagDTORequest bagDTORequest) {
+    @PostMapping("deleteProductFromBag")
+    public String deleteProductFromBag(@ModelAttribute BagDTORequest bagDTORequest) {
         bagService.deleteProductFromBag(bagDTORequest);
         return "redirect:/client/bag";
     }

@@ -1,7 +1,7 @@
 <style>
 
     table {
-        width: 50%;
+        width: max-content;
         border-collapse: collapse;
         margin-top: 20px;
     }
@@ -42,13 +42,15 @@
     <span style="color: #069e29" th:text="${successMessage}"></span>
     <br>
     <br>
-</th:block></form>
+</th:block>
+</form>
 <table>
     <thead>
     <tr>
         <th>Номер продавца</th>
         <th>Название продавца</th>
         <th>Адрес</th>
+        <th>Статус</th>
         <th>Редактировать</th>
     </tr>
     </thead>
@@ -60,14 +62,23 @@
         </td>
         <td th:text="${sellerDTO.getSellerAddress()}">
         </td>
-        <td>
-            <form method="post" th:action="@{|${adminPath}editSeller/${sellerDTO.id}|}">
-                <input type="submit" value="Редактировать">
-            </form>
-            <form method="post" th:action="@{|${adminPath}deleteSeller/${sellerDTO.id}|}">
-                <input type="submit" value="удалить">
-            </form>
+        <td th:text="${sellerDTO.getStatus.getDescription()}">
         </td>
+        <td>
+            <form method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <th:block th:if="${sellerDTO.getStatus().name()=='ACTIVE'}">
+                    <input th:formmethod="get"
+                           th:formaction="@{|${adminPath}editSeller/${sellerDTO.id}|}" type="submit"
+                           value="Редактировать"/>
+                    <input th:formaction="@{|${adminPath}deleteSeller/${sellerDTO.id}|}" type="submit"
+                           value="Удалить"/>
+                </th:block>
+                <th:block th:unless="${sellerDTO.getStatus().name()=='ACTIVE'}">
+                    <input th:formaction="@{|${adminPath}recoverSeller/${sellerDTO.id}|}" type="submit"
+                           value="Восстановить"/>
+                </th:block>
+            </form>
     </tr>
     </tbody>
 </table>

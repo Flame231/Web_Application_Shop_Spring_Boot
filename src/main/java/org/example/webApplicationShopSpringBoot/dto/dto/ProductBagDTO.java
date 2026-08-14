@@ -2,6 +2,7 @@ package org.example.webApplicationShopSpringBoot.dto.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.example.webApplicationShopSpringBoot.model.ItemStatus;
 
 import java.math.BigDecimal;
 

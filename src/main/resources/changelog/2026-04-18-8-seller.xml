@@ -12,6 +12,7 @@
             </column>
             <column name="sellerName" type="varchar(255)"/>
             <column name="sellerAddress" type="varchar(255)"/>
+            <column name="status" type="varchar(20)"/>
             <column name="createDateTime" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="updateDateTime" type="TIMESTAMP"
                     defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>

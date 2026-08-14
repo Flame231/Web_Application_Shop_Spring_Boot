@@ -3,10 +3,11 @@ package org.example.webApplicationShopSpringBoot.service.product;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dao.product.ProductRepository;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTONew.toEntity.ProductConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
+import org.example.webApplicationShopSpringBoot.model.ItemStatus;
 import org.example.webApplicationShopSpringBoot.model.Product;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,35 +16,52 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 
 public class ProductServiceImpl implements ProductService {
-    private ConversionService conversionService;
     private ProductRepository productRepository;
+    private ProductConverter productConverter;
+
+
+    @Override
+    public PageResponse<ProductDTO> getActiveProducts(Pageable pageable) {
+        Page<Product> page = productRepository.findAll(pageable, ItemStatus.ACTIVE);
+        return new PageResponse<ProductDTO>(page.map(product -> productConverter.toDTO(product)));
+    }
 
     @Override
     public PageResponse<ProductDTO> getAllProducts(Pageable pageable) {
         Page<Product> page = productRepository.findAll(pageable);
-        return new PageResponse<ProductDTO>(page.map(product -> conversionService.convert(product,ProductDTO.class)));
+        return new PageResponse<ProductDTO>(page.map(product -> productConverter.toDTO(product)));
     }
 
     public ProductDTO findProduct(Long id) {
-
-        return conversionService.convert(productRepository.findById(id).get(),ProductDTO.class);
+        Product product = productRepository.findById(id).get();
+        return productConverter.toDTO(product);
     }
 
     @Override
     public void addProduct(ProductDTO productDTO) {
-        Product product = conversionService.convert(productDTO,Product.class);
+        Product product = productConverter.toEntity(productDTO);
         productRepository.save(product);
     }
 
     @Override
     public void updateProduct(ProductDTO productDTO) {
-        Product product = conversionService.convert(productDTO,Product.class);
+        Product existingProduct = productRepository.findById(productDTO.getId()).get();
+        Product product = productConverter.updateEntity(productDTO, existingProduct);
         productRepository.save(product);
     }
 
+    @Transactional
     @Override
     public void removeProduct(Long id) {
-        productRepository.deleteById(id);
+        Product product = productRepository.findById(id).get();
+        product.setStatus(ItemStatus.DELETED);
+    }
+
+    @Transactional
+    @Override
+    public void recoverProduct(Long id) {
+        Product product = productRepository.findById(id).get();
+        product.setStatus(ItemStatus.ACTIVE);
     }
 
 }

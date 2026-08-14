@@ -17,19 +17,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 @Controller
 @RequiredArgsConstructor // ИСПРАВЛЕНО: Генерирует конструктор ТОЛЬКО для final-полей
 public class ShopController {
 
-    // ИСПРАВЛЕНО: Добавлено ключевое слово final, чтобы Lombok добавил их в конструктор
-    private final ProductService productService;
     private final UserService userService;
 
-    // Эти поля НЕ final, Lombok их проигнорирует, а Spring внедрит через @Value
     @Value("${adminPath}")
     private String adminPath;
 
@@ -51,9 +44,6 @@ public class ShopController {
 
     @RequestMapping("/login")
     public String getList(Model model) {
-        Pageable pageable = PageRequest.of(1, 10, Sort.by("id").ascending());
-        PageResponse<ProductDTO> listDTO = productService.getAllProducts(pageable);
-        model.addAttribute("listDTO", listDTO);
         return "login";
     }
 
@@ -71,11 +61,9 @@ public class ShopController {
     @GetMapping("/errorPage")
     public String showAccessDeniedPage(Model model) {
         model.addAttribute("message", "У вас нет прав для доступа к этому разделу сайта!");
-
         model.addAttribute("adminPath", adminPath);
         model.addAttribute("clientPath", clientPath);
         model.addAttribute("operatorPath", operatorPath);
-
         return "errorPage";
     }
 }

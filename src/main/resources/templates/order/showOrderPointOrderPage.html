@@ -1,16 +1,44 @@
+<style>
+
+    table {
+        width: 40%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    {
+        display: grid
+    ;
+        grid-template-columns: 120px 300px
+    ;
+        gap: 15px
+    ;
+        align-items: center
+    ;
+    }
+</style>
 <html>
 <head>
-    <form th:action="@{/operator/accountOperator}" method="get">
-        <input type="submit" value="Вернуться в личный кабинет">
-    </form>
-    <form th:action="@{/operator/readyOrders}" method="get">
-        <input type="submit" value="Назад">
-    </form>
     <title>Страница заказа</title>
-
 </head>
-<body>
+
+<a th:href="@{/operator/accountOperator}">Вернуться в личный кабинет</a>
 <h1>Страница заказа</h1>
+
+<a th:href="@{/operator/readyOrders}">Назад</a>
+<br>
+<br>
+<body>
 Номер заказа: <span th:text="${userOrderDTO.getOrderId()}"></span>
 <br>
 Статус заказа: <span th:text="${userOrderDTO.getOrderStatus().getDescription()}"></span>
@@ -47,11 +75,13 @@
         </td>
     </tr>
 </table>
-<form th:action="@{/operator/refuseOrder(userOrderId=${userOrderDTO.getOrderId()})}" method="post">
-    <input type="submit" value="Отказ"/>
-</form>
-<form th:action="@{/operator/closeOrder(userOrderId=${userOrderDTO.getOrderId()})}" method="post">
-    <input type="submit" value="Закрыть заказ"/>
+<br>
+<form method="post">
+    <input th:formaction="@{/operator/refuseOrder(userOrderId=${userOrderDTO.getOrderId()})}" type="submit"
+           value="Отказ"/>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input th:formaction="@{/operator/closeOrder(userOrderId=${userOrderDTO.getOrderId()})}" type="submit"
+           value="Закрыть заказ"/>
 </form>
 
 </body>

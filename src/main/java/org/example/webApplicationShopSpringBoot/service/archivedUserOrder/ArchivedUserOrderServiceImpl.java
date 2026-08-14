@@ -4,6 +4,7 @@ package org.example.webApplicationShopSpringBoot.service.archivedUserOrder;
 import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dao.archivedUserOrder.ArchivedUserOrderRepository;
 import org.example.webApplicationShopSpringBoot.dao.userOrder.UserOrderRepository;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTONew.toDTO.ArchivedUserOrderConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.ArchivedUserOrderDTO;
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrder;
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrderProduct;
@@ -13,7 +14,6 @@ import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.archivedUserOrderProduct.ArchivedUserOrderProductService;
 import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +28,7 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
     private ArchivedUserOrderRepository archivedUserOrderRepository;
     private UserOrderRepository userOrderRepository;
     private ArchivedUserOrderProductService archivedUserOrderProductService;
-    private ConversionService conversionService;
+    private ArchivedUserOrderConverter archivedUserOrderConverter;
 
     @Override
     public void createArchivedUserOrder(Long userOrderId) {
@@ -44,7 +44,7 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
                 .userOrderId(userOrder.getId())
                 .orderStatus(OrderStatus.CLOSED)
                 .userId(userOrder.getUser().getId())
-                .OrderPoint(userOrder.getOrderPoint().getOrderPointAddress())
+                .orderPoint(userOrder.getOrderPoint().getOrderPointAddress())
                 .orderSum(userOrder.getOrderSum())
                 .finalOrderSum(finalOrderSum)
                 .userOrderCreateDateTime(userOrder.getCreateDateTime())
@@ -65,7 +65,7 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
                 .userOrderId(userOrder.getId())
                 .orderStatus(OrderStatus.REFUSED)
                 .userId(userOrder.getUser().getId())
-                .OrderPoint(userOrder.getOrderPoint().getOrderPointAddress())
+                .orderPoint(userOrder.getOrderPoint().getOrderPointAddress())
                 .orderSum(userOrder.getOrderSum())
                 .finalOrderSum(BigDecimal.ZERO)
                 .userOrderCreateDateTime(userOrder.getCreateDateTime())
@@ -86,7 +86,6 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
         }
         return
                 new PageResponse<ArchivedUserOrderDTO>(page
-                        .map(archivedUserOrder -> conversionService.convert(archivedUserOrder,
-                                ArchivedUserOrderDTO.class)));
+                        .map(archivedUserOrder -> archivedUserOrderConverter.toDTO(archivedUserOrder)));
     }
 }

@@ -1,12 +1,14 @@
 package org.example.webApplicationShopSpringBoot.service.seller;
 
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dao.seller.SellerRepository;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTONew.toEntity.SellerConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
+import org.example.webApplicationShopSpringBoot.model.ItemStatus;
 import org.example.webApplicationShopSpringBoot.model.Seller;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,37 +19,51 @@ import java.util.List;
 @AllArgsConstructor
 public class SellerServiceImpl implements SellerService {
     private SellerRepository sellerRepository;
-    private ConversionService conversionService;
+    private SellerConverter sellerConverter;
 
     public PageResponse<SellerDTO> getSellerDTOList(Pageable pageable) {
         Page<Seller> page = sellerRepository.findAll(pageable);
-        return new PageResponse(page.map(seller -> conversionService.convert(seller, SellerDTO.class)));
+        return new PageResponse<SellerDTO>(page.map(seller -> sellerConverter.toDTO(seller)));
     }
 
     public List<SellerDTO> getSellerDTOList() {
-        return sellerRepository.findAll().stream().map(seller -> conversionService.convert(seller, SellerDTO.class)).toList();
+        return sellerRepository.findAll().stream().map(seller -> sellerConverter.toDTO(seller)).toList();
+    }
+
+    public List<SellerDTO> getActiveSellerDTOList() {
+        return sellerRepository.findAll(ItemStatus.ACTIVE).stream().map(seller -> sellerConverter.toDTO(seller)).toList();
     }
 
     @Override
     public void updateSeller(SellerDTO sellerDTO) {
-        Seller seller = conversionService.convert(sellerDTO,Seller.class);
+        Seller existingSeller = sellerRepository.findById(sellerDTO.getId()).get();
+        Seller seller = sellerConverter.updateSeller(sellerDTO, existingSeller);
         sellerRepository.save(seller);
     }
 
     @Override
     public void addSeller(SellerDTO sellerDTO) {
-        Seller seller = conversionService.convert(sellerDTO, Seller.class);
+        Seller seller = sellerConverter.toEntity(sellerDTO);
         sellerRepository.save(seller);
     }
 
+    @Transactional
     @Override
-    public void removeSeller(Long id) {
-        sellerRepository.deleteById(id);
+    public void deleteSeller(Long id) {
+        Seller seller = sellerRepository.findById(id).get();
+        seller.setStatus(ItemStatus.DELETED);
+    }
+
+    @Transactional
+    @Override
+    public void recoverSeller(Long id) {
+        Seller seller = sellerRepository.findById(id).get();
+        seller.setStatus(ItemStatus.ACTIVE);
     }
 
     @Override
     public SellerDTO getSeller(Long id) {
         Seller seller = sellerRepository.findById(id).get();
-        return conversionService.convert(seller,SellerDTO.class);
+        return sellerConverter.toDTO(seller);
     }
 }

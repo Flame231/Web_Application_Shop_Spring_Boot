@@ -19,7 +19,7 @@ public class ArchivedUserOrderDTO {
 
     private Long userId;
 
-    private String OrderPoint;
+    private String orderPoint;
 
     private BigDecimal orderSum;
 

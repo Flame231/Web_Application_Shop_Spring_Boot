@@ -35,7 +35,7 @@ public class ArchivedUserOrder {
     private Long userId;
 
     @Column(updatable = false)
-    private String OrderPoint;
+    private String orderPoint;
 
     @Column(updatable = false)
     private BigDecimal orderSum;

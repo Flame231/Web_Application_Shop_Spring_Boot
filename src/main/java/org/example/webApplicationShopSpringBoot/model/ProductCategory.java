@@ -3,6 +3,7 @@ package org.example.webApplicationShopSpringBoot.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import jakarta.persistence.*;
@@ -17,13 +18,18 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class ProductCategory extends DataEntity {
 
-    @OneToMany(mappedBy = "productCategory", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "productCategory")
     private Set<Product> products = new HashSet<>();
 
     @Column
     private String category;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ItemStatus status;
 
     @Override
     public String toString() {

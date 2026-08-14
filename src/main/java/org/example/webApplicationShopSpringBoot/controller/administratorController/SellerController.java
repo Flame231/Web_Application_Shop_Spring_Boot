@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.seller.SellerService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,8 +34,15 @@ public class SellerController {
 
     @PostMapping("deleteSeller/{id}")
     public String deleteSeller(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        sellerService.removeSeller(id);
+        sellerService.deleteSeller(id);
         redirectAttributes.addFlashAttribute("successMessage", "Продавец успешно удалён!");
+        return "redirect:/administrator/editSellers";
+    }
+
+    @PostMapping("recoverSeller/{id}")
+    public String recoverSeller(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        sellerService.recoverSeller(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Продавец успешно восстановлен!");
         return "redirect:/administrator/editSellers";
     }
 
@@ -52,7 +58,7 @@ public class SellerController {
         return "redirect:editSellers";
     }
 
-    @PostMapping("editSeller/{id}")
+    @GetMapping("editSeller/{id}")
     public String editSeller(@PathVariable Long id, Model model) {
         SellerDTO sellerDTO = sellerService.getSeller(id);
         model.addAttribute(sellerDTO);
