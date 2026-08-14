@@ -73,10 +73,10 @@ public class BagServiceImpl implements BagService {
     }
 
     @Override
-    public List<BagDTOResponse> openBag(){
+    public List<BagDTOResponse> openBag() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Bag> bagList = bagRepository.getBagList(user.getId());
-        if(bagList.isEmpty()){
+        if (bagList.isEmpty()) {
             throw new EmptyList("Корзина пуста!");
         }
         return bagList.stream().map(bag -> bagConverter.toDTO(bag)).toList();

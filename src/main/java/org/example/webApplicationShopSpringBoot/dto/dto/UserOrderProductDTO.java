@@ -14,4 +14,13 @@ public class UserOrderProductDTO {
     private Long productCount;
 
     private Long actualProductCount;
+
+    @Override
+    public String toString() {
+        return "UserOrderProductDTO{" +
+                "userOrderId=" + userOrderId +
+                ", productCount=" + productCount +
+                ", actualProductCount=" + actualProductCount +
+                '}';
+    }
 }

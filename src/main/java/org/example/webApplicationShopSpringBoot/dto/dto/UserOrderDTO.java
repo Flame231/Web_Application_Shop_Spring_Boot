@@ -24,4 +24,16 @@ public class UserOrderDTO {
     private Timestamp OrderCreateDateTime;
 
     private Set<UserOrderProductDTO> userOrderProducts;
+
+    @Override
+    public String toString() {
+        return "UserOrderDTO{" +
+                "orderId=" + orderId +
+                ", orderStatus=" + orderStatus +
+                ", orderPoint='" + orderPoint + '\'' +
+                ", orderSum=" + orderSum +
+                ", OrderCreateDateTime=" + OrderCreateDateTime +
+                ", userOrderProducts=" + userOrderProducts +
+                '}';
+    }
 }

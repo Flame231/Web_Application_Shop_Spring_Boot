@@ -49,8 +49,8 @@ public class Bag implements ProductSum<Bag> {
     @Override
     public String toString() {
         return "Bag{" +
-                "user=" + user +
-                ", product=" + product +
+                "user=" + user.getId() +
+                ", product=" + product.getId() +
                 ", count=" + count +
                 ", createDateTime=" + createDateTime +
                 ", updateDateTime=" + updateDateTime +

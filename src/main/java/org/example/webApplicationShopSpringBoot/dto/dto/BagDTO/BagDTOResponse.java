@@ -15,4 +15,13 @@ public class BagDTOResponse {
     private ProductDTO productDTO;
 
     private Long count;
+
+    @Override
+    public String toString() {
+        return "BagDTOResponse{" +
+                "userId=" + userId +
+                ", productDTO=" + productDTO +
+                ", count=" + count +
+                '}';
+    }
 }

@@ -31,6 +31,9 @@ public class OperatorController {
     @GetMapping("orders")
     public String showCreatedOrders(Model model) {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showCreatedUserOrders();
+        for(UserOrderDTO userOrderDTO: userOrderDTOList){
+            System.out.println(userOrderDTO + "!!!!!");
+        }
         model.addAttribute("userOrderDTOList", userOrderDTOList);
         return "/order/showCreatedOrderPointOrders";
     }
