@@ -3,13 +3,14 @@ package org.example.webApplicationShopSpringBoot.service.userOrder;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
 import org.example.webApplicationShopSpringBoot.dao.bag.BagRepository;
 import org.example.webApplicationShopSpringBoot.dao.orderPoint.OrderPointRepository;
 import org.example.webApplicationShopSpringBoot.dao.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
 import org.example.webApplicationShopSpringBoot.dao.userOrder.UserOrderRepository;
 import org.example.webApplicationShopSpringBoot.dao.userOrderProduct.UserOrderProductRepository;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTONew.toDTO.UserOrderConverter;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.UserOrderConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.OrderStatus;
@@ -18,11 +19,13 @@ import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import static org.example.webApplicationShopSpringBoot.service.PrincipalProvider.getUserFromSecurityContext;
 
 @Service
 @AllArgsConstructor
@@ -40,10 +43,10 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public void confirmOrder(List<OrderDTO> list) {
-        if (list.isEmpty()){
+        if (list.isEmpty()) {
             throw new EmptyList("Корзина товаров пуста!");
         }
-            BigDecimal orderSum = BigDecimal.ZERO;
+        BigDecimal orderSum = BigDecimal.ZERO;
         UserOrder userOrder = UserOrder.builder().orderStatus(OrderStatus.CREATED)
                 .user(userRepository.findById(list.get(0).getUserId()).get())
                 .orderPoint(orderPointRepository.findById(list.get(0).getOrderPointId()).get())
@@ -68,18 +71,18 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public List<UserOrderDTO> showAllUserOrders() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<UserOrderDTO> userOrderList = userOrderRepository.findAllByUserId(user.getId()).stream().map(userOrder -> userOrderConverter.toDTO(userOrder))
-                .toList();
+        User user = getUserFromSecurityContext();
+        List<UserOrder> userOrderList = userOrderRepository.findAllByUserId(user.getId());
         if (userOrderList.isEmpty()) {
             throw new EmptyList("Активные заказы отсутствуют!");
         }
-        return userOrderList;
+        return userOrderList.stream().map(userOrder -> userOrderConverter.toDTO(userOrder))
+                .toList();
     }
 
     @Override
     public List<UserOrderDTO> showUserOrdersByOrderPoint() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = getUserFromSecurityContext();
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.findAllByOrderPointId(orderPointId);
         return userOrderList.stream().map(userOrder -> userOrderConverter.toDTO(userOrder)).toList();
@@ -87,7 +90,7 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public List<UserOrderDTO> showReadyUserOrdersByOrderPoint() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = getUserFromSecurityContext();
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.getReadyUserOrderByOrderPoint(orderPointId);
         if (userOrderList.isEmpty()) {
@@ -98,21 +101,21 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public UserOrderDTO getUserOrderDTO(Long id) {
-        UserOrder userOrder = userOrderRepository.findById(id).get();
+        UserOrder userOrder = userOrderRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Заказ не найден!"));
         return userOrderConverter.toDTO(userOrder);
     }
 
-
     @Override
     public void readyUserOrder(Long userOrderId) {
-        UserOrder userOrder = userOrderRepository.findById(userOrderId).get();
+        UserOrder userOrder = userOrderRepository.findById(userOrderId)
+                .orElseThrow(() -> new ResourceNotFound("Пользователь не найден!"));
         userOrder.setOrderStatus(OrderStatus.READY);
         userOrderRepository.save(userOrder);
     }
 
     @Override
     public List<UserOrderDTO> showCreatedUserOrders() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = PrincipalProvider.getUserFromSecurityContext();
         List<UserOrder> userOrderList = userOrderRepository
                 .findAllCreatedUserOrder(user.getOrderPoint().getId());
         if (userOrderList.isEmpty()) {
@@ -120,4 +123,6 @@ public class UserOrderServiceImpl implements UserOrderService {
         }
         return userOrderList.stream().map(userOrder -> userOrderConverter.toDTO(userOrder)).toList();
     }
+
+
 }

@@ -4,7 +4,7 @@ package org.example.webApplicationShopSpringBoot.service.archivedUserOrder;
 import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dao.archivedUserOrder.ArchivedUserOrderRepository;
 import org.example.webApplicationShopSpringBoot.dao.userOrder.UserOrderRepository;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTONew.toDTO.ArchivedUserOrderConverter;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ArchivedUserOrderConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.ArchivedUserOrderDTO;
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrder;
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrderProduct;
@@ -12,11 +12,11 @@ import org.example.webApplicationShopSpringBoot.model.UserOrder.OrderStatus;
 import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrder;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
+import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
 import org.example.webApplicationShopSpringBoot.service.archivedUserOrderProduct.ArchivedUserOrderProductService;
 import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -76,10 +76,9 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
         userOrderRepository.deleteById(userOrderId);
     }
 
-
     @Override
     public PageResponse<ArchivedUserOrderDTO> showArchivedUserOrders(Pageable pageable) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = PrincipalProvider.getUserFromSecurityContext();
         Page<ArchivedUserOrder> page = archivedUserOrderRepository.findByUserId(user.getId(), pageable);
         if (page.getTotalElements() == 0) {
             throw new EmptyList("История заказов пуста");

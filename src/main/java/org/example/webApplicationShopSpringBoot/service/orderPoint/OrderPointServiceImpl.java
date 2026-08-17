@@ -2,7 +2,7 @@ package org.example.webApplicationShopSpringBoot.service.orderPoint;
 
 import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dao.orderPoint.OrderPointRepository;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTONew.toEntity.OrderPointConverter;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.OrderPointConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderPointDTO;
 import org.springframework.stereotype.Service;
 

@@ -47,17 +47,4 @@ public class Product extends DataEntity {
     @Column
     @Enumerated(EnumType.STRING)
     private ItemStatus status;
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "productName='" + productName + '\'' +
-                ", productCategory=" + productCategory +
-                ", price=" + price +
-                ", seller=" + seller +
-                ", bags=" + bags +
-                ", userOrderProducts=" + userOrderProducts +
-                ", status=" + status +
-                '}';
-    }
 }

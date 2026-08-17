@@ -1,3 +1,4 @@
+/*
 package org.example.webApplicationShopSpringBoot.dto;
 
 import jakarta.validation.ConstraintViolation;
@@ -31,3 +32,4 @@ public class ValidatorDTO {
         }
     }
 }
+*/

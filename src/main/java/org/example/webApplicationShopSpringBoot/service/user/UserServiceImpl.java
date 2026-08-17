@@ -5,17 +5,16 @@ import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTONew.toEntity.UserConverter;
-import org.example.webApplicationShopSpringBoot.dto.ValidatorDTO;
+import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.UserConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserDTO;
 import org.example.webApplicationShopSpringBoot.model.user.Role;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.BcryptUtil;
+import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
 import org.example.webApplicationShopSpringBoot.service.exceptions.DifferentPasswordsRegistration;
 import org.example.webApplicationShopSpringBoot.service.exceptions.DifferentPasswordsUpdate;
 import org.example.webApplicationShopSpringBoot.service.exceptions.UserRegistrationException;
 import org.example.webApplicationShopSpringBoot.service.exceptions.WrongPassword;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,7 +29,6 @@ public class UserServiceImpl implements UserService {
     public void saveOrUpdateUser(UserDTO userDTO) {
         if (userDTO.getId() == null) {
             try {
-                ValidatorDTO.validate(userDTO);
                 passwordValidation(userDTO);
                 userDTO.setRole(Role.CLIENT);
                 userRepository.saveAndFlush(userConverter.toEntity(userDTO));
@@ -51,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(UserDTO userDTO) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = PrincipalProvider.getUserFromSecurityContext();
         passwordValidation(userDTO);
         User userManaged = userRepository.findById(user.getId()).get();
         userManaged.setName(userDTO.getName());
@@ -64,18 +62,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void passwordValidation(UserDTO userDTO) {
         if (userDTO.getId() != null) {
-
-
             User user = userRepository.findById(userDTO.getId()).get();
             if (BcryptUtil.checkPassword(userDTO.getOldPassword(), user.getPasswordHash())) {
-
                 if (!userDTO.getNewPassword().equals(userDTO.getNewPasswordRepeat())) {
                     throw new DifferentPasswordsUpdate("Введенные пароли не совпадают!");
                 }
             } else {
                 throw new WrongPassword("Неверный пароль!");
             }
-
         } else {
             if (!userDTO.getNewPassword().equals(userDTO.getNewPasswordRepeat())) {
                 throw new DifferentPasswordsRegistration("Введенные пароли не совпадают!");
@@ -85,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUser() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = PrincipalProvider.getUserFromSecurityContext();
         return userConverter.toDTO(userRepository.findById(user.getId()).get());
     }
 }

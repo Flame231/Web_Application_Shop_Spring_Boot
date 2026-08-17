@@ -1,4 +1,4 @@
-package org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ConverterDTONew.toEntity;
+package org.example.webApplicationShopSpringBoot.dto.ConverterDTO;
 
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;

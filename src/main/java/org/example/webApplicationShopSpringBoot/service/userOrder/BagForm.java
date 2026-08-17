@@ -3,11 +3,10 @@ package org.example.webApplicationShopSpringBoot.service.userOrder;
 import lombok.Setter;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderDTO;
 import org.example.webApplicationShopSpringBoot.model.user.User;
+import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
 import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
-import java.sql.ClientInfoStatus;
 import java.util.ArrayList;
 import java.util.List;
 @Setter
@@ -23,7 +22,7 @@ public class BagForm {
         } else if (productId.size() != productPrice.size() || productId.size() != count.size()) {
             throw new EmptyList("Данные корзины некорректны!");
         }
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = PrincipalProvider.getUserFromSecurityContext();
         List<OrderDTO> list = new ArrayList<>();
         for (int i = 0; i < this.productId.size(); i++) {
             OrderDTO orderDTO = OrderDTO.builder()

@@ -30,11 +30,4 @@ public class ProductCategory extends DataEntity {
     @Column
     @Enumerated(EnumType.STRING)
     private ItemStatus status;
-
-    @Override
-    public String toString() {
-        return "ProductCategory{" +
-                ", category='" + category + '\'' +
-                '}';
-    }
 }

@@ -27,16 +27,4 @@ public class ProductDTO {
 
     private Timestamp updateDateTime;
 
-    @Override
-    public String toString() {
-        return "ProductDTO{" +
-                "id=" + id +
-                ", productName='" + productName + '\'' +
-                ", productCategory=" + productCategory +
-                ", price=" + price +
-                ", seller=" + seller +
-                ", status=" + status +
-                ", updateDateTime=" + updateDateTime +
-                '}';
-    }
 }

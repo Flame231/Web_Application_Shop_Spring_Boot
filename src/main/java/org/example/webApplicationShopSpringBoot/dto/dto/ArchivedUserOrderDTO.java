@@ -13,7 +13,7 @@ import java.util.Set;
 @Getter
 public class ArchivedUserOrderDTO {
 
-    private Long UserOrderId;
+    private Long userOrderId;
 
     private OrderStatus orderStatus;
 
@@ -31,4 +31,17 @@ public class ArchivedUserOrderDTO {
 
     private Set<ArchivedUserOrderProductDTO> archivedUserOrderProducts;
 
+    @Override
+    public String toString() {
+        return "ArchivedUserOrderDTO{" +
+                "userOrderId=" + userOrderId +
+                ", orderStatus=" + orderStatus +
+                ", userId=" + userId +
+                ", orderPoint='" + orderPoint + '\'' +
+                ", orderSum=" + orderSum +
+                ", finalOrderSum=" + finalOrderSum +
+                ", userOrderCreateDateTime=" + userOrderCreateDateTime +
+                ", createDateTime=" + createDateTime +
+                '}';
+    }
 }
