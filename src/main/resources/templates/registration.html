@@ -6,8 +6,8 @@
         form {
             display: flex;
             flex-direction: column;
-            gap: 12px;           /* Вертикальный отступ между строками */
-            max-width: 500px;    /* Максимальная ширина формы */
+            gap: 12px; /* Вертикальный отступ между строками */
+            max-width: 500px; /* Максимальная ширина формы */
             margin-top: 20px;
         }
 
@@ -42,37 +42,34 @@
 <a th:href="@{/login}">На главную</a>
 
 <form th:action="@{/saveOrUpdateUser}" method="post">
-    <!-- Скрытое поле лежит отдельно от разметки сетки, чтобы не ломать структуру -->
-    <input type="hidden" name="oldPassword" value="0">
-
     <div class="form-row">
         <label>Имя:</label>
-        <input name="name" type="text" />
+        <input name="name" type="text"/>
     </div>
 
     <div class="form-row">
         <label>Логин:</label>
-        <input name="login" type="text" />
+        <input name="login" type="text"/>
     </div>
 
     <div class="form-row">
         <label>Пароль:</label>
-        <input name="newPassword" type="password" />
+        <input name="newPassword" type="password"/>
     </div>
 
     <div class="form-row">
         <label>Подтвердите пароль:</label>
-        <input name="newPasswordRepeat" type="password" />
+        <input name="newPasswordRepeat" type="password"/>
     </div>
 
     <div class="form-row">
         <label>День Рождения:</label>
-        <input name="birthday" type="date" />
+        <input name="birthday" type="date"/>
     </div>
 
     <div class="form-row">
         <label>Способ Оплаты:</label>
-        <input name="paymentMethods" type="text" />
+        <input name="paymentMethods" type="text"/>
     </div>
 
     <input type="submit" value="Сохранить"/>

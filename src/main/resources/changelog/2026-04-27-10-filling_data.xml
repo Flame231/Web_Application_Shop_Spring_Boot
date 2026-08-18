@@ -470,6 +470,9 @@
                        '$2a$10$KPhmPj7c6LcbG2uCq4XrVeocZ2tSi80.5rvAktPlne/38QoJy2ksO', '3'),
                       ('OPERATOR', 'operator', 'operator4',
                        '$2a$12$REGvZBEb.jwsEXdW9I1Kze3krLluEQ2TO1BM7QkIDmXYqcfky1rYK', '5');
+
+            INSERT INTO `Discount` (discount, totalSum)
+            VALUES ('0', '0')
         </sql>
     </changeSet>
 </databaseChangeLog>

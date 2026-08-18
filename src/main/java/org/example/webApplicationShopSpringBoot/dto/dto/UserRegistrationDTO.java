@@ -1,25 +1,19 @@
 package org.example.webApplicationShopSpringBoot.dto.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import org.example.webApplicationShopSpringBoot.model.Discount;
-import org.example.webApplicationShopSpringBoot.model.user.Role;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Builder
 @Getter
 @Setter
-public class UserDTO {
-
-    private Long id;
+public class UserRegistrationDTO {
 
     @NotBlank(message = "имя не может быть пустым")
     private String name;
@@ -28,9 +22,6 @@ public class UserDTO {
     @Pattern(regexp = "^[a-zA-Z0-9а-яА-Я!@#$%^&*<>|/~]+$",
             message = "логин может содержать только буквы, цифры и спец. символы")
     private String login;
-
-    @NotBlank(message = "пароль не может быть пустым!")
-    private String oldPassword;
 
     @NotBlank(message = "новый пароль не может быть пустым!")
     @Pattern(regexp = "^(?=.*[!@#$%^&*<>|/~])[a-zA-Z0-9а-яА-Я!@#$%^&*<>|/~]+$",
@@ -49,10 +40,5 @@ public class UserDTO {
     @NotBlank(message = "не указан способ оплаты")
     private String paymentMethods;
 
-    private BigDecimal sumOfPurchases;
-
-    private Discount discount;
-
-    private Role role;
 
 }

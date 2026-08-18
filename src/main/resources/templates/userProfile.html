@@ -41,43 +41,42 @@
 <a th:href="@{/client/accountClient}">Вернуться в личный кабинет</a>
 <h1>Профиль пользователя</h1>
 
-<form th:action="@{/client/updateUser}" th:object="${userDTO}" method="post">
-    <!-- Скрытое поле ID лежит отдельно, чтобы не ломать сетку -->
+<form th:action="@{/client/updateUser}" th:object="${userProfileDTO}" method="post">
     <input type="hidden" th:field="*{id}"/>
 
     <div class="form-row">
         <label>Имя:</label>
-        <input type="text" th:field="*{name}" required/>
+        <input type="text" th:field="*{name}" />
     </div>
 
     <div class="form-row">
         <label>Логин:</label>
-        <input type="text" th:field="*{login}" required/>
+        <input type="text" th:field="*{login}" />
     </div>
 
     <div class="form-row">
         <label>Старый пароль:</label>
-        <input type="password" th:field="*{oldPassword}" required/>
+        <input type="password" th:field="*{oldPassword}" />
     </div>
 
     <div class="form-row">
         <label>Новый пароль:</label>
-        <input type="password" th:field="*{newPassword}" required/>
+        <input type="password" th:field="*{newPassword}" />
     </div>
 
     <div class="form-row">
         <label>Повторите новый пароль:</label>
-        <input type="password" th:field="*{newPasswordRepeat}" required/>
+        <input type="password" th:field="*{newPasswordRepeat}" />
     </div>
 
     <div class="form-row">
         <label>День Рождения:</label>
-        <input type="date" th:field="*{birthday}" required/>
+        <input type="date" th:field="*{birthday}" />
     </div>
 
     <div class="form-row">
         <label>Способ Оплаты:</label>
-        <input type="text" th:field="*{paymentMethods}" required/>
+        <input type="text" th:field="*{paymentMethods}" />
     </div>
 
     <input type="submit" value="Сохранить">

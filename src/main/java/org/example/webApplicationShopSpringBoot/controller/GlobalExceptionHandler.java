@@ -8,7 +8,6 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,8 +39,7 @@ public class GlobalExceptionHandler {
         return operatorPath;
     }
 
-    @ExceptionHandler({DifferentPasswordsRegistration.class,
-            DifferentPasswordsUpdate.class, EmptyList.class, UserRegistrationException.class,
+    @ExceptionHandler({DifferentUserPasswords.class, EmptyList.class, UserRegistrationException.class,
             WrongPassword.class, WrongLoginOrPassword.class, ResourceNotFound.class})
     public String handleBusinessError(Exception e, Model model) {
         model.addAttribute("message", e.getMessage());

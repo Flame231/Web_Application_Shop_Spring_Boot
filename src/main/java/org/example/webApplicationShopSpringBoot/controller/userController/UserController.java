@@ -1,6 +1,7 @@
 package org.example.webApplicationShopSpringBoot.controller.userController;
 
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
@@ -114,14 +115,14 @@ public class UserController {
 
     @GetMapping("userProfile")
     public String showUserProfile(Model model) {
-        UserDTO userDTO = userService.getUser();
-        model.addAttribute("userDTO", userDTO);
+        UserProfileDTO userProfileDTO = userService.getUser();
+        model.addAttribute("userProfileDTO", userProfileDTO);
         return "userProfile";
     }
 
     @PostMapping("updateUser")
-    public String updateUser(@ModelAttribute UserDTO userDTO, RedirectAttributes redirectAttributes) {
-        userService.updateUser(userDTO);
+    public String updateUser(@ModelAttribute @Valid UserProfileDTO userProfileDTO, RedirectAttributes redirectAttributes) {
+        userService.updateUser(userProfileDTO);
         redirectAttributes.addFlashAttribute("successMessage", "Данные пользователя успешно обновлены!");
         return "redirect:/client/accountClient";
     }
