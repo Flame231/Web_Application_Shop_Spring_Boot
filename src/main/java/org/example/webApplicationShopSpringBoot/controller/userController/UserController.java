@@ -53,27 +53,27 @@ public class UserController {
         PageResponse<ProductDTO> productDTOList = productService.getActiveProducts(pageable);
         List<BagDTOResponse> bagDTOResponseList = bagService.getAllBags();
         BigDecimal bagSum = bagService.showBagSum();
-        model.addAttribute("page", page);
-        model.addAttribute("bagSum", bagSum);
+        model.addAttribute(page);
+        model.addAttribute(bagSum);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
-        model.addAttribute("userId", user.getId());
+        model.addAttribute(user.getId());
         model.addAttribute("productDTOList", productDTOList);
-        model.addAttribute("bagDTOResponseList", bagDTOResponseList);
+        model.addAttribute(bagDTOResponseList);
         return "catalog";
     }
 
     @PostMapping("addProductToCatalogBag")
     public String addProductToCatalogBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
         bagService.addProductToBag(bagDTORequest);
-        redirectAttributes.addAttribute("page", page);
+        redirectAttributes.addAttribute(page);
         return "redirect:/client/catalog";
     }
 
     @PostMapping("deleteProductFromCatalogBag")
     public String deleteProductFromCatalogBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
         bagService.deleteProductFromBag(bagDTORequest);
-        redirectAttributes.addAttribute("page", page);
+        redirectAttributes.addAttribute(page);
         return "redirect:/client/catalog";
     }
 
@@ -82,9 +82,9 @@ public class UserController {
         List<BagDTOResponse> bagDTOResponseList = bagService.openBag();
         BigDecimal bagSum = bagService.showBagSum();
         List<OrderPointDTO> orderPointDTOList = orderPointService.getAllOrderPoints();
-        model.addAttribute("bagSum", bagSum);
-        model.addAttribute("bagDTOResponseList", bagDTOResponseList);
-        model.addAttribute("orderPointDTOList", orderPointDTOList);
+        model.addAttribute(bagSum);
+        model.addAttribute(bagDTOResponseList);
+        model.addAttribute(orderPointDTOList);
         return "/bag";
     }
 
@@ -141,7 +141,7 @@ public class UserController {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         PageResponse<ArchivedUserOrderDTO> archivedUserOrderDTOList = archivedUserOrderService.showArchivedUserOrders(pageable);
         model.addAttribute("archivedUserOrderDTOList", archivedUserOrderDTOList);
-        model.addAttribute("page", page);
+        model.addAttribute(page);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
         return "/order/showArchivedOrders";

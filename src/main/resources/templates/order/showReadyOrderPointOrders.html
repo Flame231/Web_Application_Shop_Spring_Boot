@@ -20,13 +20,13 @@
     <table border="2">
         <tr>
             <th>Название товара</th>
-            <th>Цена товара</th>
+            <th>Цена товара на момент заказа</th>
             <th>Количество товара</th>
         </tr>
         <tr th:each="userOrderDTOProduct : ${userOrderDTO.getUserOrderProducts()}">
             <td th:text="${userOrderDTOProduct.getProductDTO().getProductName()}">
             </td>
-            <td th:text="${#numbers.formatDecimal(userOrderDTOProduct.productDTO.price, 1, 'DEFAULT', 2, 'DEFAULT')}">
+            <td th:text="${#numbers.formatDecimal(userOrderDTOProduct.productPrice, 1, 'DEFAULT', 2, 'DEFAULT')}">
             </td>
             <td th:text="${userOrderDTOProduct.getProductCount()}">
             </td>

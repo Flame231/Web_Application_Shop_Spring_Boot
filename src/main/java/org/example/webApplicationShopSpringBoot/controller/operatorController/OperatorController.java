@@ -36,14 +36,14 @@ public class OperatorController {
     @GetMapping("orders")
     public String showCreatedOrders(Model model) {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showCreatedUserOrders();
-        model.addAttribute("userOrderDTOList", userOrderDTOList);
+        model.addAttribute(userOrderDTOList);
         return "/order/showCreatedOrderPointOrders";
     }
 
     @GetMapping("arrivedOrders")
     public String showArrivedOrders(Model model) {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showReadyUserOrdersByOrderPoint();
-        model.addAttribute("userOrderDTOList", userOrderDTOList);
+        model.addAttribute( userOrderDTOList);
         return "/order/showReadyOrderPointOrders";
     }
 
@@ -56,7 +56,7 @@ public class OperatorController {
     @GetMapping("readyOrders")
     public String showReadyOrders(Model model) {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showReadyUserOrdersByOrderPoint();
-        model.addAttribute("userOrderDTOList", userOrderDTOList);
+        model.addAttribute( userOrderDTOList);
         return "/order/showReadyOrderPointOrders";
     }
 

@@ -33,7 +33,7 @@ public class ProductController {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         PageResponse<ProductDTO> productDTOList = productService.getAllProducts(pageable);
         model.addAttribute("pageSizeList", pageSizeList);
-        model.addAttribute("pageSize", pageSize);
+        model.addAttribute(pageSize);
         model.addAttribute("productDTOList", productDTOList);
         return "/superUser/product/productsList";
     }
@@ -44,8 +44,8 @@ public class ProductController {
         List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getActiveProductCategoryDTOList();
         List<SellerDTO> sellerDTOList = sellerService.getActiveSellerDTOList();
         model.addAttribute(new ProductDTO());
-        model.addAttribute("productCategoryDTOList", productCategoryDTOList);
-        model.addAttribute("sellerDTOList", sellerDTOList);
+        model.addAttribute(productCategoryDTOList);
+        model.addAttribute(sellerDTOList);
         return "/superUser/product/addProduct";
     }
 

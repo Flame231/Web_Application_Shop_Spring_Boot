@@ -42,9 +42,8 @@
         Выбрать пункт выдачи:
         <select name="orderPointId" form="orderForm">
             <option th:each="orderPointDTO:${orderPointDTOList}"
-                    th:value="${orderPointDTO.getId()}"
-                    th:text="${orderPointDTO.getOrderPointAddress()}">
-                <span th:text="${orderPointDTO.getOpeningTime()}"></span>
+                    th:value="${orderPointDTO.id}"
+                    th:text="${orderPointDTO.orderPointAddress}">
             </option>
         </select>
 
@@ -75,27 +74,27 @@
     <tbody>
     <tr th:each="bagDTO:${bagDTOResponseList}">
         <td>
-            <input type="hidden" name="productId" form="orderForm" th:value="${bagDTO.getProductDTO().getId()}">
-            <span th:text="${bagDTO.getProductDTO.getProductName()}"></span>
+            <input type="hidden" name="productId" form="orderForm" th:value="${bagDTO.productDTO.id}">
+            <span th:text="${bagDTO.productDTO.productName}"></span>
         </td>
         <td>
-            <span th:text="${bagDTO.getProductDTO.getProductCategory().getCategory()}"></span>
+            <span th:text="${bagDTO.getProductDTO.productCategory.category}"></span>
         </td>
         <td>
-            <span th:text="${bagDTO.getProductDTO.getPrice()}"></span>
+            <span th:text="${bagDTO.productDTO.price}"></span>
             <input type="hidden" name="productPrice" form="orderForm"
-                   th:value="${bagDTO.getProductDTO.getPrice()}"/>
+                   th:value="${bagDTO.productDTO.price}"/>
         </td>
         <td>
-            <span th:text="${bagDTO.getProductDTO.getSeller().getSellerName()}"></span>
-            <input type="hidden" name="count" form="orderForm" th:value="${bagDTO.getCount()}"/>
+            <span th:text="${bagDTO.productDTO.seller.sellerName}"></span>
+            <input type="hidden" name="count" form="orderForm" th:value="${bagDTO.count}"/>
         </td>
         <td>
             <form method="post">
                 <input type="submit" formmethod="post" th:formaction="@{/client/addProductToBag}" value="+">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <input type="hidden" th:name="productId" th:value="${bagDTO.getProductDTO().getId()}">
-                <span th:text="${bagDTO.getCount()}"></span>
+                <input type="hidden" th:name="productId" th:value="${bagDTO.productDTO.id}">
+                <span th:text="${bagDTO.count}"></span>
                 <input type="submit" formmethod="post" th:formaction="@{/client/deleteProductFromBag}" value="-">
             </form>
         </td>

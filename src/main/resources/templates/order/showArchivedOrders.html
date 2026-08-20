@@ -6,24 +6,25 @@
 <a th:href="@{/client/accountClient}">Вернуться в личный кабинет</a>
 
 <h1>История заказов</h1>
-<th:block th:each="archivedUserOrderDTO : ${archivedUserOrderDTOList.content()}">
+<th:block th:each="archivedUserOrderDTO : ${archivedUserOrderDTOList.content}">
 
-    <div>Номер заказа: <span th:text="${archivedUserOrderDTO.getUserOrderId()}"></span>
+    <div>Номер заказа: <span th:text="${archivedUserOrderDTO.userOrderId}"></span>
+    </div>
+    <div>Статус заказа: <span th:text="${archivedUserOrderDTO.orderStatus.description}"></span>
+    </div>
+    <div>
+        Сумма заказа: <span th:text="${archivedUserOrderDTO.orderSum}"></span>
     </div>
 
     <div>
-        Сумма заказа: <span th:text="${archivedUserOrderDTO.getOrderSum()}"></span>
+        Сумма выкупленных товаров: <span th:text="${archivedUserOrderDTO.finalOrderSum}"></span>
     </div>
 
     <div>
-        Сумма выкупленных товаров: <span th:text="${archivedUserOrderDTO.getFinalOrderSum()}"></span>
-    </div>
-
-    <div>
-        Дата создания заказа: <span th:text="${archivedUserOrderDTO.getUserOrderCreateDateTime()}"></span>
+        Дата создания заказа: <span th:text="${archivedUserOrderDTO.userOrderCreateDateTime}"></span>
     </div>
     <div>
-        Дата закрытия заказа: <span th:text="${archivedUserOrderDTO.getCreateDateTime()}"></span>
+        Дата закрытия заказа: <span th:text="${archivedUserOrderDTO.createDateTime}"></span>
     </div>
 
     <table border="2">
@@ -36,14 +37,14 @@
         </tr>
         </thead>
 
-        <tr th:each="orderDTO : ${archivedUserOrderDTO.getArchivedUserOrderProducts()}">
-            <td><span th:text="${orderDTO.getProductName()}"></span>
+        <tr th:each="orderDTO : ${archivedUserOrderDTO.archivedUserOrderProducts}">
+            <td><span th:text="${orderDTO.productName}"></span>
             </td>
-            <td><span th:text="${orderDTO.getProductCount()}"></span>
+            <td><span th:text="${orderDTO.productCount}"></span>
             </td>
-            <td><span th:text="${orderDTO.getFinalProductCount()}"></span>
+            <td><span th:text="${orderDTO.finalProductCount}"></span>
             </td>
-            <td><span th:text="${orderDTO.getPrice()}"></span>
+            <td><span th:text="${orderDTO.price}"></span>
             </td>
         </tr>
     </table>
@@ -66,8 +67,8 @@
       th:each="i : ${#numbers.sequence(archivedUserOrderDTOList.currentPage + 1, (archivedUserOrderDTOList.currentPage + 3 < archivedUserOrderDTOList.totalPages ? archivedUserOrderDTOList.currentPage + 3 : archivedUserOrderDTOList.totalPages))}">
     <a th:href="@{|${clientPath}ordersHistory|(page=${i}, pageSize=${pageSize})}" th:text="${i}"></a>
 </span>
-<a th:href="@{|${clientPath}ordersHistory|(page=${archivedUserOrderDTOList.totalPages}, pageSize=${pageSize})}">В конец</a>
-
+<a th:href="@{|${clientPath}ordersHistory|(page=${archivedUserOrderDTOList.totalPages}, pageSize=${pageSize})}">В
+    конец</a>
 
 
 <form th:action="@{/client/ordersHistory}">

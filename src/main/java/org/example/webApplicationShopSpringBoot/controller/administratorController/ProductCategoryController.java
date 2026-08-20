@@ -62,7 +62,7 @@ public class ProductCategoryController {
     @GetMapping("editProductCategory/{id}")
     public String showEditProductCategoryPage(@PathVariable Long id, Model model) {
         ProductCategoryDTO productCategoryDTO = productCategoryService.findProductCategory(id);
-        model.addAttribute("productCategoryDTO", productCategoryDTO);
+        model.addAttribute(productCategoryDTO);
         return "/superUser/productCategory/editProductCategory";
     }
 

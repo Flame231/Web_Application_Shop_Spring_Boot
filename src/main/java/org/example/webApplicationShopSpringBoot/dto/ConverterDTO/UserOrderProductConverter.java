@@ -11,5 +11,8 @@ public interface UserOrderProductConverter {
 
 @Mapping(source = "userOrder.id",target = "userOrderId")
 @Mapping(source = "product",target = "productDTO")
+/*
+@Mapping(source = "productPrice",target = "productPrice")
+*/
     UserOrderProductDTO toDTO(UserOrderProduct userOrderProduct);
 }

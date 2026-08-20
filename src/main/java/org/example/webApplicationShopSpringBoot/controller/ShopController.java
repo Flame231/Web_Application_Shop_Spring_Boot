@@ -47,7 +47,7 @@ public class ShopController {
 
     @GetMapping("/registration")
     public String showRegistrationPage(Model model) {
-        model.addAttribute("userRegistrationDTO", new UserRegistrationDTO());
+        model.addAttribute(new UserRegistrationDTO());
         return "registration";
     }
 
@@ -61,9 +61,9 @@ public class ShopController {
     @GetMapping("/errorPage")
     public String showAccessDeniedPage(Model model) {
         model.addAttribute("message", "У вас нет прав для доступа к этому разделу сайта!");
-        model.addAttribute("adminPath", adminPath);
-        model.addAttribute("clientPath", clientPath);
-        model.addAttribute("operatorPath", operatorPath);
+        model.addAttribute(adminPath);
+        model.addAttribute(clientPath);
+        model.addAttribute(operatorPath);
         return "errorPage";
     }
 }
