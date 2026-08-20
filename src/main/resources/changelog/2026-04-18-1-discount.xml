@@ -11,7 +11,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="discount" type="INT"/>
-            <column name="totalSum" type="decimal"/>
+            <column name="totalSum" type="decimal(10,2)"/>
             <column name="createDateTime" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="updateDateTime" type="TIMESTAMP"
                     defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>

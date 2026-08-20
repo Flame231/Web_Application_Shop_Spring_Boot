@@ -7,9 +7,8 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import jakarta.persistence.*;
-import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.additional.DataEntity;
-import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
 import java.util.HashSet;

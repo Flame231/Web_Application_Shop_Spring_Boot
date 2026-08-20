@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Редактировать продукт</title>
@@ -8,17 +7,13 @@
 
 <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
 <h1>Редактировать продукт</h1>
-<a th:href="@{|${adminPath}editCatalog|}">Назад</a>
+<a th:href="@{|${adminPath}productsList|}">Назад</a>
 
 <form th:action="@{|${adminPath}updateProduct|}" th:object="${productDTO}" method="post">
 
-    <!-- Скрытые системные поля (Связаны через th:field, без конфликтов value) -->
-    <input type="hidden" th:field="*{id}" />
-    <input type="hidden" th:field="*{status}" />
-    <input type="hidden" th:field="*{updateDateTime}" /> <!-- Защищает дату от зануления -->
-
     <div>
         Номер продукта:
+        <input type="hidden" th:field="*{id}"/>
         <span th:text="*{id}"></span>
     </div>
 

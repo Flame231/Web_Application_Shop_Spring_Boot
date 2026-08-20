@@ -1,8 +1,12 @@
 package org.example.webApplicationShopSpringBoot.service.user;
 
 
+import org.example.webApplicationShopSpringBoot.dto.dto.OrderPointDTO;
+import org.example.webApplicationShopSpringBoot.dto.dto.UserDiscountDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserProfileDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserRegistrationDTO;
+
+import java.math.BigDecimal;
 
 public interface UserService {
 
@@ -10,6 +14,12 @@ public interface UserService {
 
     void updateUser(UserProfileDTO userProfileDTO);
 
-    UserProfileDTO getUser();
+    UserProfileDTO getUserProfileDTO();
+
+    void increaseTotalSum(Long userId, BigDecimal finalOrderSum);
+
+    OrderPointDTO getOrderPoint();
+
+    UserDiscountDTO getUserDiscount();
 
 }

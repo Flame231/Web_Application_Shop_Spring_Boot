@@ -4,18 +4,18 @@ import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
-import org.example.webApplicationShopSpringBoot.dao.bag.BagRepository;
-import org.example.webApplicationShopSpringBoot.dao.orderPoint.OrderPointRepository;
-import org.example.webApplicationShopSpringBoot.dao.product.ProductRepository;
-import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
-import org.example.webApplicationShopSpringBoot.dao.userOrder.UserOrderRepository;
-import org.example.webApplicationShopSpringBoot.dao.userOrderProduct.UserOrderProductRepository;
+import org.example.webApplicationShopSpringBoot.repository.bag.BagRepository;
+import org.example.webApplicationShopSpringBoot.repository.orderPoint.OrderPointRepository;
+import org.example.webApplicationShopSpringBoot.repository.product.ProductRepository;
+import org.example.webApplicationShopSpringBoot.repository.user.UserRepository;
+import org.example.webApplicationShopSpringBoot.repository.userOrder.UserOrderRepository;
+import org.example.webApplicationShopSpringBoot.repository.userOrderProduct.UserOrderProductRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.UserOrderConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
-import org.example.webApplicationShopSpringBoot.model.UserOrder.OrderStatus;
-import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrder;
-import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct;
+import org.example.webApplicationShopSpringBoot.model.userOrder.OrderStatus;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
@@ -80,13 +80,13 @@ public class UserOrderServiceImpl implements UserOrderService {
                 .toList();
     }
 
-    @Override
+/*    @Override
     public List<UserOrderDTO> showUserOrdersByOrderPoint() {
         User user = getUserFromSecurityContext();
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.findAllByOrderPointId(orderPointId);
         return userOrderList.stream().map(userOrder -> userOrderConverter.toDTO(userOrder)).toList();
-    }
+    }*/
 
     @Override
     public List<UserOrderDTO> showReadyUserOrdersByOrderPoint() {

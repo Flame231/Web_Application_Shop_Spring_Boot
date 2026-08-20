@@ -1,4 +1,3 @@
-
 <head>
     <meta charset="UTF-8">
     <title>Заказы на пункте выдачи</title>
@@ -8,19 +7,26 @@
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         th, td {
             border: 1px solid black;
             padding: 8px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
         }
-       {
-            display: grid;
-            grid-template-columns: 120px 300px;
-            gap: 15px;
-            align-items: center;
+
+        {
+            display: grid
+        ;
+            grid-template-columns: 120px 300px
+        ;
+            gap: 15px
+        ;
+            align-items: center
+        ;
         }
     </style>
 </head>
@@ -45,30 +51,32 @@
         <br>
         <div>Пункт выдачи: <span th:text="${userOrderDTO.getOrderPoint()}"></span></div>
         <br>
-        <div>Сумма заказа: <span th:text="${userOrderDTO.getOrderSum()}"></span></div>
-        <br>
-        <div>Дата создания: <span th:text="${userOrderDTO.getOrderCreateDateTime()}"></span></div>
-        <br>
+        <div>Сумма заказа:
+            <span th:text="${#numbers.formatDecimal(userOrderDTO.orderSum, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+            <br>
+            <div>
+                Дата создания: <span th:text="${userOrderDTO.getOrderCreateDateTime()}"></span></div>
+            <br>
 
-        <table>
-            <thead>
-            <tr>
-                <th>Название товара</th>
-                <th>Цена</th>
-                <th>Количество</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="orderDTO : ${userOrderDTO.getUserOrderProducts()}">
-                <td><span th:text="${orderDTO.getProductDTO().getProductName()}"></span></td>
-                <td><span th:text="${orderDTO.getProductDTO().getPrice()}"></span></td>
-                <td><span th:text="${orderDTO.getProductCount()}"></span></td>
-            </tr>
-            </tbody>
-        </table>
-        <br>
-        <input type="submit" value="Готов к выдаче"/>
-        <input type="hidden" th:value="${userOrderDTO.getOrderId()}" name="userOrderId">
+            <table>
+                <thead>
+                <tr>
+                    <th>Название товара</th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="orderDTO : ${userOrderDTO.getUserOrderProducts()}">
+                    <td><span th:text="${orderDTO.getProductDTO().getProductName()}"></span></td>
+                    <td><span th:text="${#numbers.formatDecimal(orderDTO.productDTO.price, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                    <td><span th:text="${orderDTO.getProductCount()}"></span></td>
+                </tr>
+                </tbody>
+            </table>
+            <br>
+            <input type="submit" value="Готов к выдаче"/>
+            <input type="hidden" th:value="${userOrderDTO.getOrderId()}" name="userOrderId">
     </form>
     <br><br><br><br>
 </th:block>

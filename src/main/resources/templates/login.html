@@ -62,6 +62,12 @@
             Неверный логин или пароль!
         </div>
 
+        <th:block th:if="${successMessage}">
+            <span style="color: #069e29" th:text="${successMessage}"></span>
+            <br>
+            <br>
+        </th:block>
+
         <p><input type="submit" value="Войти"/></p>
     </form>
     <a style="font-size: 20px" th:href="@{/registration}">Регистрация нового пользователя</a>

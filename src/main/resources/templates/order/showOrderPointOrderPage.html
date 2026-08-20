@@ -43,6 +43,10 @@
 <br>
 Статус заказа: <span th:text="${userOrderDTO.getOrderStatus().getDescription()}"></span>
 <br>
+Текущая сумма заказа:
+<span th:text="${#numbers.formatDecimal(userOrderProductSum, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+
+<br>
 <table border="2">
     <tr>
         <th width="100">Номер товара</th>
@@ -56,7 +60,8 @@
         </td>
         <td><span th:text="${productDTO.getProductDTO().getProductName()}"></span>
         </td>
-        <td><span th:text="${productDTO.getProductDTO().getPrice()}"></span>
+        <td>
+            <span th:text="${#numbers.formatDecimal(productDTO.productDTO.price, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
         </td>
         <td>
             <span th:text="${productDTO.getProductCount()}"></span>

@@ -22,44 +22,45 @@ public class SellerController {
     public static final List<Integer> pageSizeList = List.of(30, 50, 100);
     private SellerService sellerService;
 
-    @RequestMapping(value = "editSellers", method = {RequestMethod.GET, RequestMethod.POST})
-    public String showEditSellersPage(@RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, Model model) {
+    @RequestMapping(value = "sellersList", method = {RequestMethod.GET, RequestMethod.POST})
+    public String showSellersList(@RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, Model model) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         PageResponse<SellerDTO> sellerDTOList = sellerService.getSellerDTOList(pageable);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("sellerDTOList", sellerDTOList);
-        return "/superUser/seller/editSellers";
+        return "/superUser/seller/sellersList";
     }
 
     @PostMapping("deleteSeller/{id}")
     public String deleteSeller(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         sellerService.deleteSeller(id);
         redirectAttributes.addFlashAttribute("successMessage", "Продавец успешно удалён!");
-        return "redirect:/administrator/editSellers";
+        return "redirect:/administrator/sellersList";
     }
 
     @PostMapping("recoverSeller/{id}")
     public String recoverSeller(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         sellerService.recoverSeller(id);
         redirectAttributes.addFlashAttribute("successMessage", "Продавец успешно восстановлен!");
-        return "redirect:/administrator/editSellers";
+        return "redirect:/administrator/sellersList";
     }
 
     @GetMapping("addSeller")
-    public String showAddSellerPage() {
-        return "/superUser/seller/addSellerPage";
+    public String showAddSellerPage(Model model) {
+        model.addAttribute(new SellerDTO());
+        return "/superUser/seller/addSeller";
     }
 
     @PostMapping("addNewSeller")
-    public String addNewSeller(@ModelAttribute SellerDTO sellerDTO, RedirectAttributes redirectAttributes) {
+    public String addSeller(@ModelAttribute SellerDTO sellerDTO, RedirectAttributes redirectAttributes) {
         sellerService.addSeller(sellerDTO);
         redirectAttributes.addFlashAttribute("successMessage", "Продавец успешно добавлен!");
-        return "redirect:editSellers";
+        return "redirect:sellersList";
     }
 
     @GetMapping("editSeller/{id}")
-    public String editSeller(@PathVariable Long id, Model model) {
+    public String showEditSellerPage(@PathVariable Long id, Model model) {
         SellerDTO sellerDTO = sellerService.getSeller(id);
         model.addAttribute(sellerDTO);
         return "/superUser/seller/editSeller";
@@ -69,6 +70,6 @@ public class SellerController {
     public String updateSeller(@ModelAttribute SellerDTO sellerDTO, RedirectAttributes redirectAttributes) {
         sellerService.updateSeller(sellerDTO);
         redirectAttributes.addFlashAttribute("successMessage", "Продавец успешно обновлён!");
-        return "redirect:editSellers";
+        return "redirect:sellersList";
     }
 }

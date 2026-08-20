@@ -2,8 +2,8 @@ package org.example.webApplicationShopSpringBoot.service.bag;
 
 
 import lombok.AllArgsConstructor;
-import org.example.webApplicationShopSpringBoot.dao.bag.BagRepository;
-import org.example.webApplicationShopSpringBoot.dao.product.ProductRepository;
+import org.example.webApplicationShopSpringBoot.repository.bag.BagRepository;
+import org.example.webApplicationShopSpringBoot.repository.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.BagConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;

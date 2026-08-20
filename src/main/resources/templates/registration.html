@@ -40,36 +40,37 @@
 
 <h1>Регистрация нового пользователя</h1>
 <a th:href="@{/login}">На главную</a>
+<form th:object="${userRegistrationDTO}" th:action="@{/saveNewUser}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
-<form th:action="@{/saveOrUpdateUser}" method="post">
     <div class="form-row">
         <label>Имя:</label>
-        <input name="name" type="text"/>
+        <input type="text" th:field="*{name}"/>
     </div>
 
     <div class="form-row">
         <label>Логин:</label>
-        <input name="login" type="text"/>
+        <input type="text" th:field="*{login}"/>
     </div>
 
     <div class="form-row">
         <label>Пароль:</label>
-        <input name="newPassword" type="password"/>
+        <input type="password" th:field="*{newPassword}"/>
     </div>
 
     <div class="form-row">
         <label>Подтвердите пароль:</label>
-        <input name="newPasswordRepeat" type="password"/>
+        <input type="password" th:field="*{newPasswordRepeat}"/>
     </div>
 
     <div class="form-row">
         <label>День Рождения:</label>
-        <input name="birthday" type="date"/>
+        <input type="date" th:field="*{birthday}"/>
     </div>
 
     <div class="form-row">
         <label>Способ Оплаты:</label>
-        <input name="paymentMethods" type="text"/>
+        <input type="text" th:field="*{paymentMethods}"/>
     </div>
 
     <input type="submit" value="Сохранить"/>

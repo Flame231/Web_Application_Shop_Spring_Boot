@@ -37,11 +37,11 @@
 
 <h1>Интернет-магазин</h1>
 <h2>Администратор</h2>
-<a  style="font-size: 20px"  th:href="@{/administrator/editCatalog}">Редактировать каталог товаров</a>
+<a style="font-size: 20px" th:href="@{/administrator/productsList}">Редактировать каталог товаров</a>
 <span style="font-weight: bold; margin: 0 10px;">|</span>
-<a  style="font-size: 20px"  th:href="@{/administrator/editProductCategories}">Редактировать Категории товаров</a>
+<a style="font-size: 20px" th:href="@{/administrator/productCategoriesList}">Редактировать Категории товаров</a>
 <span style="font-weight: bold; margin: 0 10px;">|</span>
-<a  style="font-size: 20px"  th:href="@{/administrator/editSellers}">Редактировать продавцов</a>
+<a style="font-size: 20px" th:href="@{/administrator/sellersList}">Редактировать продавцов</a>
 <form method="post" th:action="@{/logout}">
     <br>
     <input type="submit" value="выйти из кабинета">

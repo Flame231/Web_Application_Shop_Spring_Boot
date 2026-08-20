@@ -5,11 +5,11 @@
 <body>
 <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
 <h1>Добавить категорию</h1>
-<a th:href="@{|${adminPath}editProductCategories|}">Назад</a>
-<form method="post" th:action="@{|${adminPath}addNewProductCategory|}">
+<a th:href="@{|${adminPath}productCategoriesList|}">Назад</a>
+<form method="post" th:object="${productCategoryDTO}" th:action="@{|${adminPath}addNewProductCategory|}">
     <div>
         Название категории:
-        <input type="text" name="category"/>
+        <input type="text" th:field="*{category}"/>
     </div>
     <input type="submit" value="Подтвердить"/>
 </form>

@@ -41,7 +41,9 @@ public class UserController {
     private ArchivedUserOrderService archivedUserOrderService;
 
     @RequestMapping(value = "accountClient", method = {RequestMethod.GET, RequestMethod.POST})
-    public String showAdministratorPage() {
+    public String showAdministratorPage(Model model) {
+        UserDiscountDTO userDiscountDTO = userService.getUserDiscount();
+        model.addAttribute(userDiscountDTO);
         return "account/accountClient";
     }
 
@@ -115,7 +117,7 @@ public class UserController {
 
     @GetMapping("userProfile")
     public String showUserProfile(Model model) {
-        UserProfileDTO userProfileDTO = userService.getUser();
+        UserProfileDTO userProfileDTO = userService.getUserProfileDTO();
         model.addAttribute("userProfileDTO", userProfileDTO);
         return "userProfile";
     }

@@ -1,6 +1,6 @@
 package org.example.webApplicationShopSpringBoot.controller.filter;
 
-import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
+import org.example.webApplicationShopSpringBoot.repository.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,25 +1,25 @@
 package org.example.webApplicationShopSpringBoot.controller;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor; // ИСПРАВЛЕНО
-import org.example.webApplicationShopSpringBoot.dto.dto.UserProfileDTO;
+import lombok.RequiredArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserRegistrationDTO;
 import org.example.webApplicationShopSpringBoot.service.user.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.ErrorPageRegistrar;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequiredArgsConstructor // ИСПРАВЛЕНО: Генерирует конструктор ТОЛЬКО для final-полей
+@RequiredArgsConstructor
 public class ShopController {
 
     private final UserService userService;
-    private final ErrorPageRegistrar errorPageRegistrar;
 
     @Value("${adminPath}")
     private String adminPath;
@@ -46,15 +46,16 @@ public class ShopController {
     }
 
     @GetMapping("/registration")
-    public String showRegistrationPage() {
+    public String showRegistrationPage(Model model) {
+        model.addAttribute("userRegistrationDTO", new UserRegistrationDTO());
         return "registration";
     }
 
-    @PostMapping("/saveOrUpdateUser")
-    public String saveNewUser(@ModelAttribute @Valid UserRegistrationDTO userRegistrationDTO) {
-        System.out.println(userRegistrationDTO);
+    @PostMapping("/saveNewUser")
+    public String saveNewUser(@ModelAttribute @Valid UserRegistrationDTO userRegistrationDTO, RedirectAttributes redirectAttributes) {
         userService.saveNewUser(userRegistrationDTO);
-        return "login";
+        redirectAttributes.addFlashAttribute("successMessage", "Пользователь успешно зарегистрирован!");
+        return "redirect:/login";
     }
 
     @GetMapping("/errorPage")

@@ -37,6 +37,11 @@
 
 <h1>Интернет-магазин</h1>
 <h2>Оператор</h2>
+<div>
+    <span>Ваш пункт выдачи: </span>
+    <span th:text="${orderPointDTO.getOrderPointAddress()}"></span>
+</div>
+<br>
 <form method="post" th:action="@{/logout}">
     <input type="submit" value="выйти из кабинета">
 </form>

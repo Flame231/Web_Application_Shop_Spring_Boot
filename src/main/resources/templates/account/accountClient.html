@@ -1,4 +1,3 @@
-<html xmlns:th="http://www.w3.org/1999/html">
 <head>
     <title>Личный кабинет</title>
     <style>
@@ -37,6 +36,17 @@
 
 <h1>Интернет-магазин</h1>
 <h2>Пользователь</h2>
+
+<th:block th:object="${userDiscountDTO}">
+    <div>
+        Сумма покупок:
+        <span th:text="${#numbers.formatDecimal(userDiscountDTO.sumOfPurchases, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+    </div>
+    <div>
+        Общая скидка:
+        <span th:text="${userDiscountDTO.discount}"></span>%
+    </div>
+</th:block>
 <th:block th:if="${successMessage}">
     <span style="color: #069e29" th:text="${successMessage}"></span>
     <br>

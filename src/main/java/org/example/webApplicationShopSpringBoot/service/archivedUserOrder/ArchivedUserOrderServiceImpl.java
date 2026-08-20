@@ -1,20 +1,23 @@
 package org.example.webApplicationShopSpringBoot.service.archivedUserOrder;
 
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.example.webApplicationShopSpringBoot.dao.archivedUserOrder.ArchivedUserOrderRepository;
-import org.example.webApplicationShopSpringBoot.dao.userOrder.UserOrderRepository;
+import org.example.webApplicationShopSpringBoot.repository.archivedUserOrder.ArchivedUserOrderRepository;
+import org.example.webApplicationShopSpringBoot.repository.userOrder.UserOrderRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ArchivedUserOrderConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.ArchivedUserOrderDTO;
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrder;
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrderProduct;
-import org.example.webApplicationShopSpringBoot.model.UserOrder.OrderStatus;
-import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrder;
+import org.example.webApplicationShopSpringBoot.model.userOrder.OrderStatus;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
 import org.example.webApplicationShopSpringBoot.service.archivedUserOrderProduct.ArchivedUserOrderProductService;
+import org.example.webApplicationShopSpringBoot.service.discount.DiscountService;
 import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
+import org.example.webApplicationShopSpringBoot.service.user.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,7 +32,10 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
     private UserOrderRepository userOrderRepository;
     private ArchivedUserOrderProductService archivedUserOrderProductService;
     private ArchivedUserOrderConverter archivedUserOrderConverter;
+    private UserService userService;
+    private DiscountService discountService;
 
+    @Transactional
     @Override
     public void createArchivedUserOrder(Long userOrderId) {
         UserOrder userOrder = userOrderRepository.findById(userOrderId).get();
@@ -52,7 +58,9 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
                 .build();
         archivedUserOrderProduct.forEach(e -> e.setArchivedUserOrder(archivedUserOrder));
         archivedUserOrderRepository.save(archivedUserOrder);
+        userService.increaseTotalSum(userOrder.getUser().getId(), archivedUserOrder.getFinalOrderSum());
         userOrderRepository.deleteById(userOrderId);
+        discountService.checkUserDiscount(userOrder.getUser());
     }
 
     @Override

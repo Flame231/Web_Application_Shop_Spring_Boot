@@ -38,14 +38,19 @@
 </head>
 <body>
 <form id="orderForm" method="post" th:action="@{/client/confirmOrder}">
+    <div>
+        Выбрать пункт выдачи:
+        <select name="orderPointId" form="orderForm">
+            <option th:each="orderPointDTO:${orderPointDTOList}"
+                    th:value="${orderPointDTO.getId()}"
+                    th:text="${orderPointDTO.getOrderPointAddress()}">
+                <span th:text="${orderPointDTO.getOpeningTime()}"></span>
+            </option>
+        </select>
+
+    </div>
+    <br>
     <input type="submit" value="Оформить заказ">
-    Выбрать пункт выдачи:
-    <select name="orderPointId" form="orderForm">
-        <option th:each="orderPointDTO:${orderPointDTOList}"
-                th:value="${orderPointDTO.getId()}"
-                th:text="${orderPointDTO.getOrderPointAddress()}">
-        </option>
-    </select>
 </form>
 <form method="post" th:action="@{/client/clearBag}">
     <input type="submit" value="Очистить корзину">
@@ -56,7 +61,7 @@
     <br>
 </th:block>
 Сумма в корзине:
-<span th:text="${bagSum}"></span>
+<span th:text="${#numbers.formatDecimal(bagSum, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
 <table>
     <thead>
     <tr>

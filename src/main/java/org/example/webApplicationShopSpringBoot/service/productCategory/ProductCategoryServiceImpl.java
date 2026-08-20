@@ -3,7 +3,7 @@ package org.example.webApplicationShopSpringBoot.service.productCategory;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.example.webApplicationShopSpringBoot.dao.productCategory.ProductCategoryRepository;
+import org.example.webApplicationShopSpringBoot.repository.productCategory.ProductCategoryRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ProductCategoryConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductCategoryDTO;
 import org.example.webApplicationShopSpringBoot.model.ItemStatus;

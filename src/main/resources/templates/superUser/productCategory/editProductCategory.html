@@ -6,14 +6,14 @@
 <title>Редактировать категорию</title>
 <h1>Редактировать категорию</h1>
 
-<a th:href="@{|${adminPath}editProductCategories|}">Назад</a>
+<a th:href="@{|${adminPath}productCategoriesList|}">Назад</a>
 <body>
 <form th:object="${productCategoryDTO}" th:action="@{|${adminPath}updateProductCategory|}" method="post">
     <div>
         Номер категории:
-        <span th:text="${productCategoryDTO.id}"></span>
         <label>
-            <input type="hidden" th:field="*{id}" readonly/>
+            <input type="hidden" th:field="*{id}"/>
+            <span th:text="*{id}"></span>
         </label>
     </div>
     <div>

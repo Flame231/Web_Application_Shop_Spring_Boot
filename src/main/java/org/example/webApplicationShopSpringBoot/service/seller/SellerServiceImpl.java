@@ -3,7 +3,7 @@ package org.example.webApplicationShopSpringBoot.service.seller;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.example.webApplicationShopSpringBoot.dao.seller.SellerRepository;
+import org.example.webApplicationShopSpringBoot.repository.seller.SellerRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.SellerConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
 import org.example.webApplicationShopSpringBoot.model.ItemStatus;

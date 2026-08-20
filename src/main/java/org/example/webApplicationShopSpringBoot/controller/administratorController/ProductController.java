@@ -28,14 +28,14 @@ public class ProductController {
     private ProductCategoryService productCategoryService;
     private SellerService sellerService;
 
-    @GetMapping(value = "editCatalog")
-    public String showEditCatalogPage(@RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, Model model) {
+    @GetMapping(value = "productsList")
+    public String showProductsList(@RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, Model model) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         PageResponse<ProductDTO> productDTOList = productService.getAllProducts(pageable);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("productDTOList", productDTOList);
-        return "/superUser/product/editCatalog";
+        return "/superUser/product/productsList";
     }
 
     @GetMapping(value = "addProduct")
@@ -43,37 +43,38 @@ public class ProductController {
         Pageable pageable = PageRequest.of(page, 8, Sort.by("id").ascending());
         List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getActiveProductCategoryDTOList();
         List<SellerDTO> sellerDTOList = sellerService.getActiveSellerDTOList();
+        model.addAttribute(new ProductDTO());
         model.addAttribute("productCategoryDTOList", productCategoryDTOList);
         model.addAttribute("sellerDTOList", sellerDTOList);
         return "/superUser/product/addProduct";
     }
 
     @RequestMapping(value = "addNewProduct", method = {RequestMethod.GET, RequestMethod.POST})
-    public String addNewProduct(@ModelAttribute ProductDTO productDTO, RedirectAttributes redirectAttributes) {
+    public String addProduct(@ModelAttribute ProductDTO productDTO, RedirectAttributes redirectAttributes) {
         productService.addProduct(productDTO);
         redirectAttributes.addFlashAttribute("successMessage", "продукт успешно сохранён!");
-        return "redirect:/administrator/editCatalog";
+        return "redirect:/administrator/productsList";
     }
 
     @PostMapping("updateProduct")
     public String updateProduct(@ModelAttribute ProductDTO productDTO, RedirectAttributes redirectAttributes) {
         productService.updateProduct(productDTO);
         redirectAttributes.addFlashAttribute("successMessage", "продукт успешно обновлён!");
-        return "redirect:/administrator/editCatalog";
+        return "redirect:/administrator/productsList";
     }
 
     @PostMapping("deleteProduct/{id}")
     public String deleteProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         productService.removeProduct(id);
         redirectAttributes.addFlashAttribute("successMessage", "продукт успешно удалён!");
-        return "redirect:/administrator/editCatalog";
+        return "redirect:/administrator/productsList";
     }
 
     @PostMapping("recoverProduct/{id}")
     public String recoverProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         productService.recoverProduct(id);
         redirectAttributes.addFlashAttribute("successMessage", "продукт успешно восстановлен!");
-        return "redirect:/administrator/editCatalog";
+        return "redirect:/administrator/productsList";
     }
 
     @GetMapping("editProduct/{id}")

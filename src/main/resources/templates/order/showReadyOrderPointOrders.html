@@ -26,7 +26,7 @@
         <tr th:each="userOrderDTOProduct : ${userOrderDTO.getUserOrderProducts()}">
             <td th:text="${userOrderDTOProduct.getProductDTO().getProductName()}">
             </td>
-            <td th:text="${userOrderDTOProduct.getProductDTO().getPrice()}">
+            <td th:text="${#numbers.formatDecimal(userOrderDTOProduct.productDTO.price, 1, 'DEFAULT', 2, 'DEFAULT')}">
             </td>
             <td th:text="${userOrderDTOProduct.getProductCount()}">
             </td>

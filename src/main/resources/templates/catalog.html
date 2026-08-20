@@ -58,7 +58,7 @@
         <td th:text="${productDTO.getId()}"></td>
         <td th:text="${productDTO.getProductName()}"></td>
         <td th:text="${productDTO.getProductCategory().getCategory()}"></td>
-        <td th:text="${productDTO.getPrice()}"></td>
+        <td th:text="${#numbers.formatDecimal(productDTO.price, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
         <td th:text="${productDTO.getSeller().getSellerName()}"></td>
         <td>
             <form method="post">
