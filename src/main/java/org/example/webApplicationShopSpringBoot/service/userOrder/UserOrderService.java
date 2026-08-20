@@ -12,8 +12,6 @@ public interface UserOrderService {
 
     List<UserOrderDTO> showAllUserOrders();
 
-    List<UserOrderDTO> showUserOrdersByOrderPoint();
-
     List<UserOrderDTO> showReadyUserOrdersByOrderPoint();
 
     UserOrderDTO getUserOrderDTO(Long  id);

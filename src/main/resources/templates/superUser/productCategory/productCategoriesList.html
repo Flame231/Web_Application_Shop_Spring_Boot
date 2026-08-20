@@ -1,0 +1,111 @@
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать категории товаров</title>
+    <style>
+        table {
+            width: max-content;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 120px 300px;
+            gap: 15px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
+<h1>Категории</h1>
+
+<a th:href="@{|${adminPath}addProductCategory|}">Добавить категорию</a>
+
+<br>
+<br>
+<th:block th:if="${successMessage}">
+    <span style="color: #069e29" th:text="${successMessage}"></span>
+    <br>
+    <br>
+</th:block>
+<table>
+    <thead>
+    <tr>
+        <th>Номер категории товара</th>
+        <th>Категория</th>
+        <th>Статус</th>
+        <th>Редактировать</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="productCategoryDTO : ${productCategoriesList.content()}">
+        <td th:text="${productCategoryDTO.getId()}"></td>
+        <td th:text="${productCategoryDTO.getCategory()}"></td>
+        <td th:text="${productCategoryDTO.getStatus().getDescription()}"></td>
+        <td>
+            <form method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                <th:block th:if="${productCategoryDTO.getStatus().name()=='ACTIVE'}">
+                    <input th:formmethod="get"
+                           th:formaction="@{|${adminPath}editProductCategory/${productCategoryDTO.getId()}|}"
+                           type="submit"
+                           value="Редактировать"/>
+                    <input th:formaction="@{|${adminPath}deleteProductCategory/${productCategoryDTO.id}|}" type="submit"
+                           value="Удалить"/>
+                </th:block>
+                <th:block th:unless="${productCategoryDTO.getStatus().name()=='ACTIVE'}">
+                    <input th:formaction="@{|${adminPath}recoverProductCategory/${productCategoryDTO.id}|}"
+                           type="submit"
+                           value="Восстановить"/>
+                </th:block>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{|${adminPath}productCategoriesList|(page=1, pageSize=${pageSize})}">В начало</a>
+
+<span style="font-size: 20px"
+      th:if="${productCategoriesList.currentPage() > 1}"
+      th:each="i : ${#numbers.sequence((productCategoriesList.currentPage() - 3 > 1 ? productCategoriesList.currentPage() - 3 : 1), productCategoriesList.currentPage() - 1)}">
+    <a th:href="@{|${adminPath}productCategoriesList|(page=${i}, pageSize=${pageSize})}" th:text="${i}"></a>
+</span>
+
+<span style="font-size: 24px" th:text="${productCategoriesList.currentPage()}"></span>
+
+<span style="font-size: 20px"
+      th:if="${productCategoriesList.currentPage() < productCategoriesList.totalPages()}"
+      th:each="i : ${#numbers.sequence(productCategoriesList.currentPage() + 1, (productCategoriesList.currentPage() + 3 < productCategoriesList.totalPages() ? productCategoriesList.currentPage() + 3 : productCategoriesList.totalPages()))}">
+    <a th:href="@{|${adminPath}productCategoriesList|(page=${i}, pageSize=${pageSize})}" th:text="${i}"></a>
+</span>
+
+<a th:href="@{|${adminPath}productCategoriesList|(page=${productCategoriesList.totalPages}, pageSize=${pageSize})}">В
+    конец</a>
+
+<form th:action="@{/administrator/productCategoriesList}">
+    <select name="pageSize">
+        <option th:each="pageSizelist : ${pageSizeList}"
+                th:text="${pageSizelist}"
+                th:value="${pageSizelist}"
+                th:selected="${pageSizelist == pageSize}"></option>
+    </select>
+    <input type="submit" value="Подтвердить">
+    <input type="hidden" name="page" value="1"/>
+</form>
+
+</body>
+</html>

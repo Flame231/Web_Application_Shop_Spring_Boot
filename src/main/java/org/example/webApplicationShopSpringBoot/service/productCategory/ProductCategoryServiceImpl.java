@@ -3,7 +3,8 @@ package org.example.webApplicationShopSpringBoot.service.productCategory;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.example.webApplicationShopSpringBoot.dao.productCategory.ProductCategoryRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.example.webApplicationShopSpringBoot.repository.productCategory.ProductCategoryRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ProductCategoryConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductCategoryDTO;
 import org.example.webApplicationShopSpringBoot.model.ItemStatus;
@@ -19,6 +20,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Transactional
+@Slf4j
 public class ProductCategoryServiceImpl implements ProductCategoryService {
     final private ProductCategoryRepository productCategoryRepository;
     final private ProductCategoryConverter productCategoryConverter;
@@ -26,12 +28,6 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public PageResponse<ProductCategoryDTO> getProductCategoryDTOList(Pageable pageable) {
         Page<ProductCategory> productCategoryPage = productCategoryRepository.findAll(pageable);
         return new PageResponse<ProductCategoryDTO>(productCategoryPage.map(productCategoryConverter::toDTO));
-    }
-
-    public List<ProductCategoryDTO> getProductCategoryDTOList() {
-        return productCategoryRepository.findAll().stream()
-                .map(productCategoryConverter::toDTO)
-                .toList();
     }
 
     public List<ProductCategoryDTO> getActiveProductCategoryDTOList() {
@@ -49,6 +45,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public void addProductCategory(ProductCategoryDTO productCategoryDTO) {
         ProductCategory productCategory = productCategoryConverter.toEntity(productCategoryDTO);
         productCategoryRepository.save(productCategory);
+        log.info("Категория продукта {} успешно добавлена!", productCategory.getCategory());
     }
 
     @Override
@@ -56,18 +53,21 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         ProductCategory existingProductCategory = getCategoryById(productCategoryDTO.getId());
         ProductCategory productCategory = productCategoryConverter.updateEntity(productCategoryDTO, existingProductCategory);
         productCategoryRepository.save(productCategory);
+        log.info("Категория продукта с id {} успешно обновлена!", productCategory.getId());
     }
 
     @Override
     public void deleteProductCategory(Long id) {
         ProductCategory productCategory = getCategoryById(id);
         productCategory.setStatus(ItemStatus.DELETED);
+        log.info("Статус категории продукта с id {} успешно изменён!", productCategory.getStatus().name());
     }
 
     @Override
     public void recoverProductCategory(Long id) {
         ProductCategory productCategory = getCategoryById(id);
         productCategory.setStatus(ItemStatus.ACTIVE);
+        log.info("Статус категории продукта с id {} успешно изменён!", productCategory.getStatus().name());
     }
 
     private ProductCategory getCategoryById(Long id) {

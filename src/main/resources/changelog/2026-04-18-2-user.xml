@@ -17,7 +17,7 @@
             <column name="passwordHash" type="varchar(255)"/>
             <column name="birthday" type="date"/>
             <column name="paymentMethods" type="varchar(255)"/>
-            <column name="sumOfPurchases" type="decimal"/>
+            <column name="sumOfPurchases" type="decimal(10,2)"/>
             <column name="discount_id" type="INT"/>
             <column name="role" type="varchar(20)"/>
             <column name="orderPoint_id" type="INT"/>

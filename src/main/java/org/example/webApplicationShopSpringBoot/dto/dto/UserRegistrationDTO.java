@@ -3,9 +3,7 @@ package org.example.webApplicationShopSpringBoot.dto.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -13,6 +11,8 @@ import java.time.LocalDate;
 @Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserRegistrationDTO {
 
     @NotBlank(message = "имя не может быть пустым")
@@ -40,5 +40,15 @@ public class UserRegistrationDTO {
     @NotBlank(message = "не указан способ оплаты")
     private String paymentMethods;
 
-
+    @Override
+    public String toString() {
+        return "UserRegistrationDTO{" +
+                "name='" + name + '\'' +
+                ", login='" + login + '\'' +
+                ", newPassword='" + newPassword + '\'' +
+                ", newPasswordRepeat='" + newPasswordRepeat + '\'' +
+                ", birthday=" + birthday +
+                ", paymentMethods='" + paymentMethods + '\'' +
+                '}';
+    }
 }

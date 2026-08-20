@@ -34,7 +34,16 @@
     <input type="submit" value="Корзина">
 </form>
 Сумма в корзине:
-<span th:text="${bagSum}"></span>
+<span th:text="${#numbers.formatDecimal(bagSum.fullPrice, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+<br>
+Ваша скидка:
+<span th:text="${#numbers.formatDecimal(bagSum.discountValue, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>%
+<br>
+Сумма скидки:
+<span th:text="${#numbers.formatDecimal(bagSum.calculatedDiscount, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+<br>
+Сумма в корзине с учётом скидки:
+<span th:text="${#numbers.formatDecimal(bagSum.priceWithDiscount, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
 <br>
 <th:block th:if="${successMessage}">
     <span style="color: #069e29" th:text="${successMessage}"></span>
@@ -58,7 +67,7 @@
         <td th:text="${productDTO.getId()}"></td>
         <td th:text="${productDTO.getProductName()}"></td>
         <td th:text="${productDTO.getProductCategory().getCategory()}"></td>
-        <td th:text="${productDTO.getPrice()}"></td>
+        <td th:text="${#numbers.formatDecimal(productDTO.price, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
         <td th:text="${productDTO.getSeller().getSellerName()}"></td>
         <td>
             <form method="post">
@@ -108,7 +117,6 @@
                 th:selected="${pageSizelist == pageSize}"></option>
     </select>
     <input type="submit" value="Подтвердить">
-    <input type="hidden" name="page" value="1"/>
 </form>
 </body>
 </html>

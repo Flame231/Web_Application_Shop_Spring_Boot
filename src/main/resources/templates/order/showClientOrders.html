@@ -29,7 +29,7 @@
 </style>
 <html>
 <head>
-        <a th:href="@{/client/accountClient}">Вернуться в личный кабинет</a>
+    <a th:href="@{/client/accountClient}">Вернуться в личный кабинет</a>
     <h1>Мои Заказы</h1>
     <title>Мои Заказы</title>
     <br>
@@ -38,19 +38,20 @@
 <body>
 <th:block th:each="userOrderDTO: ${userOrderDTOList}">
 
-    <div>Номер заказа:<span th:text="${userOrderDTO.getOrderId()}"></span>
+    <div>Номер заказа:<span th:text="${userOrderDTO.orderId}"></span>
     </div>
     <br>
-    <div>Статус заказа:<span th:text="${userOrderDTO.getOrderStatus().getDescription()}"></span>
+    <div>Статус заказа:<span th:text="${userOrderDTO.orderStatus.description}"></span>
     </div>
     <br>
-    <div>Пункт выдачи: <span th:text="${userOrderDTO.getOrderPoint()}"></span>
+    <div>Пункт выдачи: <span th:text="${userOrderDTO.orderPoint}"></span>
     </div>
     <br>
-    <div>Сумма заказа: <span th:text="${userOrderDTO.getOrderSum()}"></span>
+    <div>Сумма заказа: <span
+            th:text="${#numbers.formatDecimal(userOrderDTO.orderSum, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
     </div>
     <br>
-    <div>Дата создания: <span th:text="${userOrderDTO.getOrderCreateDateTime()}"></span>
+    <div>Дата создания: <span th:text="${userOrderDTO.orderCreateDateTime}"></span>
     </div>
     <br>
 
@@ -58,23 +59,23 @@
         <thead>
         <tr>
             <th>Название товара</th>
-            <th>Цена</th>
+            <th>Цена товара на момент заказа</th>
             <th>Количество</th>
         </tr>
         </thead>
         <tbody>
 
-        <tr th:each="orderDTO : ${userOrderDTO.getUserOrderProducts()}">
+        <tr th:each="orderDTO : ${userOrderDTO.userOrderProducts}">
 
-            <td><span th:text="${orderDTO.getProductDTO().getProductName()}"></span>
+            <td><span th:text="${orderDTO.productDTO.productName}"></span>
             </td>
 
             <td>
-                <span th:text="${orderDTO.getProductDTO().getPrice()}"></span>
+                <span th:text="${#numbers.formatDecimal(orderDTO.productPrice, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
             </td>
 
             <td>
-                <span th:text="${orderDTO.getProductCount()}"></span>
+                <span th:text="${orderDTO.productCount}"></span>
             </td>
         </tr>
         </tbody>

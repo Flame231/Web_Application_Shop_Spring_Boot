@@ -41,7 +41,9 @@ public class UserController {
     private ArchivedUserOrderService archivedUserOrderService;
 
     @RequestMapping(value = "accountClient", method = {RequestMethod.GET, RequestMethod.POST})
-    public String showAdministratorPage() {
+    public String showAdministratorPage(Model model) {
+        UserDiscountDTO userDiscountDTO = userService.getUserDiscount();
+        model.addAttribute("userDiscountDTO", userDiscountDTO);
         return "account/accountClient";
     }
 
@@ -50,39 +52,38 @@ public class UserController {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         PageResponse<ProductDTO> productDTOList = productService.getActiveProducts(pageable);
         List<BagDTOResponse> bagDTOResponseList = bagService.getAllBags();
-        BigDecimal bagSum = bagService.showBagSum();
+        BagSumWithDiscountDTO bagSum = bagService.calculateBagSumWithDiscount();
         model.addAttribute("page", page);
         model.addAttribute("bagSum", bagSum);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
-        model.addAttribute("userId", user.getId());
         model.addAttribute("productDTOList", productDTOList);
-        model.addAttribute("bagDTOResponseList", bagDTOResponseList);
+        model.addAttribute(bagDTOResponseList);
         return "catalog";
     }
 
     @PostMapping("addProductToCatalogBag")
     public String addProductToCatalogBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
         bagService.addProductToBag(bagDTORequest);
-        redirectAttributes.addAttribute("page", page);
+        redirectAttributes.addAttribute(page);
         return "redirect:/client/catalog";
     }
 
     @PostMapping("deleteProductFromCatalogBag")
     public String deleteProductFromCatalogBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
         bagService.deleteProductFromBag(bagDTORequest);
-        redirectAttributes.addAttribute("page", page);
+        redirectAttributes.addAttribute(page);
         return "redirect:/client/catalog";
     }
 
     @GetMapping("bag")
     public String showBag(Model model) {
         List<BagDTOResponse> bagDTOResponseList = bagService.openBag();
-        BigDecimal bagSum = bagService.showBagSum();
+        BagSumWithDiscountDTO bagSum = bagService.calculateBagSumWithDiscount();
         List<OrderPointDTO> orderPointDTOList = orderPointService.getAllOrderPoints();
         model.addAttribute("bagSum", bagSum);
-        model.addAttribute("bagDTOResponseList", bagDTOResponseList);
-        model.addAttribute("orderPointDTOList", orderPointDTOList);
+        model.addAttribute(bagDTOResponseList);
+        model.addAttribute(orderPointDTOList);
         return "/bag";
     }
 
@@ -115,7 +116,7 @@ public class UserController {
 
     @GetMapping("userProfile")
     public String showUserProfile(Model model) {
-        UserProfileDTO userProfileDTO = userService.getUser();
+        UserProfileDTO userProfileDTO = userService.getUserProfileDTO();
         model.addAttribute("userProfileDTO", userProfileDTO);
         return "userProfile";
     }
@@ -139,7 +140,7 @@ public class UserController {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         PageResponse<ArchivedUserOrderDTO> archivedUserOrderDTOList = archivedUserOrderService.showArchivedUserOrders(pageable);
         model.addAttribute("archivedUserOrderDTOList", archivedUserOrderDTOList);
-        model.addAttribute("page", page);
+        model.addAttribute(page);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
         return "/order/showArchivedOrders";

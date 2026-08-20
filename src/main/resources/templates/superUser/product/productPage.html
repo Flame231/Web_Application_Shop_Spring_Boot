@@ -27,8 +27,7 @@
     <title>Страница товара</title>
     <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
     <h1>Страница товара</h1>
-    <a th:href="@{|${adminPath}editCatalog|}">Назад</a>
-    </form>
+    <a th:href="@{|${adminPath}productsList|(page=${page}, pageSize=${pageSize})}">Назад</a>
 
 </head>
 <body>
@@ -54,7 +53,7 @@
     </td>
     <td>
         <div>
-            <a th:text="${productDTO.getPrice()}"></a>
+            <a th:text="${#numbers.formatDecimal(productDTO.price, 1, 'DEFAULT', 2, 'DEFAULT')}"></a>
 
         </div>
     </td>
@@ -67,7 +66,6 @@
     <td>
         <div>
             <a th:text="${productDTO.getUpdateDateTime()}"></a>
-
         </div>
     </td>
 </table>

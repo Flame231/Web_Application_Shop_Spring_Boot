@@ -10,9 +10,8 @@ import jakarta.persistence.*;
 import org.example.webApplicationShopSpringBoot.model.Bag;
 import org.example.webApplicationShopSpringBoot.model.Discount;
 import org.example.webApplicationShopSpringBoot.model.OrderPoint;
-import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrder;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
 import org.example.webApplicationShopSpringBoot.model.additional.DataEntity;
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -99,5 +98,18 @@ public class User extends DataEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "sumOfPurchases=" + sumOfPurchases +
+                ", paymentMethods='" + paymentMethods + '\'' +
+                ", birthday=" + birthday +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", login='" + login + '\'' +
+                ", name='" + name + '\'' +
+                ", role=" + role +
+                '}';
     }
 }

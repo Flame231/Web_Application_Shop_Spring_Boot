@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 @Setter
 @Getter
 @IdClass(PrimaryKeyBag.class)
-public class Bag implements ProductSum<Bag> {
+public class Bag implements ProductSum {
 
     @Id
     @ManyToOne

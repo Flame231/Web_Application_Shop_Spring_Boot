@@ -2,9 +2,12 @@ package org.example.webApplicationShopSpringBoot.controller.operatorController;
 
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.webApplicationShopSpringBoot.dto.dto.OrderPointDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderChangeCountDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
 import org.example.webApplicationShopSpringBoot.service.archivedUserOrder.ArchivedUserOrderService;
+import org.example.webApplicationShopSpringBoot.service.user.UserService;
 import org.example.webApplicationShopSpringBoot.service.userOrder.UserOrderService;
 import org.example.webApplicationShopSpringBoot.service.userOrderProduct.UserOrderProductService;
 import org.springframework.stereotype.Controller;
@@ -12,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -19,20 +23,20 @@ import java.util.List;
 @AllArgsConstructor
 public class OperatorController {
     private UserOrderService userOrderService;
+    private UserService userService;
     private UserOrderProductService userOrderProductService;
     private ArchivedUserOrderService archivedUserOrderService;
 
     @RequestMapping(value = "accountOperator", method = {RequestMethod.GET, RequestMethod.POST})
-    public String showAdministratorPage() {
-
+    public String showOperatorPage(Model model) {
+        OrderPointDTO orderPointDTO = userService.getOrderPoint();
+        model.addAttribute("orderPointDTO", orderPointDTO);
         return "account/accountOperator";
     }
 
     @GetMapping("orders")
     public String showCreatedOrders(Model model) {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showCreatedUserOrders();
-        for(UserOrderDTO userOrderDTO: userOrderDTOList){
-        }
         model.addAttribute("userOrderDTOList", userOrderDTOList);
         return "/order/showCreatedOrderPointOrders";
     }
@@ -60,7 +64,9 @@ public class OperatorController {
     @GetMapping("showOrder")
     public String showOrder(@RequestParam Long id, Model model) {
         UserOrderDTO userOrderDTO = userOrderService.getUserOrderDTO(id);
+        BigDecimal UserOrderProductSum = userOrderProductService.showUserOrderProductSum(id);
         model.addAttribute("userOrderDTO", userOrderDTO);
+        model.addAttribute("userOrderProductSum", UserOrderProductSum);
         return "/order/showOrderPointOrderPage";
     }
 

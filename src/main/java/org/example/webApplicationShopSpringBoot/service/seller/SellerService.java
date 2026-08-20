@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface SellerService {
 
-    PageResponse<SellerDTO> getSellerDTOList(Pageable pageable);
+    PageResponse<SellerDTO> getSellerDTOList(int page,  int pageSize);
 
     List<SellerDTO> getSellerDTOList();
 

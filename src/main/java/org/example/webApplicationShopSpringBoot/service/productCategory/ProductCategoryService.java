@@ -14,8 +14,6 @@ public interface ProductCategoryService {
 
     PageResponse<ProductCategoryDTO> getProductCategoryDTOList(Pageable pageable);
 
-    List<ProductCategoryDTO> getProductCategoryDTOList();
-
     List<ProductCategoryDTO> getActiveProductCategoryDTOList();
 
     void addProductCategory(ProductCategoryDTO productCategoryDTO);

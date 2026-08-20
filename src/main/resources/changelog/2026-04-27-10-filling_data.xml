@@ -435,44 +435,54 @@
 ('Катушка для лески', 8, 700.00, 6, 'ACTIVE'),
 ('Батарейки АА (набор 12 шт)', 1, 900.00, 1, 'ACTIVE');
 
-               INSERT INTO OrderPoint (orderPointAddress, openingTime, closeTime)
-               VALUES ('Москва, ул. Ленина, д. 10', '08:00:00', '20:00:00'),
-                      ('Москва, пр. Мира, д. 25', '09:00:00', '21:00:00'),
-                      ('Санкт-Петербург, Невский пр., д. 5', '10:00:00', '22:00:00'),
-                      ('Санкт-Петербург, ул. Пушкина, д. 12', '08:30:00', '20:30:00'),
-                      ('Новосибирск, ул. Красный проспект, д. 44', '09:00:00', '21:00:00'),
-                      ('Екатеринбург, ул. Малышева, д. 31', '08:00:00', '19:00:00'),
-                      ('Казань, ул. Баумана, д. 7', '10:00:00', '22:00:00'),
-                      ('Нижний Новгород, ул. Большая Покровская, д. 15', '09:00:00', '21:00:00'),
-                      ('Челябинск, пр. Ленина, д. 80', '08:00:00', '20:00:00'),
-                      ('Самара, ул. Куйбышева, д. 110', '09:00:00', '21:00:00'),
-                      ('Омск, ул. Гагарина, д. 3', '08:30:00', '19:30:00'),
-                      ('Ростов-на-Дону, ул. Большая Садовая, д. 50', '10:00:00', '22:00:00'),
-                      ('Уфа, ул. Октября, д. 20', '09:00:00', '21:00:00'),
-                      ('Красноярск, ул. Маркса, д. 15', '08:00:00', '20:00:00'),
-                      ('Пермь, ул. Ленина, д. 60', '09:00:00', '21:00:00'),
-                      ('Воронеж, пр. Революции, д. 12', '10:00:00', '22:00:00'),
-                      ('Волгоград, пр. Ленина, д. 5', '08:00:00', '20:00:00'),
-                      ('Краснодар, ул. Красная, д. 100', '09:00:00', '21:00:00'),
-                      ('Саратов, ул. Московская, д. 45', '08:30:00', '19:30:00'),
-                      ('Тюмень, ул. Республики, д. 14', '09:00:00', '21:00:00');
 
-               INSERT INTO `user` (role, name, login, passwordHash, orderPoint_id)
-               VALUES ('ADMINISTRATOR', 'admin', 'admin',
-                       '$2a$10$HT4xVlaamoaf.A3.kKJZ/OKtc1NqxOaRXMDtOpA3VR2T.RwhXKIwC', null),
-                      ('CLIENT', 'user', 'user', '$2a$12$R.xMGIs8LXHA5PcX3CdWueEtWeju/iVLP054BcY8MTcAlKJim7qsi', null),
-                      ('CLIENT', 'user2', 'user2', '$2a$12$kGxowBZv8e4Y3MrykjumN.SGwZYydCQ36LCNLbOAtAFhL4BBowBpu', null),
-                      ('OPERATOR', 'operator', 'operator',
-                       '$2a$10$KPhmPj7c6LcbG2uCq4XrVeocZ2tSi80.5rvAktPlne/38QoJy2ksO', '1'),
-                      ('OPERATOR', 'operator', 'operator2',
-                       '$2a$10$KPhmPj7c6LcbG2uCq4XrVeocZ2tSi80.5rvAktPlne/38QoJy2ksO', '2'),
-                      ('OPERATOR', 'operator', 'operator3',
-                       '$2a$10$KPhmPj7c6LcbG2uCq4XrVeocZ2tSi80.5rvAktPlne/38QoJy2ksO', '3'),
-                      ('OPERATOR', 'operator', 'operator4',
-                       '$2a$12$REGvZBEb.jwsEXdW9I1Kze3krLluEQ2TO1BM7QkIDmXYqcfky1rYK', '5');
+            INSERT INTO Discount (discount, totalSum)
+            VALUES ('0', '100000'),
+                   ('2', '300000'),
+                   ('3', '400000'),
+                   ('5', '650000'),
+                   ('7', '1000000'),
+                   ('10', '2000000');
 
-            INSERT INTO `Discount` (discount, totalSum)
-            VALUES ('0', '0')
+            INSERT INTO OrderPoint (orderPointAddress, openingTime, closeTime)
+            VALUES ('Москва, ул. Ленина, д. 10', '08:00:00', '20:00:00'),
+                   ('Москва, пр. Мира, д. 25', '09:00:00', '21:00:00'),
+                   ('Санкт-Петербург, Невский пр., д. 5', '10:00:00', '22:00:00'),
+                   ('Санкт-Петербург, ул. Пушкина, д. 12', '08:30:00', '20:30:00'),
+                   ('Новосибирск, ул. Красный проспект, д. 44', '09:00:00', '21:00:00'),
+                   ('Екатеринбург, ул. Малышева, д. 31', '08:00:00', '19:00:00'),
+                   ('Казань, ул. Баумана, д. 7', '10:00:00', '22:00:00'),
+                   ('Нижний Новгород, ул. Большая Покровская, д. 15', '09:00:00', '21:00:00'),
+                   ('Челябинск, пр. Ленина, д. 80', '08:00:00', '20:00:00'),
+                   ('Самара, ул. Куйбышева, д. 110', '09:00:00', '21:00:00'),
+                   ('Омск, ул. Гагарина, д. 3', '08:30:00', '19:30:00'),
+                   ('Ростов-на-Дону, ул. Большая Садовая, д. 50', '10:00:00', '22:00:00'),
+                   ('Уфа, ул. Октября, д. 20', '09:00:00', '21:00:00'),
+                   ('Красноярск, ул. Маркса, д. 15', '08:00:00', '20:00:00'),
+                   ('Пермь, ул. Ленина, д. 60', '09:00:00', '21:00:00'),
+                   ('Воронеж, пр. Революции, д. 12', '10:00:00', '22:00:00'),
+                   ('Волгоград, пр. Ленина, д. 5', '08:00:00', '20:00:00'),
+                   ('Краснодар, ул. Красная, д. 100', '09:00:00', '21:00:00'),
+                   ('Саратов, ул. Московская, д. 45', '08:30:00', '19:30:00'),
+                   ('Тюмень, ул. Республики, д. 14', '09:00:00', '21:00:00');
+
+            INSERT INTO `user` (role, name, login, passwordHash, orderPoint_id)
+            VALUES ('ADMINISTRATOR', 'admin', 'admin',
+                    '$2a$10$HT4xVlaamoaf.A3.kKJZ/OKtc1NqxOaRXMDtOpA3VR2T.RwhXKIwC', null),
+                   ('OPERATOR', 'operator', 'operator',
+                    '$2a$10$KPhmPj7c6LcbG2uCq4XrVeocZ2tSi80.5rvAktPlne/38QoJy2ksO', '1'),
+                   ('OPERATOR', 'operator', 'operator2',
+                    '$2a$10$KPhmPj7c6LcbG2uCq4XrVeocZ2tSi80.5rvAktPlne/38QoJy2ksO', '2'),
+                   ('OPERATOR', 'operator', 'operator3',
+                    '$2a$10$KPhmPj7c6LcbG2uCq4XrVeocZ2tSi80.5rvAktPlne/38QoJy2ksO', '3'),
+                   ('OPERATOR', 'operator', 'operator4',
+                    '$2a$12$REGvZBEb.jwsEXdW9I1Kze3krLluEQ2TO1BM7QkIDmXYqcfky1rYK', '5');
+
+            INSERT INTO `user` (role, name, login, passwordHash, sumOfPurchases, discount_id)
+            VALUES ('CLIENT', 'user', 'user', '$2a$12$R.xMGIs8LXHA5PcX3CdWueEtWeju/iVLP054BcY8MTcAlKJim7qsi', '0', '1'),
+                   ('CLIENT', 'user2', 'user2', '$2a$12$kGxowBZv8e4Y3MrykjumN.SGwZYydCQ36LCNLbOAtAFhL4BBowBpu', '0',
+                    '1');
+
         </sql>
     </changeSet>
 </databaseChangeLog>

@@ -2,7 +2,7 @@ package org.example.webApplicationShopSpringBoot.dto.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.example.webApplicationShopSpringBoot.model.UserOrder.OrderStatus;
+import org.example.webApplicationShopSpringBoot.model.userOrder.OrderStatus;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

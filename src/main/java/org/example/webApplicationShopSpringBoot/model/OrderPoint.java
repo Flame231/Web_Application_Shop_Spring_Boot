@@ -10,7 +10,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrder;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
 import org.example.webApplicationShopSpringBoot.model.additional.DataEntity;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 

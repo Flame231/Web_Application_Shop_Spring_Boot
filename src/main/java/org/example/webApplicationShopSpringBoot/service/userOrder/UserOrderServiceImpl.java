@@ -1,21 +1,23 @@
 package org.example.webApplicationShopSpringBoot.service.userOrder;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
-import org.example.webApplicationShopSpringBoot.dao.bag.BagRepository;
-import org.example.webApplicationShopSpringBoot.dao.orderPoint.OrderPointRepository;
-import org.example.webApplicationShopSpringBoot.dao.product.ProductRepository;
-import org.example.webApplicationShopSpringBoot.dao.user.UserRepository;
-import org.example.webApplicationShopSpringBoot.dao.userOrder.UserOrderRepository;
-import org.example.webApplicationShopSpringBoot.dao.userOrderProduct.UserOrderProductRepository;
+import org.example.webApplicationShopSpringBoot.repository.bag.BagRepository;
+import org.example.webApplicationShopSpringBoot.repository.orderPoint.OrderPointRepository;
+import org.example.webApplicationShopSpringBoot.repository.product.ProductRepository;
+import org.example.webApplicationShopSpringBoot.repository.user.UserRepository;
+import org.example.webApplicationShopSpringBoot.repository.userOrder.UserOrderRepository;
+import org.example.webApplicationShopSpringBoot.repository.userOrderProduct.UserOrderProductRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.UserOrderConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
-import org.example.webApplicationShopSpringBoot.model.UserOrder.OrderStatus;
-import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrder;
-import org.example.webApplicationShopSpringBoot.model.UserOrder.UserOrderProduct;
+import org.example.webApplicationShopSpringBoot.model.userOrder.OrderStatus;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyBag;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
@@ -23,12 +25,14 @@ import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFo
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static org.example.webApplicationShopSpringBoot.service.PrincipalProvider.getUserFromSecurityContext;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserOrderServiceImpl implements UserOrderService {
 
     private static final Logger logger = LogManager.getLogger(UserOrderService.class);
@@ -42,13 +46,15 @@ public class UserOrderServiceImpl implements UserOrderService {
     private UserOrderConverter userOrderConverter;
 
     @Override
+    @Transactional
     public void confirmOrder(List<OrderDTO> list) {
         if (list.isEmpty()) {
             throw new EmptyList("Корзина товаров пуста!");
         }
+        User user = userRepository.findById(list.get(0).getUserId()).get();
         BigDecimal orderSum = BigDecimal.ZERO;
         UserOrder userOrder = UserOrder.builder().orderStatus(OrderStatus.CREATED)
-                .user(userRepository.findById(list.get(0).getUserId()).get())
+                .user(user)
                 .orderPoint(orderPointRepository.findById(list.get(0).getOrderPointId()).get())
                 .build();
         userOrderRepository.save(userOrder);
@@ -65,8 +71,13 @@ public class UserOrderServiceImpl implements UserOrderService {
                 bagRepository.deleteById(primaryKeyBag);
             }
         }
-        userOrder.setOrderSum(orderSum);
+        Integer discountValue = user.getDiscount().getDiscount();
+        BigDecimal calculatedDiscount = orderSum.multiply(new BigDecimal(discountValue)).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
+        BigDecimal orderSumWithDiscount = orderSum.subtract(calculatedDiscount);
+        System.out.println("orderSumWithDiscount " + orderSumWithDiscount);
+        userOrder.setOrderSum(orderSumWithDiscount);
         userOrderRepository.save(userOrder);
+        log.info("Заказ с id {} для пользователя с id {} успешно создан!", user.getId(), userOrder.getId());
     }
 
     @Override
@@ -80,13 +91,13 @@ public class UserOrderServiceImpl implements UserOrderService {
                 .toList();
     }
 
-    @Override
+/*    @Override
     public List<UserOrderDTO> showUserOrdersByOrderPoint() {
         User user = getUserFromSecurityContext();
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.findAllByOrderPointId(orderPointId);
         return userOrderList.stream().map(userOrder -> userOrderConverter.toDTO(userOrder)).toList();
-    }
+    }*/
 
     @Override
     public List<UserOrderDTO> showReadyUserOrdersByOrderPoint() {
@@ -111,6 +122,7 @@ public class UserOrderServiceImpl implements UserOrderService {
                 .orElseThrow(() -> new ResourceNotFound("Пользователь не найден!"));
         userOrder.setOrderStatus(OrderStatus.READY);
         userOrderRepository.save(userOrder);
+        log.info("Статус заказа с id успешно изменён на {}", userOrder.getOrderStatus());
     }
 
     @Override

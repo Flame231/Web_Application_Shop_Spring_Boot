@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import org.example.webApplicationShopSpringBoot.model.UserOrder.OrderStatus;
+import org.example.webApplicationShopSpringBoot.model.userOrder.OrderStatus;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.*;

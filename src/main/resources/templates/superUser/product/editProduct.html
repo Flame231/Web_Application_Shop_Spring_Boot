@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Редактировать продукт</title>
@@ -8,47 +7,47 @@
 
 <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
 <h1>Редактировать продукт</h1>
-<a th:href="@{|${adminPath}editCatalog|}">Назад</a>
+<a th:href="@{|${adminPath}productsList|(page=${page}, pageSize=${pageSize})}">Назад</a>
 
-<form th:action="@{|${adminPath}updateProduct|}" th:object="${productDTO}" method="post">
-
-    <!-- Скрытые системные поля (Связаны через th:field, без конфликтов value) -->
-    <input type="hidden" th:field="*{id}" />
-    <input type="hidden" th:field="*{status}" />
-    <input type="hidden" th:field="*{updateDateTime}" /> <!-- Защищает дату от зануления -->
+<form th:action="@{|${adminPath}updateProduct|(page=${page}, pageSize=${pageSize})}"
+      method="post">
 
     <div>
         Номер продукта:
-        <span th:text="*{id}"></span>
+        <input type="hidden" name="id" th:value="${productDTO.getId()}"/>
+        <span th:text="${productDTO.getId()}"></span>
     </div>
 
     <div>
         Название продукта:
-        <input type="text" th:field="*{productName}"/>
+        <input type="text" name="productName" th:value="${productDTO.getProductName()}"/>
     </div>
 
     <div>
         Категория продукта:
-        <select th:field="*{productCategory.id}">
+        <select name="productCategory">
             <option th:each="productCategoryDTO : ${productCategoryDTOList}"
                     th:value="${productCategoryDTO.id}"
                     th:text="${productCategoryDTO.category}">
             </option>
+            <option th:value="${productDTO.productCategory}"
+                    th:text="${productDTO.productCategory.category}" selected></option>
         </select>
     </div>
 
     <div>
         Цена:
-        <input type="text" th:field="*{price}"/>
+        <input type="text" name="price" th:value="${productDTO.price}"/>
     </div>
 
     <div>
         Продавец:
-        <select th:field="*{seller.id}">
+        <select name="seller">
             <option th:each="sellerDTO : ${sellerDTOList}"
                     th:value="${sellerDTO.id}"
                     th:text="${sellerDTO.sellerName}">
             </option>
+            <option th:value="${productDTO.seller.id}" th:text="${productDTO.seller.sellerName}" selected></option>
         </select>
     </div>
 
