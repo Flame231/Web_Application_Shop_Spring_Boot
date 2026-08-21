@@ -23,9 +23,8 @@ public class SellerController {
     private SellerService sellerService;
 
     @RequestMapping(value = "sellersList", method = {RequestMethod.GET, RequestMethod.POST})
-    public String showSellersList(@RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, Model model) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
-        PageResponse<SellerDTO> sellerDTOList = sellerService.getSellerDTOList(pageable);
+    public String showSellersList(@RequestParam( defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, Model model) {
+        PageResponse<SellerDTO> sellerDTOList = sellerService.getSellerDTOList(page, pageSize);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("sellerDTOList", sellerDTOList);

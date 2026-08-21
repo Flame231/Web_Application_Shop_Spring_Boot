@@ -54,10 +54,9 @@ public class UserController {
         List<BagDTOResponse> bagDTOResponseList = bagService.getAllBags();
         BigDecimal bagSum = bagService.showBagSum();
         model.addAttribute(page);
-        model.addAttribute(bagSum);
+        model.addAttribute("bagSum", bagSum);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
-        model.addAttribute(user.getId());
         model.addAttribute("productDTOList", productDTOList);
         model.addAttribute(bagDTOResponseList);
         return "catalog";

@@ -2,6 +2,7 @@ package org.example.webApplicationShopSpringBoot.service.product;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.example.webApplicationShopSpringBoot.model.NewProductDTO;
 import org.example.webApplicationShopSpringBoot.repository.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ProductConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
@@ -38,15 +39,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addProduct(ProductDTO productDTO) {
+    public void addProduct(NewProductDTO productDTO) {
         Product product = productConverter.toEntity(productDTO);
         productRepository.save(product);
     }
 
     @Override
-    public void updateProduct(ProductDTO productDTO) {
-        Product existingProduct = productRepository.findById(productDTO.getId()).get();
-        Product product = productConverter.updateEntity(productDTO, existingProduct);
+    public void updateProduct(NewProductDTO newProductDTO) {
+        Product existingProduct = productRepository.findById(newProductDTO.getId()).get();
+        Product product = productConverter.updateEntity(newProductDTO, existingProduct);
         productRepository.save(product);
     }
 

@@ -2,6 +2,7 @@ package org.example.webApplicationShopSpringBoot.service.product;
 
 
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
+import org.example.webApplicationShopSpringBoot.model.NewProductDTO;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.springframework.data.domain.Pageable;
 
@@ -13,9 +14,9 @@ public interface ProductService {
 
     ProductDTO findProduct(Long id);
 
-    void addProduct(ProductDTO productDTO);
+    void addProduct(NewProductDTO productDTO);
 
-    void updateProduct(ProductDTO productDTO);
+    void updateProduct(NewProductDTO newProductDTO);
 
     void removeProduct(Long id);
 

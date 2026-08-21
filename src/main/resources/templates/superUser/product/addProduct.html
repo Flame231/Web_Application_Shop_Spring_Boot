@@ -3,39 +3,40 @@
     <title>Добавить товар в каталог</title>
     <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
     <h1>Добавить товар в каталог</h1>
-    <a th:href="@{|${adminPath}productsList|}">Назад</a>
+    <a th:href="@{|${adminPath}productsList|(page=${page}, pageSize=${pageSize})}">Назад</a>
     <br>
-    <form th:object="${productDTO}" th:action="@{|${adminPath}addNewProduct|}" method="post">
-        <div>
-            Название продукта:
-            <input type="text" name="productName">
-        </div>
-        <div>
-            Категория продукта:
-            <select th:field="*{productCategory}">
-                <option th:each="productCategoryDTO:${productCategoryDTOList}"
-                        th:value="${productCategoryDTO.id}"
-                        th:text="${productCategoryDTO.category}">
-                </option>
-            </select>
-        </div>
-        <div>
-            Цена:
-            <input name="price">
-        </div>
-
-        <div>
-            Продавец:
-            <select th:field="*{seller}">
-                <option th:each="sellerDTO:${sellerDTOList}"
-                        th:value="${sellerDTO.id}"
-                        th:text="${sellerDTO.sellerName}">
-                </option>
-            </select>
-        </div>
-        <input type="submit" value="Подтвердить">
-    </form>
 </head>
 <body>
+<form th:object="${productDTO}" th:action="@{|${adminPath}addNewProduct|(page=${page}, pageSize=${pageSize})}"
+      method="post">
+    <div>
+        Название продукта:
+        <input type="text" name="productName">
+    </div>
+    <div>
+        Категория продукта:
+        <select th:field="*{productCategory}">
+            <option th:each="productCategoryDTO:${productCategoryDTOList}"
+                    th:value="${productCategoryDTO.id}"
+                    th:text="${productCategoryDTO.category}">
+            </option>
+        </select>
+    </div>
+    <div>
+        Цена:
+        <input type="text" name="price">
+    </div>
+
+    <div>
+        Продавец:
+        <select th:field="*{seller}">
+            <option th:each="sellerDTO:${sellerDTOList}"
+                    th:value="${sellerDTO.id}"
+                    th:text="${sellerDTO.sellerName}">
+            </option>
+        </select>
+    </div>
+    <input type="submit" value="Подтвердить">
+</form>
 </body>
 </html>

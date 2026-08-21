@@ -7,9 +7,10 @@
 
 <a th:href="@{|${adminPath}accountAdministrator|}">Вернуться в личный кабинет</a>
 <h1>Редактировать продукт</h1>
-<a th:href="@{|${adminPath}productsList|}">Назад</a>
+<a th:href="@{|${adminPath}productsList|(page=${page}, pageSize=${pageSize})}">Назад</a>
 
-<form th:action="@{|${adminPath}updateProduct|}" th:object="${productDTO}" method="post">
+<form th:object="${productDTO}" th:action="@{|${adminPath}updateProduct|(page=${page}, pageSize=${pageSize})}"
+      method="post">
 
     <div>
         Номер продукта:
@@ -24,7 +25,7 @@
 
     <div>
         Категория продукта:
-        <select th:field="*{productCategory.id}">
+        <select th:field="*{productCategory}">
             <option th:each="productCategoryDTO : ${productCategoryDTOList}"
                     th:value="${productCategoryDTO.id}"
                     th:text="${productCategoryDTO.category}">
@@ -39,7 +40,7 @@
 
     <div>
         Продавец:
-        <select th:field="*{seller.id}">
+        <select th:field="*{seller}">
             <option th:each="sellerDTO : ${sellerDTOList}"
                     th:value="${sellerDTO.id}"
                     th:text="${sellerDTO.sellerName}">
