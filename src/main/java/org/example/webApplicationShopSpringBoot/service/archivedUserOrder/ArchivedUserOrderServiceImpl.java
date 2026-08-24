@@ -3,6 +3,7 @@ package org.example.webApplicationShopSpringBoot.service.archivedUserOrder;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.repository.archivedUserOrder.ArchivedUserOrderRepository;
 import org.example.webApplicationShopSpringBoot.repository.userOrder.UserOrderRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ArchivedUserOrderConverter;
@@ -27,6 +28,7 @@ import java.util.Set;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
     private ArchivedUserOrderRepository archivedUserOrderRepository;
     private UserOrderRepository userOrderRepository;
@@ -61,6 +63,7 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
         userService.increaseTotalSum(userOrder.getUser().getId(), archivedUserOrder.getFinalOrderSum());
         userOrderRepository.deleteById(userOrderId);
         discountService.checkUserDiscount(userOrder.getUser());
+        log.info("Заказ с id {} успешно заархивирован!", archivedUserOrder.getUserOrderId());
     }
 
     @Override
@@ -82,6 +85,7 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
         archivedUserOrderProduct.forEach(e -> e.setArchivedUserOrder(archivedUserOrder));
         archivedUserOrderRepository.save(archivedUserOrder);
         userOrderRepository.deleteById(userOrderId);
+        log.info("Отказ заказа с id {} успешно заархивирован!", archivedUserOrder.getUserOrderId());
     }
 
     @Override

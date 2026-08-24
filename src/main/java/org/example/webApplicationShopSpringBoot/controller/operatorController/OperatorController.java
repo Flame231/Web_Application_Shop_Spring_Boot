@@ -2,6 +2,7 @@ package org.example.webApplicationShopSpringBoot.controller.operatorController;
 
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderPointDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderChangeCountDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
@@ -29,21 +30,21 @@ public class OperatorController {
     @RequestMapping(value = "accountOperator", method = {RequestMethod.GET, RequestMethod.POST})
     public String showOperatorPage(Model model) {
         OrderPointDTO orderPointDTO = userService.getOrderPoint();
-        model.addAttribute(orderPointDTO);
+        model.addAttribute("orderPointDTO", orderPointDTO);
         return "account/accountOperator";
     }
 
     @GetMapping("orders")
     public String showCreatedOrders(Model model) {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showCreatedUserOrders();
-        model.addAttribute(userOrderDTOList);
+        model.addAttribute("userOrderDTOList", userOrderDTOList);
         return "/order/showCreatedOrderPointOrders";
     }
 
     @GetMapping("arrivedOrders")
     public String showArrivedOrders(Model model) {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showReadyUserOrdersByOrderPoint();
-        model.addAttribute( userOrderDTOList);
+        model.addAttribute("userOrderDTOList", userOrderDTOList);
         return "/order/showReadyOrderPointOrders";
     }
 
@@ -56,7 +57,7 @@ public class OperatorController {
     @GetMapping("readyOrders")
     public String showReadyOrders(Model model) {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showReadyUserOrdersByOrderPoint();
-        model.addAttribute( userOrderDTOList);
+        model.addAttribute("userOrderDTOList", userOrderDTOList);
         return "/order/showReadyOrderPointOrders";
     }
 

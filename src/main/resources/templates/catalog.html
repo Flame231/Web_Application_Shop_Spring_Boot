@@ -34,7 +34,16 @@
     <input type="submit" value="Корзина">
 </form>
 Сумма в корзине:
-<span th:text="${bagSum}"></span>
+<span th:text="${#numbers.formatDecimal(bagSum.fullPrice, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+<br>
+Ваша скидка:
+<span th:text="${#numbers.formatDecimal(bagSum.discountValue, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>%
+<br>
+Сумма скидки:
+<span th:text="${#numbers.formatDecimal(bagSum.calculatedDiscount, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+<br>
+Сумма в корзине с учётом скидки:
+<span th:text="${#numbers.formatDecimal(bagSum.priceWithDiscount, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
 <br>
 <th:block th:if="${successMessage}">
     <span style="color: #069e29" th:text="${successMessage}"></span>

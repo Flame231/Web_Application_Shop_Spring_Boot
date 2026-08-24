@@ -1,9 +1,8 @@
 package org.example.webApplicationShopSpringBoot.repository.userOrderProduct;
 
 
-import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
-import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUserOrderProduct;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrderProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -42,27 +42,27 @@ public class ProductCategoryController {
     public String addNewProductCategory(@ModelAttribute ProductCategoryDTO productCategoryDTO, RedirectAttributes redirectAttributes) {
         productCategoryService.addProductCategory(productCategoryDTO);
         redirectAttributes.addFlashAttribute("successMessage", "категория успешно добавлена!");
-        return "redirect:editProductCategories";
+        return "redirect:productCategoriesList";
     }
 
     @PostMapping("deleteProductCategory/{id}")
     public String deleteProductCategory(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         productCategoryService.deleteProductCategory(id);
         redirectAttributes.addFlashAttribute("successMessage", "категория успешно удалена!");
-        return "redirect:/administrator/editProductCategories";
+        return "redirect:/administrator/productCategoriesList";
     }
 
     @PostMapping("recoverProductCategory/{id}")
     public String recoverProductCategory(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         productCategoryService.recoverProductCategory(id);
         redirectAttributes.addFlashAttribute("successMessage", "категория успешно удалена!");
-        return "redirect:/administrator/editProductCategories";
+        return "redirect:/administrator/productCategoriesList";
     }
 
     @GetMapping("editProductCategory/{id}")
     public String showEditProductCategoryPage(@PathVariable Long id, Model model) {
         ProductCategoryDTO productCategoryDTO = productCategoryService.findProductCategory(id);
-        model.addAttribute(productCategoryDTO);
+        model.addAttribute("productCategoryDTO", productCategoryDTO);
         return "/superUser/productCategory/editProductCategory";
     }
 
@@ -70,6 +70,6 @@ public class ProductCategoryController {
     public String updateProductCategory(@ModelAttribute ProductCategoryDTO productCategoryDTO, RedirectAttributes redirectAttributes) {
         productCategoryService.updateProductCategory(productCategoryDTO);
         redirectAttributes.addFlashAttribute("successMessage", "категория успешно обновлена!");
-        return "redirect:editProductCategories";
+        return "redirect:productCategoriesList";
     }
 }

@@ -73,8 +73,7 @@ public class UserServiceImpl implements UserService {
         boolean hasRepeatPass = repeatPass != null && !repeatPass.isBlank();
         boolean hasOldPass = oldPass != null && !oldPass.isBlank();
         userProfileConverter.updateUser(userProfileDTO, userManaged);
-
-        if (hasNewPass && hasRepeatPass) { //если новые пароли заполнены
+        if (hasNewPass && hasRepeatPass) {
             if (hasOldPass) {
                 if (!BcryptUtil.checkPassword(userProfileDTO.getOldPassword(), userManaged.getPasswordHash())) {
                     throw new WrongPassword("Неверный пароль!");
@@ -87,6 +86,7 @@ public class UserServiceImpl implements UserService {
         } else if (hasNewPass || hasRepeatPass) {
             throw new DifferentUserPasswords("Не заполнены формы нового пароля");
         }
+        log.info("Пользователь с id {} успешно обновлён!", user.getId());
     }
 
     @Override
@@ -101,6 +101,7 @@ public class UserServiceImpl implements UserService {
         BigDecimal userTotalSum = user.getSumOfPurchases();
         BigDecimal newUserTotalSum = userTotalSum.add(finalOrderSum);
         user.setSumOfPurchases(newUserTotalSum);
+        log.info("Сумма пользователя с id {} успешно увеличена до {}", user.getId(), newUserTotalSum);
     }
 
     @Override
@@ -112,7 +113,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDiscountDTO getUserDiscount() {
         User user = userRepository.findById(PrincipalProvider.getUserFromSecurityContext().getId()).get();
-
         return userDiscountConverter.toDTO(user);
     }
 }

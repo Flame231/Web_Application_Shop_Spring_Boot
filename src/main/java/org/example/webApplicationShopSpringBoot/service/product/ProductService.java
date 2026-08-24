@@ -2,7 +2,7 @@ package org.example.webApplicationShopSpringBoot.service.product;
 
 
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
-import org.example.webApplicationShopSpringBoot.model.NewProductDTO;
+import org.example.webApplicationShopSpringBoot.dto.dto.NewProductDTO;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.springframework.data.domain.Pageable;
 

@@ -61,9 +61,9 @@ public class ShopController {
     @GetMapping("/errorPage")
     public String showAccessDeniedPage(Model model) {
         model.addAttribute("message", "У вас нет прав для доступа к этому разделу сайта!");
-        model.addAttribute(adminPath);
-        model.addAttribute(clientPath);
-        model.addAttribute(operatorPath);
+        model.addAttribute("adminPath",adminPath);
+        model.addAttribute("clientPath",clientPath);
+        model.addAttribute("operatorPath",operatorPath);
         return "errorPage";
     }
 }

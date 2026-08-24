@@ -47,18 +47,18 @@ public class GlobalExceptionHandler {
     public String handleBusinessError(Exception e, Model model) {
         log.warn("Ошибка сервиса: {}", e.getMessage());
         model.addAttribute("message", e.getMessage());
-        model.addAttribute(adminPath);
-        model.addAttribute(clientPath);
-        model.addAttribute(operatorPath);
+        model.addAttribute("adminPath", adminPath);
+        model.addAttribute("clientPath", clientPath);
+        model.addAttribute("operatorPath", operatorPath);
         return "errorPage";
     }
 
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
     public String validationHandler(MethodArgumentNotValidException e, Model model) {
         log.warn("Ошибка валидации: {}", e.getMessage());
-        model.addAttribute(adminPath);
-        model.addAttribute(clientPath);
-        model.addAttribute(operatorPath);
+        model.addAttribute("adminPath", adminPath);
+        model.addAttribute("clientPath", clientPath);
+        model.addAttribute("operatorPath", operatorPath);
         List<String> s = e.getBindingResult()
                 .getFieldErrors()
                 .stream()

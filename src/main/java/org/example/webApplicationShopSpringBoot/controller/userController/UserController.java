@@ -43,7 +43,7 @@ public class UserController {
     @RequestMapping(value = "accountClient", method = {RequestMethod.GET, RequestMethod.POST})
     public String showAdministratorPage(Model model) {
         UserDiscountDTO userDiscountDTO = userService.getUserDiscount();
-        model.addAttribute(userDiscountDTO);
+        model.addAttribute("userDiscountDTO", userDiscountDTO);
         return "account/accountClient";
     }
 
@@ -52,8 +52,8 @@ public class UserController {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         PageResponse<ProductDTO> productDTOList = productService.getActiveProducts(pageable);
         List<BagDTOResponse> bagDTOResponseList = bagService.getAllBags();
-        BigDecimal bagSum = bagService.showBagSum();
-        model.addAttribute(page);
+        BagSumWithDiscountDTO bagSum = bagService.calculateBagSumWithDiscount();
+        model.addAttribute("page", page);
         model.addAttribute("bagSum", bagSum);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
@@ -79,9 +79,9 @@ public class UserController {
     @GetMapping("bag")
     public String showBag(Model model) {
         List<BagDTOResponse> bagDTOResponseList = bagService.openBag();
-        BigDecimal bagSum = bagService.showBagSum();
+        BagSumWithDiscountDTO bagSum = bagService.calculateBagSumWithDiscount();
         List<OrderPointDTO> orderPointDTOList = orderPointService.getAllOrderPoints();
-        model.addAttribute(bagSum);
+        model.addAttribute("bagSum", bagSum);
         model.addAttribute(bagDTOResponseList);
         model.addAttribute(orderPointDTOList);
         return "/bag";

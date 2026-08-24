@@ -46,7 +46,6 @@
                     th:text="${orderPointDTO.orderPointAddress}">
             </option>
         </select>
-
     </div>
     <br>
     <input type="submit" value="Оформить заказ">
@@ -60,7 +59,17 @@
     <br>
 </th:block>
 Сумма в корзине:
-<span th:text="${#numbers.formatDecimal(bagSum, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+<span th:text="${#numbers.formatDecimal(bagSum.fullPrice, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+<br>
+Ваша скидка:
+<span th:text="${#numbers.formatDecimal(bagSum.discountValue, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>%
+<br>
+Сумма скидки:
+<span th:text="${#numbers.formatDecimal(bagSum.calculatedDiscount, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+<br>
+Сумма в корзине с учётом скидки:
+<span th:text="${#numbers.formatDecimal(bagSum.priceWithDiscount, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+<br>
 <table>
     <thead>
     <tr>

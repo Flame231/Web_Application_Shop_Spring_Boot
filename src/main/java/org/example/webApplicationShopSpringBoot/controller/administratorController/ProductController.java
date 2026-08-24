@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductCategoryDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
-import org.example.webApplicationShopSpringBoot.model.NewProductDTO;
+import org.example.webApplicationShopSpringBoot.dto.dto.NewProductDTO;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.product.ProductService;
 import org.example.webApplicationShopSpringBoot.service.productCategory.ProductCategoryService;

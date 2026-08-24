@@ -23,7 +23,7 @@ public class SellerController {
     private SellerService sellerService;
 
     @RequestMapping(value = "sellersList", method = {RequestMethod.GET, RequestMethod.POST})
-    public String showSellersList(@RequestParam( defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, Model model) {
+    public String showSellersList(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, Model model) {
         PageResponse<SellerDTO> sellerDTOList = sellerService.getSellerDTOList(page, pageSize);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
@@ -61,7 +61,7 @@ public class SellerController {
     @GetMapping("editSeller/{id}")
     public String showEditSellerPage(@PathVariable Long id, Model model) {
         SellerDTO sellerDTO = sellerService.getSeller(id);
-        model.addAttribute(sellerDTO);
+        model.addAttribute("sellerDTO", sellerDTO);
         return "/superUser/seller/editSeller";
     }
 

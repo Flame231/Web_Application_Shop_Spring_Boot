@@ -2,6 +2,7 @@ package org.example.webApplicationShopSpringBoot.service.discount;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.model.Discount;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.repository.discount.DiscountRepository;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class DiscountServiceImpl implements DiscountService {
     private DiscountRepository discountRepository;
 
@@ -30,6 +32,7 @@ public class DiscountServiceImpl implements DiscountService {
         for (Discount discountFormList : discountList) {
             if (sumOfPurchases.compareTo(discountFormList.getTotalSum()) >= 0) {
                 user.setDiscount(discountFormList);
+                log.info("Скидка пользователя с id {} увеличена до discount с id {}!", user.getId(), discountFormList.getId());
             }
         }
     }

@@ -3,6 +3,7 @@ package org.example.webApplicationShopSpringBoot.service.seller;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.repository.seller.SellerRepository;
 import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.SellerConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
@@ -19,11 +20,12 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class SellerServiceImpl implements SellerService {
     private SellerRepository sellerRepository;
     private SellerConverter sellerConverter;
 
-    public PageResponse<SellerDTO> getSellerDTOList(int page,  int pageSize) {
+    public PageResponse<SellerDTO> getSellerDTOList(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         Page<Seller> resultPage = sellerRepository.findAll(pageable);
         return new PageResponse<SellerDTO>(resultPage.map(seller -> sellerConverter.toDTO(seller)));
@@ -42,12 +44,14 @@ public class SellerServiceImpl implements SellerService {
         Seller existingSeller = sellerRepository.findById(sellerDTO.getId()).get();
         Seller seller = sellerConverter.updateSeller(sellerDTO, existingSeller);
         sellerRepository.save(seller);
+        log.info("Продавец с id {} успешно обновлён!", existingSeller.getId());
     }
 
     @Override
     public void addSeller(SellerDTO sellerDTO) {
         Seller seller = sellerConverter.toEntity(sellerDTO);
         sellerRepository.save(seller);
+        log.info("Продавец {} успешно добавлен!", seller.getSellerName());
     }
 
     @Transactional
@@ -55,6 +59,7 @@ public class SellerServiceImpl implements SellerService {
     public void deleteSeller(Long id) {
         Seller seller = sellerRepository.findById(id).get();
         seller.setStatus(ItemStatus.DELETED);
+        log.info("Статус категории продукта с id {} успешно изменён!", seller.getStatus().name());
     }
 
     @Transactional
@@ -62,6 +67,7 @@ public class SellerServiceImpl implements SellerService {
     public void recoverSeller(Long id) {
         Seller seller = sellerRepository.findById(id).get();
         seller.setStatus(ItemStatus.ACTIVE);
+        log.info("Статус категории продукта с id {} успешно изменён!", seller.getStatus().name());
     }
 
     @Override

@@ -37,7 +37,6 @@
 
 <h1>Заказы на пункте выдачи</h1>
 
-<!-- ИСПРАВЛЕНО: Безопасное отображение. Строка покажется только если список НЕ пустой -->
 <div th:if="${not #lists.isEmpty(userOrderDTOList)}">
     Ваш пункт выдачи: <span th:text="${userOrderDTOList[0].orderPoint}"></span>
 </div>
@@ -51,7 +50,7 @@
         <br>
         <div>Пункт выдачи: <span th:text="${userOrderDTO.orderPoint}"></span></div>
         <br>
-        <div>Сумма заказа:
+        <div>Сумма заказа с учётом скидки:
             <span th:text="${#numbers.formatDecimal(userOrderDTO.orderSum, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
             <br>
         </div>
