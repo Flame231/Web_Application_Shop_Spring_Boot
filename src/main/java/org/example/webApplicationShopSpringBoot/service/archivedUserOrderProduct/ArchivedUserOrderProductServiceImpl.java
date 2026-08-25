@@ -1,5 +1,6 @@
 package org.example.webApplicationShopSpringBoot.service.archivedUserOrderProduct;
 
+import jakarta.transaction.Transactional;
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrder;
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrderProduct;
@@ -9,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ArchivedUserOrderProductServiceImpl implements ArchivedUserOrderProductService {
 
     @Override
@@ -22,5 +24,10 @@ public class ArchivedUserOrderProductServiceImpl implements ArchivedUserOrderPro
                 .finalProductCount(e.getActualProductCount())
                 .price(e.getProductPrice())
                 .build()).collect(Collectors.toSet());
+    }
+
+    @Override
+    public void setArchivedUserOrder(ArchivedUserOrder archivedUserOrder, Set<ArchivedUserOrderProduct> archivedUserOrderProduct) {
+        archivedUserOrderProduct.forEach(e -> e.setArchivedUserOrder(archivedUserOrder));
     }
 }

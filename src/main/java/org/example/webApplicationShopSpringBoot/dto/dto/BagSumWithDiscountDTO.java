@@ -1,14 +1,14 @@
 package org.example.webApplicationShopSpringBoot.dto.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Setter
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BagSumWithDiscountDTO {
 
     private BigDecimal fullPrice;

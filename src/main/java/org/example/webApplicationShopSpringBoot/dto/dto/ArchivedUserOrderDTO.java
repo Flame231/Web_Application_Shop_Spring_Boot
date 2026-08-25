@@ -1,7 +1,9 @@
 package org.example.webApplicationShopSpringBoot.dto.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.example.webApplicationShopSpringBoot.model.userOrder.OrderStatus;
 
 
@@ -11,6 +13,8 @@ import java.util.Set;
 
 @Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArchivedUserOrderDTO {
 
     private Long userOrderId;

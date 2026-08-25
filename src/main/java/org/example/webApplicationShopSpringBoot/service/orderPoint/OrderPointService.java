@@ -9,4 +9,7 @@ import java.util.List;
 public interface OrderPointService {
 
     List<OrderPointDTO> getAllOrderPoints();
+
+    OrderPoint getOrderPoint(Long orderPointId);
+
 }

@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductCategoryDTO;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.productCategory.ProductCategoryService;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +21,7 @@ public class ProductCategoryController {
 
     @RequestMapping(value = "productCategoriesList", method = {RequestMethod.GET, RequestMethod.POST})
     public String showProductCategoriesList(@RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, Model model) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
-        PageResponse<ProductCategoryDTO> productCategoriesList = productCategoryService.getProductCategoryDTOList(pageable);
+        PageResponse<ProductCategoryDTO> productCategoriesList = productCategoryService.getProductCategoryDTOList(page, pageSize);
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("productCategoriesList", productCategoriesList);

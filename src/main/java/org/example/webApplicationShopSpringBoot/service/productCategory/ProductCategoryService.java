@@ -4,15 +4,12 @@ package org.example.webApplicationShopSpringBoot.service.productCategory;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductCategoryDTO;
 import org.example.webApplicationShopSpringBoot.model.ProductCategory;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
-import java.io.Serializable;
 import java.util.List;
 
 public interface ProductCategoryService {
 
-    PageResponse<ProductCategoryDTO> getProductCategoryDTOList(Pageable pageable);
+    PageResponse<ProductCategoryDTO> getProductCategoryDTOList(int page, int pageSize);
 
     List<ProductCategoryDTO> getActiveProductCategoryDTOList();
 
@@ -25,4 +22,7 @@ public interface ProductCategoryService {
     void deleteProductCategory(Long id);
 
     void recoverProductCategory(Long id);
+
+    ProductCategory getCategoryById(Long id);
+
 }

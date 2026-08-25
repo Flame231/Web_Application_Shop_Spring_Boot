@@ -1,31 +1,29 @@
 package org.example.webApplicationShopSpringBoot.service.discount;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.model.Discount;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.repository.discount.DiscountRepository;
-import org.example.webApplicationShopSpringBoot.repository.user.UserRepository;
-import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
-import org.example.webApplicationShopSpringBoot.service.user.UserService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class DiscountServiceImpl implements DiscountService {
-    private DiscountRepository discountRepository;
+    private final DiscountRepository discountRepository;
 
     @Override
     public List<Discount> getDiscountList() {
         return discountRepository.findAll();
     }
 
-    @Transactional
+    @Override
     public void checkUserDiscount(User user) {
         BigDecimal sumOfPurchases = user.getSumOfPurchases();
         List<Discount> discountList = getDiscountList();

@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.seller.SellerService;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +57,7 @@ public class SellerController {
 
     @GetMapping("editSeller/{id}")
     public String showEditSellerPage(@PathVariable Long id, Model model) {
-        SellerDTO sellerDTO = sellerService.getSeller(id);
+        SellerDTO sellerDTO = sellerService.getSellerDTO(id);
         model.addAttribute("sellerDTO", sellerDTO);
         return "/superUser/seller/editSeller";
     }

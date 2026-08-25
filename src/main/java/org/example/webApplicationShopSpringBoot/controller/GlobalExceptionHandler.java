@@ -1,7 +1,7 @@
 package org.example.webApplicationShopSpringBoot.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.webApplicationShopSpringBoot.service.exceptions.*;
+import org.example.webApplicationShopSpringBoot.service.serviceExceptions.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.ui.Model;

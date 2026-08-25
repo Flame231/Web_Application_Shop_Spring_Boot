@@ -1,0 +1,18 @@
+package org.example.webApplicationShopSpringBoot.dto.converterDTO;
+
+import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderProductDTO;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrderProduct;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+@Mapper(componentModel = "spring", uses = {ProductConverter.class})
+public interface UserOrderProductConverter {
+
+
+@Mapping(source = "userOrder.id",target = "userOrderId")
+@Mapping(source = "product",target = "productDTO")
+/*
+@Mapping(source = "productPrice",target = "productPrice")
+*/
+    UserOrderProductDTO toDTO(UserOrderProduct userOrderProduct);
+}

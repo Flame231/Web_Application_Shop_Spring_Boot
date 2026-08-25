@@ -1,22 +1,26 @@
 package org.example.webApplicationShopSpringBoot.service.userOrder;
 
 
-import org.example.webApplicationShopSpringBoot.dto.dto.OrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
+import org.example.webApplicationShopSpringBoot.model.OrderPoint;
+import org.example.webApplicationShopSpringBoot.model.user.User;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
 
 import java.util.List;
 
 public interface UserOrderService {
 
-    void confirmOrder(List<OrderDTO> list);
+    List<UserOrderDTO> showAllUserOrders(User user);
 
-    List<UserOrderDTO> showAllUserOrders();
+    List<UserOrderDTO> showReadyUserOrdersByOrderPoint(User user);
 
-    List<UserOrderDTO> showReadyUserOrdersByOrderPoint();
-
-    UserOrderDTO getUserOrderDTO(Long  id);
+    UserOrder getUserOrder(Long id);
 
     void readyUserOrder(Long userOrderId);
 
-    List<UserOrderDTO> showCreatedUserOrders();
+    List<UserOrderDTO> showCreatedUserOrders(User user);
+
+    void deleteUserOrder(Long id);
+
+    UserOrder createUserOrder(User user, OrderPoint orderPoint);
 }

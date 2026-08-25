@@ -45,19 +45,13 @@
 <th:block th:each="userOrderDTO: ${userOrderDTOList}">
     <form method="post" th:action="@{/operator/changeUserOrderStatus}">
         <div>Номер заказа: <span th:text="${userOrderDTO.orderId}"></span></div>
-        <br>
         <div>Статус заказа: <span th:text="${userOrderDTO.orderStatus.description}"></span></div>
-        <br>
         <div>Пункт выдачи: <span th:text="${userOrderDTO.orderPoint}"></span></div>
-        <br>
         <div>Сумма заказа с учётом скидки:
             <span th:text="${#numbers.formatDecimal(userOrderDTO.orderSum, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
-            <br>
         </div>
         <div>
             Дата создания: <span th:text="${userOrderDTO.orderCreateDateTime}"></span></div>
-        <br>
-
         <table>
             <thead>
             <tr>
