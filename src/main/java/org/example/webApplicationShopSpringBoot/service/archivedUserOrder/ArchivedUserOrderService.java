@@ -1,6 +1,7 @@
 package org.example.webApplicationShopSpringBoot.service.archivedUserOrder;
 
 import org.example.webApplicationShopSpringBoot.dto.dto.ArchivedUserOrderDTO;
+import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.springframework.data.domain.Pageable;
 
@@ -12,6 +13,6 @@ public interface ArchivedUserOrderService {
 
     void refuseUserOrder(Long userOrderId);
 
-    PageResponse<ArchivedUserOrderDTO> showArchivedUserOrders(Pageable pageable);
+    PageResponse<ArchivedUserOrderDTO> showArchivedUserOrders(int page, int pageSize, User user);
 
 }

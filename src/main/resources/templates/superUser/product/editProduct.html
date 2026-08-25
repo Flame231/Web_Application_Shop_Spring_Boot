@@ -14,40 +14,40 @@
 
     <div>
         Номер продукта:
-        <input type="hidden" name="id" th:value="${productDTO.getId()}"/>
-        <span th:text="${productDTO.getId()}"></span>
+        <input type="hidden" name="id" th:value="${editProductDTO.productDTO.getId()}"/>
+        <span th:text="${editProductDTO.productDTO.getId()}"></span>
     </div>
 
     <div>
         Название продукта:
-        <input type="text" name="productName" th:value="${productDTO.getProductName()}"/>
+        <input type="text" name="productName" th:value="${editProductDTO.productDTO.getProductName()}"/>
     </div>
 
     <div>
         Категория продукта:
         <select name="productCategory">
-            <option th:each="productCategoryDTO : ${productCategoryDTOList}"
+            <option th:each="productCategoryDTO : ${editProductDTO.productCategoryDTOList}"
                     th:value="${productCategoryDTO.id}"
                     th:text="${productCategoryDTO.category}">
             </option>
-            <option th:value="${productDTO.productCategory}"
-                    th:text="${productDTO.productCategory.category}" selected></option>
+            <option th:value="${editProductDTO.productDTO.productCategory}"
+                    th:text="${editProductDTO.productDTO.productCategory.category}" selected></option>
         </select>
     </div>
 
     <div>
         Цена:
-        <input type="text" name="price" th:value="${productDTO.price}"/>
+        <input type="text" name="price" th:value="${editProductDTO.productDTO.price}"/>
     </div>
 
     <div>
         Продавец:
         <select name="seller">
-            <option th:each="sellerDTO : ${sellerDTOList}"
+            <option th:each="sellerDTO : ${editProductDTO.sellerDTOList}"
                     th:value="${sellerDTO.id}"
                     th:text="${sellerDTO.sellerName}">
             </option>
-            <option th:value="${productDTO.seller.id}" th:text="${productDTO.seller.sellerName}" selected></option>
+            <option th:value="${editProductDTO.productDTO.seller.id}" th:text="${editProductDTO.productDTO.seller.sellerName}" selected></option>
         </select>
     </div>
 

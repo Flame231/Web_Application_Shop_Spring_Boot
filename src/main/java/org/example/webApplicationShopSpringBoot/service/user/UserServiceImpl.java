@@ -63,8 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(UserProfileDTO userProfileDTO) {
-        User user = PrincipalProvider.getUserFromSecurityContext();
+    public void updateUser(UserProfileDTO userProfileDTO, User user) {
         User userManaged = userRepository.findById(user.getId()).orElseThrow(() -> new ResourceNotFound("Пользователь не найден!"));
         String newPass = userProfileDTO.getNewPassword();
         String repeatPass = userProfileDTO.getNewPasswordRepeat();
@@ -90,8 +89,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProfileDTO getUserProfileDTO() {
-        User user = PrincipalProvider.getUserFromSecurityContext();
+    public UserProfileDTO getUserProfileDTO(User user) {
         return userProfileConverter.toDTO(userRepository.findById(user.getId()).get());
     }
 

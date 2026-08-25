@@ -3,28 +3,24 @@ package org.example.webApplicationShopSpringBoot.controller.userController;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
-import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.dto.dto.*;
+import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
+import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.BagInfoDTO;
+import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.ProductsAndBagsDTO;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.archivedUserOrder.ArchivedUserOrderService;
 import org.example.webApplicationShopSpringBoot.service.bag.BagService;
-import org.example.webApplicationShopSpringBoot.service.orderPoint.OrderPointService;
 import org.example.webApplicationShopSpringBoot.service.product.ProductService;
 import org.example.webApplicationShopSpringBoot.service.user.UserService;
-import org.example.webApplicationShopSpringBoot.service.userOrder.BagForm;
+import org.example.webApplicationShopSpringBoot.dto.dto.BagFormDTO;
 import org.example.webApplicationShopSpringBoot.service.userOrder.UserOrderService;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -36,7 +32,6 @@ public class UserController {
     private final UserService userService;
     private ProductService productService;
     private BagService bagService;
-    private OrderPointService orderPointService;
     private UserOrderService userOrderService;
     private ArchivedUserOrderService archivedUserOrderService;
 
@@ -49,81 +44,71 @@ public class UserController {
 
     @GetMapping("catalog")
     public String showCatalog(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, @AuthenticationPrincipal User user) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
-        PageResponse<ProductDTO> productDTOList = productService.getActiveProducts(pageable);
-        List<BagDTOResponse> bagDTOResponseList = bagService.getAllBags();
-        BagSumWithDiscountDTO bagSum = bagService.calculateBagSumWithDiscount();
+        ProductsAndBagsDTO productsAndBagsDTO = productService.getProductsAndBags(page, pageSize, user);
+        model.addAttribute("productsAndBagsDTO", productsAndBagsDTO);
         model.addAttribute("page", page);
-        model.addAttribute("bagSum", bagSum);
-        model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
-        model.addAttribute("productDTOList", productDTOList);
-        model.addAttribute(bagDTOResponseList);
+        model.addAttribute("pageSizeList", pageSizeList);
         return "catalog";
     }
 
     @PostMapping("addProductToCatalogBag")
-    public String addProductToCatalogBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
-        bagService.addProductToBag(bagDTORequest);
+    public String addProductToCatalogBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes, @AuthenticationPrincipal User user) {
+        bagService.addProductToBag(bagDTORequest, user);
         redirectAttributes.addAttribute(page);
         return "redirect:/client/catalog";
     }
 
     @PostMapping("deleteProductFromCatalogBag")
-    public String deleteProductFromCatalogBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes) {
-        bagService.deleteProductFromBag(bagDTORequest);
+    public String deleteProductFromCatalogBag(@ModelAttribute BagDTORequest bagDTORequest, @RequestParam(defaultValue = "1") int page, RedirectAttributes redirectAttributes, @AuthenticationPrincipal User user) {
+        bagService.deleteProductFromBag(bagDTORequest, user);
         redirectAttributes.addAttribute(page);
         return "redirect:/client/catalog";
     }
 
     @GetMapping("bag")
-    public String showBag(Model model) {
-        List<BagDTOResponse> bagDTOResponseList = bagService.openBag();
-        BagSumWithDiscountDTO bagSum = bagService.calculateBagSumWithDiscount();
-        List<OrderPointDTO> orderPointDTOList = orderPointService.getAllOrderPoints();
-        model.addAttribute("bagSum", bagSum);
-        model.addAttribute(bagDTOResponseList);
-        model.addAttribute(orderPointDTOList);
+    public String showBag(Model model, @AuthenticationPrincipal User user) {
+        BagInfoDTO bagInfoDTO = bagService.returnBagInfo(user);
+        model.addAttribute("bagInfoDTO", bagInfoDTO);
         return "/bag";
     }
 
     @PostMapping("addProductToBag")
-    public String addProductToBag(@ModelAttribute BagDTORequest bagDTORequest) {
-        bagService.addProductToBag(bagDTORequest);
+    public String addProductToBag(@ModelAttribute BagDTORequest bagDTORequest, @AuthenticationPrincipal User user) {
+        bagService.addProductToBag(bagDTORequest, user);
         return "redirect:/client/bag";
     }
 
     @PostMapping("deleteProductFromBag")
-    public String deleteProductFromBag(@ModelAttribute BagDTORequest bagDTORequest) {
-        bagService.deleteProductFromBag(bagDTORequest);
+    public String deleteProductFromBag(@ModelAttribute BagDTORequest bagDTORequest, @AuthenticationPrincipal User user) {
+        bagService.deleteProductFromBag(bagDTORequest, user);
         return "redirect:/client/bag";
     }
 
     @PostMapping("clearBag")
-    public String clearAllBags(RedirectAttributes redirectAttributes) {
+    public String clearAllBags(RedirectAttributes redirectAttributes, @AuthenticationPrincipal User user) {
         redirectAttributes.addFlashAttribute("successMessage", "Корзина очищена!");
-        bagService.clearAllBags();
+        bagService.clearAllBags(user);
         return "redirect:/client/bag";
     }
 
     @PostMapping("confirmOrder")
-    public String confirmOrder(@ModelAttribute BagForm bagForm, RedirectAttributes redirectAttributes) {
-        List<OrderDTO> list = bagForm.toNewOrderDTO();
-        userOrderService.confirmOrder(list);
+    public String confirmOrder(@ModelAttribute BagFormDTO bagFormDTO, RedirectAttributes redirectAttributes, @AuthenticationPrincipal User user) {
+        userOrderService.confirmOrder(bagFormDTO, user);
         redirectAttributes.addFlashAttribute("successMessage", "Заказ успешно оформлен");
         return "redirect:/client/catalog";
     }
 
     @GetMapping("userProfile")
-    public String showUserProfile(Model model) {
-        UserProfileDTO userProfileDTO = userService.getUserProfileDTO();
+    public String showUserProfile(Model model, @AuthenticationPrincipal User user) {
+        UserProfileDTO userProfileDTO = userService.getUserProfileDTO(user);
         model.addAttribute("userProfileDTO", userProfileDTO);
         return "userProfile";
     }
 
     @PostMapping("updateUser")
-    public String updateUser(@ModelAttribute @Valid UserProfileDTO userProfileDTO, RedirectAttributes redirectAttributes) {
-        userService.updateUser(userProfileDTO);
+    public String updateUser(@ModelAttribute @Valid UserProfileDTO userProfileDTO, RedirectAttributes redirectAttributes, @AuthenticationPrincipal User user) {
+        userService.updateUser(userProfileDTO, user);
         redirectAttributes.addFlashAttribute("successMessage", "Данные пользователя успешно обновлены!");
         return "redirect:/client/accountClient";
     }
@@ -136,11 +121,10 @@ public class UserController {
     }
 
     @GetMapping("ordersHistory")
-    public String showOrdersHistory(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
-        PageResponse<ArchivedUserOrderDTO> archivedUserOrderDTOList = archivedUserOrderService.showArchivedUserOrders(pageable);
+    public String showOrdersHistory(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = PAGE_SIZE_30) int pageSize, @AuthenticationPrincipal User user) {
+        PageResponse<ArchivedUserOrderDTO> archivedUserOrderDTOList = archivedUserOrderService.showArchivedUserOrders(page, pageSize, user);
         model.addAttribute("archivedUserOrderDTOList", archivedUserOrderDTOList);
-        model.addAttribute(page);
+        model.addAttribute("page", page);
         model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
         return "/order/showArchivedOrders";

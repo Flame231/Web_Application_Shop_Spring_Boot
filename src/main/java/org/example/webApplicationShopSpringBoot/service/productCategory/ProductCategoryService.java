@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ProductCategoryService {
 
-    PageResponse<ProductCategoryDTO> getProductCategoryDTOList(Pageable pageable);
+    PageResponse<ProductCategoryDTO> getProductCategoryDTOList(int page, int pageSize);
 
     List<ProductCategoryDTO> getActiveProductCategoryDTOList();
 

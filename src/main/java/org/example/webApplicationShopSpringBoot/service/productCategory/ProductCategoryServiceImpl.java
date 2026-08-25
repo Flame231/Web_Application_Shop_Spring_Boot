@@ -12,7 +12,9 @@ import org.example.webApplicationShopSpringBoot.model.ProductCategory;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +27,8 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     final private ProductCategoryRepository productCategoryRepository;
     final private ProductCategoryConverter productCategoryConverter;
 
-    public PageResponse<ProductCategoryDTO> getProductCategoryDTOList(Pageable pageable) {
+    public PageResponse<ProductCategoryDTO> getProductCategoryDTOList(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         Page<ProductCategory> productCategoryPage = productCategoryRepository.findAll(pageable);
         return new PageResponse<ProductCategoryDTO>(productCategoryPage.map(productCategoryConverter::toDTO));
     }

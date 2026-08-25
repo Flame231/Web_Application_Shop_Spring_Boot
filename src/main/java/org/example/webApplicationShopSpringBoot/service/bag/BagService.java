@@ -4,24 +4,28 @@ package org.example.webApplicationShopSpringBoot.service.bag;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagSumWithDiscountDTO;
+import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.BagInfoDTO;
+import org.example.webApplicationShopSpringBoot.model.user.User;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public interface BagService {
-    void addProductToBag(BagDTORequest bagDTORequest);
+    void addProductToBag(BagDTORequest bagDTORequest, User user);
 
-    void deleteProductFromBag(BagDTORequest bagDTORequest);
+    void deleteProductFromBag(BagDTORequest bagDTORequest, User user);
 
-    List<BagDTOResponse> getAllBags();
+    List<BagDTOResponse> getAllBags(User user);
 
-    BigDecimal showBagSum();
+    BigDecimal showBagSum(User user);
 
     BigDecimal showCalculatedDiscount(BigDecimal fullPrice, Integer discountValue);
 
-    BagSumWithDiscountDTO calculateBagSumWithDiscount();
+    BagSumWithDiscountDTO calculateBagSumWithDiscount(User user);
 
-    void clearAllBags();
+    void clearAllBags(User user);
 
-    List<BagDTOResponse> openBag();
+    List<BagDTOResponse> openBag(User user);
+
+    BagInfoDTO returnBagInfo(User user);
 }

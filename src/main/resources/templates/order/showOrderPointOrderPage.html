@@ -39,12 +39,12 @@
 <br>
 <br>
 <body>
-Номер заказа: <span th:text="${userOrderDTO.getOrderId()}"></span>
+Номер заказа: <span th:text="${showOrderDTO.userOrderDTO.getOrderId()}"></span>
 <br>
-Статус заказа: <span th:text="${userOrderDTO.getOrderStatus().getDescription()}"></span>
+Статус заказа: <span th:text="${showOrderDTO.userOrderDTO.getOrderStatus().getDescription()}"></span>
 <br>
 Текущая сумма заказа:
-<span th:text="${#numbers.formatDecimal(userOrderProductSum, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+<span th:text="${#numbers.formatDecimal(showOrderDTO.userOrderProductSum, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
 
 <br>
 <table border="2">
@@ -55,7 +55,7 @@
         <th width="60">Заказано товара</th>
         <th width="60">Изменить количество товара</th>
     </tr>
-    <tr height="30" th:each="userOrderProductDTO:${userOrderDTO.getUserOrderProducts()}">
+    <tr height="30" th:each="userOrderProductDTO:${showOrderDTO.userOrderDTO.getUserOrderProducts()}">
         <td><span th:text="${userOrderProductDTO.getProductDTO().getId()}"></span>
         </td>
         <td><span th:text="${userOrderProductDTO.getProductDTO().getProductName()}"></span>
@@ -73,7 +73,7 @@
                 <input type="hidden" name="userOrderId" th:value="${userOrderProductDTO.getUserOrderId()}">
                 <input type="hidden" name="productId" th:value="${userOrderProductDTO.getProductDTO().getId()}">
                 <input type="hidden" name="count" value="1">
-                <input type="hidden" name="id" th:value="${userOrderDTO.getOrderId()}">
+                <input type="hidden" name="id" th:value="${showOrderDTO.userOrderDTO.getOrderId()}">
                 <span th:text="${userOrderProductDTO.getActualProductCount()}"></span>
                 <input type="submit" th:formaction="@{/operator/deleteProductFromOrder}" value="-">
             </form>
@@ -82,10 +82,10 @@
 </table>
 <br>
 <form method="post">
-    <input th:formaction="@{/operator/refuseOrder(userOrderId=${userOrderDTO.getOrderId()})}" type="submit"
+    <input th:formaction="@{/operator/refuseOrder(userOrderId=${showOrderDTO.userOrderDTO.getOrderId()})}" type="submit"
            value="Отказ"/>
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <input th:formaction="@{/operator/closeOrder(userOrderId=${userOrderDTO.getOrderId()})}" type="submit"
+    <input th:formaction="@{/operator/closeOrder(userOrderId=${showOrderDTO.userOrderDTO.getOrderId()})}" type="submit"
            value="Закрыть заказ"/>
 </form>
 

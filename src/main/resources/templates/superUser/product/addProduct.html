@@ -16,7 +16,7 @@
     <div>
         Категория продукта:
         <select th:field="*{productCategory}">
-            <option th:each="productCategoryDTO:${productCategoryDTOList}"
+            <option th:each="productCategoryDTO:${editProductDTO.productCategoryDTOList}"
                     th:value="${productCategoryDTO.id}"
                     th:text="${productCategoryDTO.category}">
             </option>
@@ -30,7 +30,7 @@
     <div>
         Продавец:
         <select th:field="*{seller}">
-            <option th:each="sellerDTO:${sellerDTOList}"
+            <option th:each="sellerDTO:${editProductDTO.sellerDTOList}"
                     th:value="${sellerDTO.id}"
                     th:text="${sellerDTO.sellerName}">
             </option>

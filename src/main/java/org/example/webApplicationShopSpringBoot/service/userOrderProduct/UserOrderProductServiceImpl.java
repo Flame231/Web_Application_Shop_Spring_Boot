@@ -39,8 +39,8 @@ public class UserOrderProductServiceImpl implements UserOrderProductService {
             Long newCount = userOrderProduct.getActualProductCount() + count;
             userOrderProduct.setActualProductCount(newCount);
             userOrderProductRepository.flush();
+            log.info("Значение продукта с id {} успешно увеличено до {} в заказе с id {}!", productId, newCount, userOrderId);
         }
-        log.info("Значение продукта с id {} успешно увеличено на {} в заказе с id {}!", productId, count, userOrderId);
     }
 
     @Override
@@ -55,8 +55,8 @@ public class UserOrderProductServiceImpl implements UserOrderProductService {
             Long newCount = userOrderProduct.getActualProductCount() - count;
             userOrderProduct.setActualProductCount(newCount);
             userOrderProductRepository.flush();
+            log.info("Значение продукта с id {} успешно уменьшено до {} в заказе с id {}!", productId, newCount, userOrderId);
         }
-        log.info("Значение продукта с id {} успешно уменьшено на {} в заказе с id {}!", productId, count, userOrderId);
     }
 
     @Override

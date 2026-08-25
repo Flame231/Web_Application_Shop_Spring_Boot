@@ -41,7 +41,7 @@
     <div>
         Выбрать пункт выдачи:
         <select name="orderPointId" form="orderForm">
-            <option th:each="orderPointDTO:${orderPointDTOList}"
+            <option th:each="orderPointDTO:${bagInfoDTO.orderPointDTOList}"
                     th:value="${orderPointDTO.id}"
                     th:text="${orderPointDTO.orderPointAddress}">
             </option>
@@ -59,16 +59,16 @@
     <br>
 </th:block>
 Сумма в корзине:
-<span th:text="${#numbers.formatDecimal(bagSum.fullPrice, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+<span th:text="${#numbers.formatDecimal(bagInfoDTO.bagSum.fullPrice, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
 <br>
 Ваша скидка:
-<span th:text="${#numbers.formatDecimal(bagSum.discountValue, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>%
+<span th:text="${#numbers.formatDecimal(bagInfoDTO.bagSum.discountValue, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>%
 <br>
 Сумма скидки:
-<span th:text="${#numbers.formatDecimal(bagSum.calculatedDiscount, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+<span th:text="${#numbers.formatDecimal(bagInfoDTO.bagSum.calculatedDiscount, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
 <br>
 Сумма в корзине с учётом скидки:
-<span th:text="${#numbers.formatDecimal(bagSum.priceWithDiscount, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+<span th:text="${#numbers.formatDecimal(bagInfoDTO.bagSum.priceWithDiscount, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
 <br>
 <table>
     <thead>
@@ -81,7 +81,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="bagDTO:${bagDTOResponseList}">
+    <tr th:each="bagDTO:${bagInfoDTO.bagDTOResponseList}">
         <td>
             <input type="hidden" name="productId" form="orderForm" th:value="${bagDTO.productDTO.id}">
             <span th:text="${bagDTO.productDTO.productName}"></span>
