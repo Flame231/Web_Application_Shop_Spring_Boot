@@ -2,7 +2,6 @@ package org.example.webApplicationShopSpringBoot.controller.operatorController;
 
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderPointDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderChangeCountDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
@@ -18,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -31,8 +29,8 @@ public class OperatorController {
     private ArchivedUserOrderService archivedUserOrderService;
 
     @RequestMapping(value = "accountOperator", method = {RequestMethod.GET, RequestMethod.POST})
-    public String showOperatorPage(Model model) {
-        OrderPointDTO orderPointDTO = userService.getOrderPoint();
+    public String showOperatorPage(Model model, @AuthenticationPrincipal User user) {
+        OrderPointDTO orderPointDTO = userService.getOrderPoint(user);
         model.addAttribute("orderPointDTO", orderPointDTO);
         return "account/accountOperator";
     }
@@ -45,8 +43,8 @@ public class OperatorController {
     }
 
     @GetMapping("arrivedOrders")
-    public String showArrivedOrders(Model model) {
-        List<UserOrderDTO> userOrderDTOList = userOrderService.showReadyUserOrdersByOrderPoint();
+    public String showArrivedOrders(Model model, @AuthenticationPrincipal User user) {
+        List<UserOrderDTO> userOrderDTOList = userOrderService.showReadyUserOrdersByOrderPoint(user);
         model.addAttribute("userOrderDTOList", userOrderDTOList);
         return "/order/showReadyOrderPointOrders";
     }
@@ -58,8 +56,8 @@ public class OperatorController {
     }
 
     @GetMapping("readyOrders")
-    public String showReadyOrders(Model model) {
-        List<UserOrderDTO> userOrderDTOList = userOrderService.showReadyUserOrdersByOrderPoint();
+    public String showReadyOrders(Model model, User user) {
+        List<UserOrderDTO> userOrderDTOList = userOrderService.showReadyUserOrdersByOrderPoint(user);
         model.addAttribute("userOrderDTOList", userOrderDTOList);
         return "/order/showReadyOrderPointOrders";
     }

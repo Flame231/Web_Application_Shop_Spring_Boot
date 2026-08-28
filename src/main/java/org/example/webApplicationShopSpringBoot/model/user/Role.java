@@ -1,6 +1,5 @@
 package org.example.webApplicationShopSpringBoot.model.user;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 
 public enum Role implements GrantedAuthority {

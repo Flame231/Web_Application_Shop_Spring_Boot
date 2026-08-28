@@ -1,7 +1,7 @@
-package org.example.webApplicationShopSpringBoot.dto.ConverterDTO;
+package org.example.webApplicationShopSpringBoot.dto.converterDTO;
 
-import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
-import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
+import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTORequest;
+import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.model.Bag;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

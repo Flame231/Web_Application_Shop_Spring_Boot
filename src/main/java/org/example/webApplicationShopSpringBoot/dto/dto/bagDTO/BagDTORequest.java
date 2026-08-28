@@ -1,4 +1,4 @@
-package org.example.webApplicationShopSpringBoot.dto.dto.BagDTO;
+package org.example.webApplicationShopSpringBoot.dto.dto.bagDTO;
 
 import lombok.Builder;
 import lombok.Getter;

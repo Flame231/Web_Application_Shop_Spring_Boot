@@ -5,7 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.repository.productCategory.ProductCategoryRepository;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ProductCategoryConverter;
+import org.example.webApplicationShopSpringBoot.dto.converterDTO.ProductCategoryConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductCategoryDTO;
 import org.example.webApplicationShopSpringBoot.model.ItemStatus;
 import org.example.webApplicationShopSpringBoot.model.ProductCategory;
@@ -30,7 +30,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public PageResponse<ProductCategoryDTO> getProductCategoryDTOList(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         Page<ProductCategory> productCategoryPage = productCategoryRepository.findAll(pageable);
-        return new PageResponse<ProductCategoryDTO>(productCategoryPage.map(productCategoryConverter::toDTO));
+        return new PageResponse<>(productCategoryPage.map(productCategoryConverter::toDTO));
     }
 
     public List<ProductCategoryDTO> getActiveProductCategoryDTOList() {

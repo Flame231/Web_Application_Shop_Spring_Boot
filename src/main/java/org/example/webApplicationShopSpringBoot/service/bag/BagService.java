@@ -1,8 +1,8 @@
 package org.example.webApplicationShopSpringBoot.service.bag;
 
 
-import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
-import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
+import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTORequest;
+import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagSumWithDiscountDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.BagInfoDTO;
 import org.example.webApplicationShopSpringBoot.model.user.User;

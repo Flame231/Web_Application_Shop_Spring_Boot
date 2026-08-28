@@ -3,9 +3,9 @@ package org.example.webApplicationShopSpringBoot.service.bag;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.BagConverter;
-import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
-import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
+import org.example.webApplicationShopSpringBoot.dto.converterDTO.BagConverter;
+import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTORequest;
+import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagSumWithDiscountDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderPointDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.BagInfoDTO;
@@ -43,7 +43,7 @@ public class BagServiceImpl implements BagService {
         Long currentCount = bag.getCount();
         bag.setCount(++currentCount);
         bagRepository.save(bag);
-        log.info("Значение продукта с id {} успешно увеличено в корзине пользователя с id {}!", product.getId(), user.getId());
+        log.info("Значение продукта с id {} успешно увеличено до {} в корзине пользователя с id {}!", product.getId(),bag.getCount(), user.getId());
     }
 
     @Override
@@ -57,8 +57,8 @@ public class BagServiceImpl implements BagService {
             bagRepository.delete(bag);
         } else {
             bagRepository.save(bag);
+            log.info("Значение продукта с id {} успешно уменьшено до {} в корзине пользователя с id {}!", product.getId(),bag.getCount(), user.getId());
         }
-        log.info("Значение продукта с id {} успешно уменьшено в корзине пользователя с id {}!", product.getId(), user.getId());
     }
 
     public List<BagDTOResponse> getAllBags(User user) {

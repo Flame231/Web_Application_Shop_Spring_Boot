@@ -4,7 +4,7 @@ package org.example.webApplicationShopSpringBoot.service.archivedUserOrder;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ArchivedUserOrderConverter;
+import org.example.webApplicationShopSpringBoot.dto.converterDTO.ArchivedUserOrderConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.ArchivedUserOrderDTO;
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrder;
 import org.example.webApplicationShopSpringBoot.model.ArchivedUserOrderProduct;
@@ -14,7 +14,6 @@ import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
 import org.example.webApplicationShopSpringBoot.repository.archivedUserOrder.ArchivedUserOrderRepository;
 import org.example.webApplicationShopSpringBoot.repository.userOrder.UserOrderRepository;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
-import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
 import org.example.webApplicationShopSpringBoot.service.archivedUserOrderProduct.ArchivedUserOrderProductService;
 import org.example.webApplicationShopSpringBoot.service.discount.DiscountService;
 import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
@@ -99,7 +98,7 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
             throw new EmptyList("История заказов пуста");
         }
         return
-                new PageResponse<ArchivedUserOrderDTO>(archivedUserOrderPage
+                new PageResponse<>(archivedUserOrderPage
                         .map(archivedUserOrder -> archivedUserOrderConverter.toDTO(archivedUserOrder)));
     }
 }

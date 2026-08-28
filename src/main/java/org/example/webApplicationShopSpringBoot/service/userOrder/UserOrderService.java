@@ -13,9 +13,9 @@ public interface UserOrderService {
 
     void confirmOrder(BagFormDTO bagFormDTO, User user);
 
-    List<UserOrderDTO> showAllUserOrders();
+    List<UserOrderDTO> showAllUserOrders(User user);
 
-    List<UserOrderDTO> showReadyUserOrdersByOrderPoint();
+    List<UserOrderDTO> showReadyUserOrdersByOrderPoint(User user);
 
     UserOrderDTO getUserOrderDTO(Long id);
 

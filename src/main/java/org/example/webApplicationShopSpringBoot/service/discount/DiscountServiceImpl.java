@@ -6,9 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.model.Discount;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.repository.discount.DiscountRepository;
-import org.example.webApplicationShopSpringBoot.repository.user.UserRepository;
-import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
-import org.example.webApplicationShopSpringBoot.service.user.UserService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

@@ -5,7 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.repository.seller.SellerRepository;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.SellerConverter;
+import org.example.webApplicationShopSpringBoot.dto.converterDTO.SellerConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
 import org.example.webApplicationShopSpringBoot.model.ItemStatus;
 import org.example.webApplicationShopSpringBoot.model.Seller;
@@ -28,7 +28,7 @@ public class SellerServiceImpl implements SellerService {
     public PageResponse<SellerDTO> getSellerDTOList(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         Page<Seller> resultPage = sellerRepository.findAll(pageable);
-        return new PageResponse<SellerDTO>(resultPage.map(seller -> sellerConverter.toDTO(seller)));
+        return new PageResponse<>(resultPage.map(seller -> sellerConverter.toDTO(seller)));
     }
 
     public List<SellerDTO> getSellerDTOList() {

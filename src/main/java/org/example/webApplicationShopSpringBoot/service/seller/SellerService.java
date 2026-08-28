@@ -2,7 +2,6 @@ package org.example.webApplicationShopSpringBoot.service.seller;
 
 import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 

@@ -12,7 +12,6 @@ import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrderProduct
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUtil;
 import org.example.webApplicationShopSpringBoot.service.Calculate;
-import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

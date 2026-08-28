@@ -19,8 +19,8 @@ public interface UserService {
 
     void increaseTotalSum(Long userId, BigDecimal finalOrderSum);
 
-    OrderPointDTO getOrderPoint();
+    OrderPointDTO getOrderPoint(User user);
 
-    UserDiscountDTO getUserDiscount();
+    UserDiscountDTO getUserDiscount(User user);
 
 }

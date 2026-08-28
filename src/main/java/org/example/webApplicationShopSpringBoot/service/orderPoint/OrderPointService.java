@@ -2,7 +2,6 @@ package org.example.webApplicationShopSpringBoot.service.orderPoint;
 
 
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderPointDTO;
-import org.example.webApplicationShopSpringBoot.model.OrderPoint;
 
 import java.util.List;
 

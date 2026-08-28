@@ -3,16 +3,15 @@ package org.example.webApplicationShopSpringBoot.service.product;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.webApplicationShopSpringBoot.dto.converterDTO.ProductConverter;
+import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.dto.dto.*;
-import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.EditProductDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.ProductsAndBagsDTO;
-import org.example.webApplicationShopSpringBoot.model.ProductCategory;
-import org.example.webApplicationShopSpringBoot.model.user.User;
-import org.example.webApplicationShopSpringBoot.repository.product.ProductRepository;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.ProductConverter;
 import org.example.webApplicationShopSpringBoot.model.ItemStatus;
 import org.example.webApplicationShopSpringBoot.model.Product;
+import org.example.webApplicationShopSpringBoot.model.user.User;
+import org.example.webApplicationShopSpringBoot.repository.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.bag.BagService;
 import org.example.webApplicationShopSpringBoot.service.productCategory.ProductCategoryService;
@@ -48,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
     public PageResponse<ProductDTO> getAllProducts(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         Page<Product> productsPage = productRepository.findAll(pageable);
-        return new PageResponse<ProductDTO>(productsPage.map(product -> productConverter.toDTO(product)));
+        return new PageResponse<>(productsPage.map(product -> productConverter.toDTO(product)));
     }
 
     public ProductDTO findProduct(Long id) {

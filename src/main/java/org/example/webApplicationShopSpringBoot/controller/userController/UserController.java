@@ -4,7 +4,7 @@ package org.example.webApplicationShopSpringBoot.controller.userController;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.example.webApplicationShopSpringBoot.dto.dto.*;
-import org.example.webApplicationShopSpringBoot.dto.dto.BagDTO.BagDTORequest;
+import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTORequest;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.BagInfoDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.ProductsAndBagsDTO;
 import org.example.webApplicationShopSpringBoot.model.user.User;
@@ -13,7 +13,6 @@ import org.example.webApplicationShopSpringBoot.service.archivedUserOrder.Archiv
 import org.example.webApplicationShopSpringBoot.service.bag.BagService;
 import org.example.webApplicationShopSpringBoot.service.product.ProductService;
 import org.example.webApplicationShopSpringBoot.service.user.UserService;
-import org.example.webApplicationShopSpringBoot.dto.dto.BagFormDTO;
 import org.example.webApplicationShopSpringBoot.service.userOrder.UserOrderService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -30,14 +29,14 @@ public class UserController {
     public static final String PAGE_SIZE_30 = "30";
     public static final List<Integer> pageSizeList = List.of(30, 50, 100);
     private final UserService userService;
-    private ProductService productService;
-    private BagService bagService;
-    private UserOrderService userOrderService;
-    private ArchivedUserOrderService archivedUserOrderService;
+    private final ProductService productService;
+    private final BagService bagService;
+    private final UserOrderService userOrderService;
+    private final ArchivedUserOrderService archivedUserOrderService;
 
     @RequestMapping(value = "accountClient", method = {RequestMethod.GET, RequestMethod.POST})
-    public String showAdministratorPage(Model model) {
-        UserDiscountDTO userDiscountDTO = userService.getUserDiscount();
+    public String showAdministratorPage(Model model, @AuthenticationPrincipal User user) {
+        UserDiscountDTO userDiscountDTO = userService.getUserDiscount(user);
         model.addAttribute("userDiscountDTO", userDiscountDTO);
         return "account/accountClient";
     }
@@ -114,8 +113,8 @@ public class UserController {
     }
 
     @GetMapping("userOrders")
-    public String showUserOrders(Model model) {
-        List<UserOrderDTO> userOrderDTOList = userOrderService.showAllUserOrders();
+    public String showUserOrders(Model model, @AuthenticationPrincipal User user) {
+        List<UserOrderDTO> userOrderDTOList = userOrderService.showAllUserOrders(user);
         model.addAttribute("userOrderDTOList", userOrderDTOList);
         return "order/showClientOrders";
     }
@@ -125,8 +124,8 @@ public class UserController {
         PageResponse<ArchivedUserOrderDTO> archivedUserOrderDTOList = archivedUserOrderService.showArchivedUserOrders(page, pageSize, user);
         model.addAttribute("archivedUserOrderDTOList", archivedUserOrderDTOList);
         model.addAttribute("page", page);
-        model.addAttribute("pageSizeList", pageSizeList);
         model.addAttribute("pageSize", pageSize);
+        model.addAttribute("pageSizeList", pageSizeList);
         return "/order/showArchivedOrders";
     }
 }

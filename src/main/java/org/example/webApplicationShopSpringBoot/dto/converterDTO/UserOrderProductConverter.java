@@ -1,4 +1,4 @@
-package org.example.webApplicationShopSpringBoot.dto.ConverterDTO;
+package org.example.webApplicationShopSpringBoot.dto.converterDTO;
 
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderProductDTO;
 import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrderProduct;

@@ -3,10 +3,10 @@ package org.example.webApplicationShopSpringBoot.service.user;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.OrderPointConverter;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.UserDiscountConverter;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.UserProfileConverter;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.UserRegistrationConverter;
+import org.example.webApplicationShopSpringBoot.dto.converterDTO.OrderPointConverter;
+import org.example.webApplicationShopSpringBoot.dto.converterDTO.UserDiscountConverter;
+import org.example.webApplicationShopSpringBoot.dto.converterDTO.UserProfileConverter;
+import org.example.webApplicationShopSpringBoot.dto.converterDTO.UserRegistrationConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderPointDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserDiscountDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserProfileDTO;
@@ -16,7 +16,6 @@ import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.repository.discount.DiscountRepository;
 import org.example.webApplicationShopSpringBoot.repository.user.UserRepository;
 import org.example.webApplicationShopSpringBoot.service.BcryptUtil;
-import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
 import org.example.webApplicationShopSpringBoot.service.exceptions.DifferentUserPasswords;
 import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
 import org.example.webApplicationShopSpringBoot.service.exceptions.UserRegistrationException;
@@ -103,14 +102,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public OrderPointDTO getOrderPoint() {
-        User user = userRepository.findById(PrincipalProvider.getUserFromSecurityContext().getId()).get();
+    public OrderPointDTO getOrderPoint(User user) {
         return orderPointConverter.toDTO(user.getOrderPoint());
     }
 
     @Override
-    public UserDiscountDTO getUserDiscount() {
-        User user = userRepository.findById(PrincipalProvider.getUserFromSecurityContext().getId()).get();
+    public UserDiscountDTO getUserDiscount(User user) {
         return userDiscountConverter.toDTO(user);
     }
 }

@@ -1,5 +1,6 @@
 package org.example.webApplicationShopSpringBoot.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,11 +11,8 @@ import org.example.webApplicationShopSpringBoot.service.ProductSum;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.stream.Stream;
 
 @Entity
 @SuperBuilder

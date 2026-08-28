@@ -7,14 +7,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagFormDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.ShowOrderDTO;
-import org.example.webApplicationShopSpringBoot.service.PrincipalProvider;
 import org.example.webApplicationShopSpringBoot.repository.bag.BagRepository;
 import org.example.webApplicationShopSpringBoot.repository.orderPoint.OrderPointRepository;
 import org.example.webApplicationShopSpringBoot.repository.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.repository.user.UserRepository;
 import org.example.webApplicationShopSpringBoot.repository.userOrder.UserOrderRepository;
 import org.example.webApplicationShopSpringBoot.repository.userOrderProduct.UserOrderProductRepository;
-import org.example.webApplicationShopSpringBoot.dto.ConverterDTO.UserOrderConverter;
+import org.example.webApplicationShopSpringBoot.dto.converterDTO.UserOrderConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
 import org.example.webApplicationShopSpringBoot.model.userOrder.OrderStatus;
@@ -31,8 +30,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.example.webApplicationShopSpringBoot.service.PrincipalProvider.getUserFromSecurityContext;
 
 @Service
 @AllArgsConstructor
@@ -64,14 +61,14 @@ public class UserOrderServiceImpl implements UserOrderService {
                 .orderPoint(orderPointRepository.findById(list.get(0).getOrderPointId()).get())
                 .build();
         userOrderRepository.save(userOrder);
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getCount() != 0) {
+        for (OrderDTO orderDTO : list) {
+            if (orderDTO.getCount() != 0) {
                 UserOrderProduct userOrderProduct = UserOrderProduct.builder()
-                        .userOrder(userOrder).product(productRepository.findById(list.get(i).getProductId()).get())
-                        .productCount(list.get(i).getCount()).actualProductCount(list.get(i).getCount()).productPrice(list.get(i).getProductPrice()).build();
-                orderSum = orderSum.add(((list.get(i).getProductPrice()).multiply(new BigDecimal(list.get(i).getCount()))));
+                        .userOrder(userOrder).product(productRepository.findById(orderDTO.getProductId()).get())
+                        .productCount(orderDTO.getCount()).actualProductCount(orderDTO.getCount()).productPrice(orderDTO.getProductPrice()).build();
+                orderSum = orderSum.add(((orderDTO.getProductPrice()).multiply(new BigDecimal(orderDTO.getCount()))));
                 userOrderProductRepository.save(userOrderProduct);
-                PrimaryKeyBag primaryKeyBag = new PrimaryKeyBag(list.get(i).getUserId(), list.get(i).getProductId());
+                PrimaryKeyBag primaryKeyBag = new PrimaryKeyBag(orderDTO.getUserId(), orderDTO.getProductId());
                 bagRepository.deleteById(primaryKeyBag);
             }
         }
@@ -84,8 +81,7 @@ public class UserOrderServiceImpl implements UserOrderService {
     }
 
     @Override
-    public List<UserOrderDTO> showAllUserOrders() {
-        User user = getUserFromSecurityContext();
+    public List<UserOrderDTO> showAllUserOrders(User user) {
         List<UserOrder> userOrderList = userOrderRepository.findAllByUserId(user.getId());
         if (userOrderList.isEmpty()) {
             throw new EmptyList("Активные заказы отсутствуют!");
@@ -95,8 +91,7 @@ public class UserOrderServiceImpl implements UserOrderService {
     }
 
     @Override
-    public List<UserOrderDTO> showReadyUserOrdersByOrderPoint() {
-        User user = getUserFromSecurityContext();
+    public List<UserOrderDTO> showReadyUserOrdersByOrderPoint(User user) {
         Long orderPointId = user.getOrderPoint().getId();
         List<UserOrder> userOrderList = userOrderRepository.getReadyUserOrderByOrderPoint(orderPointId);
         if (userOrderList.isEmpty()) {

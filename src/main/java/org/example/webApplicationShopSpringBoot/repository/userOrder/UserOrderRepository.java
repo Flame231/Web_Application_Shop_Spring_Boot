@@ -14,13 +14,10 @@ public interface UserOrderRepository extends JpaRepository<UserOrder, Long> {
 
     List<UserOrder> findAllByUserId(Long userId);
 
-
     @Query("select distinct uo from UserOrder uo left join fetch uo.userOrderProduct uop left join fetch uop.product p" +
             " left join fetch p.productCategory left join fetch p.seller where" +
             " uo.orderPoint.id =:orderPointId AND uo.orderStatus='CREATED'")
     List<UserOrder> findAllCreatedUserOrder(@Param("orderPointId") Long orderPointId);
-
-    List<UserOrder> findAllByOrderPointId(Long orderPointId);
 
     @Query("select distinct uo from UserOrder uo left join fetch uo.userOrderProduct uop left join fetch uop.product p" +
             " left join fetch p.productCategory left join fetch p.seller where" +

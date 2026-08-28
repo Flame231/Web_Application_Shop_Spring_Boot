@@ -1,17 +1,12 @@
 package org.example.webApplicationShopSpringBoot.dto.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import org.example.webApplicationShopSpringBoot.model.Discount;
-import org.example.webApplicationShopSpringBoot.model.user.Role;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Builder
