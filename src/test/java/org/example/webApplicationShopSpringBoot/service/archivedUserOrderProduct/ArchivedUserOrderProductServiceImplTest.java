@@ -38,7 +38,7 @@ class ArchivedUserOrderProductServiceImplTest {
         assertEquals(userOrderProducts.size(), archivedUserOrderProducts.size());
         assertThat(archivedUserOrderProducts)
                 .hasSize(2)
-                .extracting("productId", "price", "productCount", "finalProductCount", "archivedUserOrder") // "Вытаскиваем" эти поля
+                .extracting("productId", "price", "productCount", "finalProductCount", "archivedUserOrder")
                 .containsExactlyInAnyOrder(
                         tuple(1L, new BigDecimal(1200L), 2L, 1L, archivedUserOrder),
                         tuple(2L, new BigDecimal(1500L), 2L, 1L, archivedUserOrder)

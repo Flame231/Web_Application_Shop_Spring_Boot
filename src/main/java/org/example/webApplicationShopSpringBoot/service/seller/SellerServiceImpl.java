@@ -59,6 +59,7 @@ public class SellerServiceImpl implements SellerService {
     public void deleteSeller(Long id) {
         Seller seller = sellerRepository.findById(id).get();
         seller.setStatus(ItemStatus.DELETED);
+        sellerRepository.save(seller);
         log.info("Статус категории продукта с id {} успешно изменён!", seller.getStatus().name());
     }
 
@@ -67,6 +68,7 @@ public class SellerServiceImpl implements SellerService {
     public void recoverSeller(Long id) {
         Seller seller = sellerRepository.findById(id).get();
         seller.setStatus(ItemStatus.ACTIVE);
+        sellerRepository.save(seller);
         log.info("Статус категории продукта с id {} успешно изменён!", seller.getStatus().name());
     }
 
@@ -75,4 +77,5 @@ public class SellerServiceImpl implements SellerService {
         Seller seller = sellerRepository.findById(id).get();
         return sellerConverter.toDTO(seller);
     }
+
 }

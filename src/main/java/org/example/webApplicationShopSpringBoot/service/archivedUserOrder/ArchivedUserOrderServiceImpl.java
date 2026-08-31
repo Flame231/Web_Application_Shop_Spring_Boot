@@ -65,7 +65,7 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
         userService.increaseTotalSum(userOrder.getUser().getId(), archivedUserOrder.getFinalOrderSum());
         userOrderRepository.deleteById(userOrderId);
         discountService.checkUserDiscount(userOrder.getUser());
-        log.info("Заказ с id {} успешно заархивирован!", archivedUserOrder.getUserOrderId());
+        log.info("Заказ с id {} успешно архивирован!", archivedUserOrder.getUserOrderId());
     }
 
     @Override

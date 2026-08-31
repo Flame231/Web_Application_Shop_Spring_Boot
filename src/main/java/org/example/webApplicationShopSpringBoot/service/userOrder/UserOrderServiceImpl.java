@@ -36,8 +36,6 @@ import java.util.List;
 @Slf4j
 public class UserOrderServiceImpl implements UserOrderService {
 
-    private static final Logger logger = LogManager.getLogger(UserOrderService.class);
-
     private UserOrderRepository userOrderRepository;
     private UserRepository userRepository;
     private OrderPointRepository orderPointRepository;
