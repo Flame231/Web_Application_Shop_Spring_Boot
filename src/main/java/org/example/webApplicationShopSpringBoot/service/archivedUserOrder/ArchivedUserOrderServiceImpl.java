@@ -60,6 +60,7 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
                 .userOrderCreateDateTime(userOrder.getCreateDateTime())
                 .archivedUserOrderProducts(archivedUserOrderProduct)
                 .build();
+
         archivedUserOrderProduct.forEach(e -> e.setArchivedUserOrder(archivedUserOrder));
         archivedUserOrderRepository.save(archivedUserOrder);
         userService.increaseTotalSum(userOrder.getUser().getId(), archivedUserOrder.getFinalOrderSum());
@@ -87,7 +88,7 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
         archivedUserOrderProduct.forEach(e -> e.setArchivedUserOrder(archivedUserOrder));
         archivedUserOrderRepository.save(archivedUserOrder);
         userOrderRepository.deleteById(userOrderId);
-        log.info("Отказ заказа с id {} успешно заархивирован!", archivedUserOrder.getUserOrderId());
+        log.info("Отказ заказа с id {} успешно архивирован!", archivedUserOrder.getUserOrderId());
     }
 
     @Override

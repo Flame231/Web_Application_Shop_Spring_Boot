@@ -1,5 +1,6 @@
 package org.example.webApplicationShopSpringBoot.service.product;
 
+import ch.qos.logback.classic.spi.IThrowableProxy;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.repository.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.bag.BagService;
+import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
 import org.example.webApplicationShopSpringBoot.service.productCategory.ProductCategoryService;
 import org.example.webApplicationShopSpringBoot.service.seller.SellerService;
 import org.springframework.data.domain.Page;
@@ -35,7 +37,6 @@ public class ProductServiceImpl implements ProductService {
     private SellerService sellerService;
     private BagService bagService;
 
-
     @Override
     public PageResponse<ProductDTO> getActiveProducts(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
@@ -51,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public ProductDTO findProduct(Long id) {
-        Product product = productRepository.findById(id).get();
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Продукт не найден!"));
         return productConverter.toDTO(product);
     }
 
@@ -64,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void updateProduct(NewProductDTO newProductDTO) {
-        Product existingProduct = productRepository.findById(newProductDTO.getId()).get();
+        Product existingProduct = productRepository.findById(newProductDTO.getId()).orElseThrow(() -> new ResourceNotFound("Продукт не найден!"));
         Product product = productConverter.updateEntity(newProductDTO, existingProduct);
         productRepository.save(product);
         log.info("Продукт с id {} успешно обновлён!", existingProduct.getId());
@@ -73,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public void removeProduct(Long id) {
-        Product product = productRepository.findById(id).get();
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Продукт не найден!"));
         product.setStatus(ItemStatus.DELETED);
         log.info("Статус продукта с id {} успешно изменён на {}!", product.getId(), product.getStatus().name());
     }
@@ -81,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public void recoverProduct(Long id) {
-        Product product = productRepository.findById(id).get();
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Продукт не найден!"));
         product.setStatus(ItemStatus.ACTIVE);
         log.info("Статус продукта с id {} успешно изменён на {}!", product.getId(), product.getStatus().name());
     }

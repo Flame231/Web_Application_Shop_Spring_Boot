@@ -7,16 +7,13 @@ import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
 import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrderProduct;
 import org.example.webApplicationShopSpringBoot.repository.archivedUserOrder.ArchivedUserOrderRepository;
 import org.example.webApplicationShopSpringBoot.repository.userOrder.UserOrderRepository;
-import org.example.webApplicationShopSpringBoot.service.archivedUserOrderProduct.ArchivedUserOrderProductService;
 import org.example.webApplicationShopSpringBoot.service.archivedUserOrderProduct.ArchivedUserOrderProductServiceImpl;
 import org.example.webApplicationShopSpringBoot.service.discount.DiscountService;
-import org.example.webApplicationShopSpringBoot.service.user.UserService;
 import org.example.webApplicationShopSpringBoot.service.user.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -24,9 +21,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,9 +50,10 @@ class ArchivedUserOrderServiceImplTest {
         userOrderProducts.add(new UserOrderProduct());
         userOrderProducts.add(new UserOrderProduct());
         userOrderProducts.add(new UserOrderProduct());
+        Set<ArchivedUserOrderProduct> archivedUserOrderProducts = new HashSet<>();
         when(userOrderRepository.findById(id)).thenReturn(Optional.of(new UserOrder()));
-        when(archivedUserOrderProductService.createUserOrderProduct(userOrderProducts, null));
-        doNothing().when(archivedUserOrderRepository.save(any(ArchivedUserOrder.class)));
+        when(archivedUserOrderProductService.createUserOrderProduct(userOrderProducts, null)).thenReturn(archivedUserOrderProducts);
+        when(archivedUserOrderRepository.save(any(ArchivedUserOrder.class))).thenReturn(new ArchivedUserOrder());
         doNothing().when(userService).increaseTotalSum(any(Long.class), any(BigDecimal.class));
         doNothing().when(userOrderRepository).deleteById(any(Long.class));
         doNothing().when(discountService).checkUserDiscount(any(User.class));
