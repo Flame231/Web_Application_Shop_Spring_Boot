@@ -75,8 +75,8 @@ class ProductCategoryServiceImplTest {
         when(productCategoryRepository.findAll(ItemStatus.ACTIVE)).thenReturn(list);
         when(productCategoryConverter.toDTO(any(ProductCategory.class))).thenReturn(productDTOList.get(0), productDTOList.get(1), productDTOList.get(2), productDTOList.get(3));
         List<ProductCategoryDTO> productCategoryDTOList = productCategoryService.getActiveProductCategoryDTOList();
-        verify(productCategoryRepository.findAll(ItemStatus.ACTIVE), times(1));
-        verify(productCategoryConverter.toDTO(any(ProductCategory.class)), times(4));
+        verify(productCategoryRepository, times(1)).findAll(ItemStatus.ACTIVE);
+        verify(productCategoryConverter, times(4)).toDTO(any(ProductCategory.class));
         assertNotNull(productCategoryDTOList);
     }
 
@@ -95,17 +95,55 @@ class ProductCategoryServiceImplTest {
 
     @Test
     void addProductCategory() {
+        ProductCategory productCategory = new ProductCategory();
+        ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO();
+        when(productCategoryConverter.toEntity(productCategoryDTO)).thenReturn(productCategory);
+        when(productCategoryRepository.save(productCategory)).thenReturn(productCategory);
+        productCategoryService.addProductCategory(productCategoryDTO);
+        verify(productCategoryConverter, times(1)).toEntity(productCategoryDTO);
+        verify(productCategoryRepository, times(1)).save(productCategory);
     }
 
     @Test
     void updateProductCategory() {
+        ProductCategory existingProductCategory = new ProductCategory();
+        existingProductCategory.setCategory("Old categoryName");
+        ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO();
+        productCategoryDTO.setCategory("New categoryName");
+        productCategoryDTO.setId(1L);
+        when(productCategoryConverter.updateEntity(productCategoryDTO, existingProductCategory)).thenAnswer((InvocationOnMock) ->
+        {
+            existingProductCategory.setCategory(productCategoryDTO.getCategory());
+            return existingProductCategory;
+        });
+        when(productCategoryRepository.save(existingProductCategory)).thenReturn(existingProductCategory);
+        when(productCategoryRepository.findById(productCategoryDTO.getId())).thenReturn(Optional.of(existingProductCategory));
+        productCategoryService.updateProductCategory(productCategoryDTO);
+        verify(productCategoryConverter, times(1)).updateEntity(productCategoryDTO, existingProductCategory);
+        verify(productCategoryRepository, times(1)).save(existingProductCategory);
+        verify(productCategoryRepository, times(1)).findById(productCategoryDTO.getId());
+        assertEquals("New categoryName", existingProductCategory.getCategory());
     }
 
     @Test
     void deleteProductCategory() {
+        Long id = 5L;
+        ProductCategory productCategory = new ProductCategory();
+        productCategory.setStatus(ItemStatus.ACTIVE);
+        when(productCategoryRepository.findById(id)).thenReturn(Optional.of(productCategory));
+        productCategoryService.deleteProductCategory(id);
+        assertEquals(ItemStatus.DELETED, productCategory.getStatus());
+        verify(productCategoryRepository, times(1)).findById(id);
     }
 
     @Test
     void recoverProductCategory() {
+        Long id = 5L;
+        ProductCategory productCategory = new ProductCategory();
+        productCategory.setStatus(ItemStatus.DELETED);
+        when(productCategoryRepository.findById(id)).thenReturn(Optional.of(productCategory));
+        productCategoryService.recoverProductCategory(id);
+        assertEquals(ItemStatus.ACTIVE, productCategory.getStatus());
+        verify(productCategoryRepository, times(1)).findById(id);
     }
 }

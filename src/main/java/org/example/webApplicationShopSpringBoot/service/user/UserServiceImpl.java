@@ -2,6 +2,7 @@ package org.example.webApplicationShopSpringBoot.service.user;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.dto.converterDTO.OrderPointConverter;
 import org.example.webApplicationShopSpringBoot.dto.converterDTO.UserDiscountConverter;
@@ -20,6 +21,8 @@ import org.example.webApplicationShopSpringBoot.service.exceptions.DifferentUser
 import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
 import org.example.webApplicationShopSpringBoot.service.exceptions.UserRegistrationException;
 import org.example.webApplicationShopSpringBoot.service.exceptions.WrongPassword;
+import org.jspecify.annotations.NonNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,12 +32,12 @@ import java.math.BigDecimal;
 @Transactional
 @Slf4j
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
-    private DiscountRepository discountRepository;
-    private UserProfileConverter userProfileConverter;
-    private UserRegistrationConverter userRegistrationConverter;
-    private OrderPointConverter orderPointConverter;
-    private UserDiscountConverter userDiscountConverter;
+    private final UserRepository userRepository;
+    private final DiscountRepository discountRepository;
+    private final UserProfileConverter userProfileConverter;
+    private final UserRegistrationConverter userRegistrationConverter;
+    private final OrderPointConverter orderPointConverter;
+    private final UserDiscountConverter userDiscountConverter;
 
     @Override
     public void saveNewUser(UserRegistrationDTO userRegistrationDTO) {
@@ -48,7 +51,8 @@ public class UserServiceImpl implements UserService {
         user.setPasswordHash(passwordHash);
         user.setSumOfPurchases(BigDecimal.ZERO);
         user.setRole(Role.CLIENT);
-        user.setDiscount(discountRepository.findById(1L).orElseThrow(() -> new UserRegistrationException("Ошибка регистрации!")));
+        Long defaultDiscountId = 1L;
+        user.setDiscount(discountRepository.findById(defaultDiscountId).orElseThrow(() -> new UserRegistrationException("Ошибка регистрации!")));
         userRepository.save(user);
         log.info("Пользователь с логином {} успешно зарегистрирован!", user.getLogin());
     }
@@ -89,12 +93,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileDTO getUserProfileDTO(User user) {
-        return userProfileConverter.toDTO(userRepository.findById(user.getId()).get());
+        return userProfileConverter.toDTO(getUser(user.getId()));
     }
 
     @Override
     public void increaseTotalSum(Long userId, BigDecimal finalOrderSum) {
-        User user = userRepository.findById(userId).get();
+        User user = getUser(userId);
         BigDecimal userTotalSum = user.getSumOfPurchases();
         BigDecimal newUserTotalSum = userTotalSum.add(finalOrderSum);
         user.setSumOfPurchases(newUserTotalSum);
@@ -109,5 +113,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDiscountDTO getUserDiscount(User user) {
         return userDiscountConverter.toDTO(user);
+    }
+
+    private @NonNull User getUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFound("Пользователь не найден!"));
     }
 }

@@ -63,14 +63,14 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public void deleteProductCategory(Long id) {
         ProductCategory productCategory = getCategoryById(id);
         productCategory.setStatus(ItemStatus.DELETED);
-        log.info("Статус категории продукта с id {} успешно изменён!", productCategory.getStatus().name());
+        log.info("Статус категории продукта с id {} успешно изменён на {}!", productCategory.getId(), productCategory.getStatus().name());
     }
 
     @Override
     public void recoverProductCategory(Long id) {
         ProductCategory productCategory = getCategoryById(id);
         productCategory.setStatus(ItemStatus.ACTIVE);
-        log.info("Статус категории продукта с id {} успешно изменён!", productCategory.getStatus().name());
+        log.info("Статус категории продукта с id {} успешно изменён на {}!", productCategory.getId(), productCategory.getStatus().name());
     }
 
     private ProductCategory getCategoryById(Long id) {

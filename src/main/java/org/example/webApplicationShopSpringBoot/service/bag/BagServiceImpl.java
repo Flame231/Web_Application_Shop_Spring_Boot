@@ -39,11 +39,12 @@ public class BagServiceImpl implements BagService {
 
         Product product = productRepository.getReferenceById(bagDTORequest.getProductId());
         PrimaryKeyBag primaryKeyBag = PrimaryKeyUtil.getPrimaryKeyBag(user, product);
-        Bag bag = bagRepository.findById(primaryKeyBag).orElse(Bag.builder().user(user).product(product).count(0L).build());
+        Bag bag = bagRepository.findById(primaryKeyBag)
+                .orElse(Bag.builder().user(user).product(product).count(0L).build());
         Long currentCount = bag.getCount();
         bag.setCount(++currentCount);
         bagRepository.save(bag);
-        log.info("Значение продукта с id {} успешно увеличено до {} в корзине пользователя с id {}!", product.getId(),bag.getCount(), user.getId());
+        log.info("Значение продукта с id {} успешно увеличено до {} в корзине пользователя с id {}!", product.getId(), bag.getCount(), user.getId());
     }
 
     @Override
@@ -57,7 +58,7 @@ public class BagServiceImpl implements BagService {
             bagRepository.delete(bag);
         } else {
             bagRepository.save(bag);
-            log.info("Значение продукта с id {} успешно уменьшено до {} в корзине пользователя с id {}!", product.getId(),bag.getCount(), user.getId());
+            log.info("Значение продукта с id {} успешно уменьшено до {} в корзине пользователя с id {}!", product.getId(), bag.getCount(), user.getId());
         }
     }
 

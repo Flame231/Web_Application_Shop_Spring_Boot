@@ -21,11 +21,11 @@ import java.util.Set;
 @Setter
 public class ProductCategory extends DataEntity {
 
-    @OneToMany(mappedBy = "productCategory")
-    private Set<Product> products = new HashSet<>();
-
     @Column
     private String category;
+
+    @OneToMany(mappedBy = "productCategory")
+    private Set<Product> products = new HashSet<>();
 
     @Column
     @Enumerated(EnumType.STRING)
