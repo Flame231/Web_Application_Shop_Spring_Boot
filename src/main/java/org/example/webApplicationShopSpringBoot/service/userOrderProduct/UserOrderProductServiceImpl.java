@@ -12,6 +12,9 @@ import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrderProduct
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUtil;
 import org.example.webApplicationShopSpringBoot.service.Calculate;
+import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
+import org.example.webApplicationShopSpringBoot.service.user.UserService;
+import org.example.webApplicationShopSpringBoot.service.userOrder.UserOrderService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,9 +25,9 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @Slf4j
 public class UserOrderProductServiceImpl implements UserOrderProductService {
+
+    private UserOrderService userOrderService;
     private UserOrderProductRepository userOrderProductRepository;
-    private UserOrderRepository userOrderRepository;
-    private UserRepository userRepository;
 
     @Override
     public void addProductToOrder(UserOrderChangeCountDTO userOrderChangeCountDTO) {
@@ -33,7 +36,7 @@ public class UserOrderProductServiceImpl implements UserOrderProductService {
         Long count = userOrderChangeCountDTO.getCount();
         PrimaryKeyUserOrderProduct primaryKeyUserOrderProduct =
                 PrimaryKeyUtil.getPrimaryKeyUserOrderProduct(userOrderId, productId);
-        UserOrderProduct userOrderProduct = userOrderProductRepository.findById(primaryKeyUserOrderProduct).get();
+        UserOrderProduct userOrderProduct = getUserOrderProduct(primaryKeyUserOrderProduct);
         if (userOrderProduct.getActualProductCount() + count <= userOrderProduct.getProductCount()) {
             Long newCount = userOrderProduct.getActualProductCount() + count;
             userOrderProduct.setActualProductCount(newCount);
@@ -49,7 +52,7 @@ public class UserOrderProductServiceImpl implements UserOrderProductService {
         Long count = userOrderChangeCountDTO.getCount();
         PrimaryKeyUserOrderProduct primaryKeyUserOrderProduct =
                 PrimaryKeyUtil.getPrimaryKeyUserOrderProduct(userOrderId, productId);
-        UserOrderProduct userOrderProduct = userOrderProductRepository.findById(primaryKeyUserOrderProduct).get();
+        UserOrderProduct userOrderProduct = getUserOrderProduct(primaryKeyUserOrderProduct);
         if (userOrderProduct.getActualProductCount() - count >= 0) {
             Long newCount = userOrderProduct.getActualProductCount() - count;
             userOrderProduct.setActualProductCount(newCount);
@@ -60,10 +63,15 @@ public class UserOrderProductServiceImpl implements UserOrderProductService {
 
     @Override
     public BigDecimal showUserOrderProductSum(Long userOrderId) {
-        UserOrder userOrder = userOrderRepository.findById(userOrderId).get();
-        User user = userRepository.findById(userOrder.getUser().getId()).get();
+        UserOrder userOrder = userOrderService.getUserOrder(userOrderId);
+        User user = userOrder.getUser();
         List<UserOrderProduct> userOrderProductList = userOrderProductRepository.findByUserOrderId(userOrderId);
         Stream<UserOrderProduct> userOrderProductStream = userOrderProductList.stream();
         return Calculate.calculateSum(userOrderProductStream, user.getDiscount().getDiscount());
+    }
+
+    private UserOrderProduct getUserOrderProduct(PrimaryKeyUserOrderProduct primaryKeyUserOrderProduct) {
+        return userOrderProductRepository.findById(primaryKeyUserOrderProduct)
+                .orElseThrow(() -> new ResourceNotFound("Продукт либо заказ не найден"));
     }
 }

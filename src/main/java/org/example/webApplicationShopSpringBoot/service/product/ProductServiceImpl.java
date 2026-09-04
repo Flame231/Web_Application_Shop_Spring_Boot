@@ -111,4 +111,8 @@ public class ProductServiceImpl implements ProductService {
         BagSumWithDiscountDTO bagSum = bagService.calculateBagSumWithDiscount(user);
         return ProductsAndBagsDTO.builder().productDTOList(productDTOList).bagDTOResponseList(bagDTOResponseList).bagSum(bagSum).build();
     }
+
+    public Product getProduct(Long productId){
+       return productRepository.findById(productId).orElseThrow(()->new ResourceNotFound("Продукт не найден!"));
+    }
 }

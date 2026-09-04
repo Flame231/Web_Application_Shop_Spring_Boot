@@ -13,8 +13,11 @@ import org.example.webApplicationShopSpringBoot.model.OrderPoint;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.repository.discount.DiscountRepository;
 import org.example.webApplicationShopSpringBoot.repository.user.UserRepository;
+import org.example.webApplicationShopSpringBoot.service.BcryptUtil;
+import org.example.webApplicationShopSpringBoot.service.exceptions.DifferentUserPasswords;
 import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
 import org.example.webApplicationShopSpringBoot.service.exceptions.UserRegistrationException;
+import org.example.webApplicationShopSpringBoot.service.exceptions.WrongPassword;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,6 +34,11 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
+
+    private final String USER_IS_NOT_FOUND = "Пользователь не найден!";
+    private final String NEW_PASSWORDS_ARE_EMPTY = "Не заполнены формы нового пароля";
+    private final String WRONG_PASSWORD = "Неверный пароль!";
+    private final String PASSWORD_IS_EMPTY = "Пароль не заполнен!";
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -95,8 +103,73 @@ class UserServiceImplTest {
     }
 
     @Test
-    void updateUser() {
+    void updateUserThrowsResourceNotFound() {
+        Long id = 5L;
+        UserProfileDTO userProfileDTO = new UserProfileDTO();
+        User user = new User();
+        user.setId(id);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
+        ResourceNotFound resourceNotFoundException = assertThrows(ResourceNotFound.class, () -> userService.updateUser(userProfileDTO, user));
+        assertEquals(USER_IS_NOT_FOUND, resourceNotFoundException.getMessage());
+        verify(userRepository, times(1)).findById(user.getId());
     }
+
+    @Test
+    void updateUserThrowsDifferentPasswords() {
+        UserProfileDTO userProfileDTO = UserProfileDTO.builder().name("Alex").login("Alex123").oldPassword("321q!").newPassword("")
+                .newPasswordRepeat("123q!").birthday(LocalDate.of(2026, 7, 13)).paymentMethods(null).build();
+        Long id = 5L;
+        User user = new User();
+        user.setId(id);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        DifferentUserPasswords differentUserPasswordsException = assertThrows(DifferentUserPasswords.class, () -> userService.updateUser(userProfileDTO, user));
+        assertEquals(NEW_PASSWORDS_ARE_EMPTY, differentUserPasswordsException.getMessage());
+        verify(userProfileConverter, times(1)).updateUser(userProfileDTO, user);
+    }
+
+    @Test
+    void updateUserThrowsWrongPassword() {
+        UserProfileDTO userProfileDTO = UserProfileDTO.builder().name("Alex").login("Alex123").oldPassword("321q!").newPassword("123q!")
+                .newPasswordRepeat("123q!").birthday(LocalDate.of(2026, 7, 13)).paymentMethods(null).build();
+        Long id = 5L;
+        User user = new User();
+        user.setId(id);
+        user.setPasswordHash("$2a$12$.mnFPs7pc6C7AisJgr6JWu2hUsl1xDQKNSeLQ8cuRVblNOzt8n4cm");
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        WrongPassword wrongPasswordException = assertThrows(WrongPassword.class, () -> userService.updateUser(userProfileDTO, user));
+        assertEquals(WRONG_PASSWORD, wrongPasswordException.getMessage());
+        verify(userProfileConverter, times(1)).updateUser(userProfileDTO, user);
+    }
+
+    @Test
+    void updateUserThrowsEmptyPassword() {
+        UserProfileDTO userProfileDTO = UserProfileDTO.builder().name("Alex").login("Alex123").oldPassword("").newPassword("123q!")
+                .newPasswordRepeat("123q!").birthday(LocalDate.of(2026, 7, 13)).paymentMethods(null).build();
+        Long id = 5L;
+        User user = new User();
+        user.setId(id);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        WrongPassword wrongPasswordException = assertThrows(WrongPassword.class, () -> userService.updateUser(userProfileDTO, user));
+        assertEquals(PASSWORD_IS_EMPTY, wrongPasswordException.getMessage());
+        verify(userProfileConverter, times(1)).updateUser(userProfileDTO, user);
+    }
+
+    @Test
+    void updateUser() {
+        UserProfileDTO userProfileDTO = UserProfileDTO.builder().name("Alex").login("Alex123").oldPassword("321q!").newPassword("123q!")
+                .newPasswordRepeat("123q!").birthday(LocalDate.of(2026, 7, 13)).paymentMethods(null).build();
+        Long id = 5L;
+        User user = new User();
+        user.setId(id);
+        User userManaged = new User();
+        userManaged.setPasswordHash("$2a$12$oN2wPiHh4a9SnQ.GiEZz9O/TcCSGVRcYTuDR9jvYQFypHdXw87D1K");
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(userManaged));
+        userService.updateUser(userProfileDTO, user);
+        assertTrue(BcryptUtil.checkPassword(userProfileDTO.getNewPassword(), userManaged.getPasswordHash()));
+        verify(userProfileConverter, times(1)).updateUser(userProfileDTO, userManaged);
+    }
+
 
     @Test
     void getUserProfileDTO() {
@@ -117,7 +190,8 @@ class UserServiceImplTest {
         User user = new User();
         user.setId(2L);
         when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFound.class, () -> userService.getUserProfileDTO(user));
+        ResourceNotFound resourceNotFoundException = assertThrows(ResourceNotFound.class, () -> userService.getUserProfileDTO(user));
+        assertEquals(USER_IS_NOT_FOUND, resourceNotFoundException.getMessage());
         verify(userRepository, times(1)).findById(user.getId());
     }
 

@@ -262,7 +262,7 @@ class ProductServiceImplTest {
         assertNotNull(productsAndBagsDTO);
         assertNotNull(productsAndBagsDTO.getProductDTOList());
         assertEquals(pageSize, productsAndBagsDTO.getProductDTOList().size()); // проверяем размер пагинации
-        assertSame(listDTO.get(0), productsAndBagsDTO.getProductDTOList().content().get(0));
+        assertSame(listDTO.getFirst(), productsAndBagsDTO.getProductDTOList().content().get(0));
         verify(productRepository, times(1)).findAll(pageable, ItemStatus.ACTIVE);
         verify(productConverter, times(list.size())).toDTO(any(Product.class));
         verify(bagService, times(1)).getAllBags(user);

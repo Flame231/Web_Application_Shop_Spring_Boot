@@ -7,6 +7,7 @@ import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderChangeCountDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.ShowOrderDTO;
 import org.example.webApplicationShopSpringBoot.model.user.User;
+import org.example.webApplicationShopSpringBoot.service.UserOrderProcessing.UserOrderProcessingService;
 import org.example.webApplicationShopSpringBoot.service.archivedUserOrder.ArchivedUserOrderService;
 import org.example.webApplicationShopSpringBoot.service.user.UserService;
 import org.example.webApplicationShopSpringBoot.service.userOrder.UserOrderService;
@@ -27,6 +28,7 @@ public class OperatorController {
     private UserService userService;
     private UserOrderProductService userOrderProductService;
     private ArchivedUserOrderService archivedUserOrderService;
+    private UserOrderProcessingService userOrderProcessingService;
 
     @RequestMapping(value = "accountOperator", method = {RequestMethod.GET, RequestMethod.POST})
     public String showOperatorPage(Model model, @AuthenticationPrincipal User user) {
@@ -56,7 +58,7 @@ public class OperatorController {
     }
 
     @GetMapping("readyOrders")
-    public String showReadyOrders(Model model, User user) {
+    public String showReadyOrders(Model model, @AuthenticationPrincipal User user) {
         List<UserOrderDTO> userOrderDTOList = userOrderService.showReadyUserOrdersByOrderPoint(user);
         model.addAttribute("userOrderDTOList", userOrderDTOList);
         return "/order/showReadyOrderPointOrders";
@@ -85,13 +87,13 @@ public class OperatorController {
 
     @PostMapping("refuseOrder")
     public String refuseOrder(@RequestParam Long userOrderId) {
-        archivedUserOrderService.refuseUserOrder(userOrderId);
+        userOrderProcessingService.refuseUserOrder(userOrderId);
         return "redirect:/operator/arrivedOrders";
     }
 
     @PostMapping("closeOrder")
     public String closeOrder(@RequestParam Long userOrderId) {
-        archivedUserOrderService.createArchivedUserOrder(userOrderId);
+        userOrderProcessingService.closeUserOrder(userOrderId);
         return "redirect:/operator/arrivedOrders";
     }
 }

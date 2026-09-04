@@ -4,6 +4,7 @@ import org.example.webApplicationShopSpringBoot.dto.converterDTO.OrderPointConve
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderPointDTO;
 import org.example.webApplicationShopSpringBoot.model.OrderPoint;
 import org.example.webApplicationShopSpringBoot.repository.orderPoint.OrderPointRepository;
+import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,13 +14,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderPointServiceImplTest {
+
+    private final String ORDER_POINT_NOT_FOUND = "Пункт выдачи заказов не найден!";
 
     @InjectMocks
     OrderPointServiceImpl orderPointService;
@@ -40,5 +45,24 @@ class OrderPointServiceImplTest {
         List<OrderPointDTO> orderPointDTOList = orderPointService.getAllOrderPoints();
         assertEquals(OrderPointDTO.class, orderPointDTOList.getFirst().getClass());
         assertEquals(3, orderPointDTOList.size());
+    }
+
+    @Test
+    void getOrderPoint() {
+        Long orderPointId = 18L;
+        OrderPoint orderPoint = new OrderPoint();
+        when(orderPointRepository.findById(orderPointId)).thenReturn(Optional.of(orderPoint));
+        assertEquals(orderPoint, orderPointService.getOrderPoint(orderPointId));
+        verify(orderPointRepository, times(1)).findById(orderPointId);
+    }
+
+    @Test
+    void getOrderPointThrowsResourceNotFound() {
+        Long orderPointId = 18L;
+        OrderPoint orderPoint = new OrderPoint();
+        when(orderPointRepository.findById(orderPointId)).thenReturn(Optional.empty());
+        ResourceNotFound resourceNotFoundException = assertThrows(ResourceNotFound.class, () -> orderPointService.getOrderPoint(orderPointId));
+        verify(orderPointRepository, times(1)).findById(orderPointId);
+        assertEquals(ORDER_POINT_NOT_FOUND,resourceNotFoundException.getMessage());
     }
 }

@@ -3,10 +3,9 @@ package org.example.webApplicationShopSpringBoot.service.userOrder;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagFormDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.ShowOrderDTO;
+import org.example.webApplicationShopSpringBoot.model.OrderPoint;
 import org.example.webApplicationShopSpringBoot.repository.bag.BagRepository;
 import org.example.webApplicationShopSpringBoot.repository.orderPoint.OrderPointRepository;
 import org.example.webApplicationShopSpringBoot.repository.product.ProductRepository;
@@ -23,7 +22,12 @@ import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.Pri
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
 import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
+import org.example.webApplicationShopSpringBoot.service.orderPoint.OrderPointService;
+import org.example.webApplicationShopSpringBoot.service.orderPoint.OrderPointServiceImpl;
+import org.example.webApplicationShopSpringBoot.service.product.ProductService;
+import org.example.webApplicationShopSpringBoot.service.user.UserService;
 import org.example.webApplicationShopSpringBoot.service.userOrderProduct.UserOrderProductService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -36,47 +40,10 @@ import java.util.List;
 @Slf4j
 public class UserOrderServiceImpl implements UserOrderService {
 
-    private UserOrderRepository userOrderRepository;
-    private UserRepository userRepository;
-    private OrderPointRepository orderPointRepository;
-    private BagRepository bagRepository;
-    private ProductRepository productRepository;
-    private UserOrderProductRepository userOrderProductRepository;
-    private UserOrderConverter userOrderConverter;
+    @Lazy
     private UserOrderProductService userOrderProductService;
-
-    @Override
-    @Transactional
-    public void confirmOrder(BagFormDTO bagFormDTO, User user) {
-        List<OrderDTO> list = toNewOrderDTO(bagFormDTO, user);
-        if (list.isEmpty()) {
-            throw new EmptyList("Корзина товаров пуста!");
-        }
-        User managedUser = userRepository.findById(list.get(0).getUserId()).get();
-        BigDecimal orderSum = BigDecimal.ZERO;
-        UserOrder userOrder = UserOrder.builder().orderStatus(OrderStatus.CREATED)
-                .user(managedUser)
-                .orderPoint(orderPointRepository.findById(list.get(0).getOrderPointId()).get())
-                .build();
-        userOrderRepository.save(userOrder);
-        for (OrderDTO orderDTO : list) {
-            if (orderDTO.getCount() != 0) {
-                UserOrderProduct userOrderProduct = UserOrderProduct.builder()
-                        .userOrder(userOrder).product(productRepository.findById(orderDTO.getProductId()).get())
-                        .productCount(orderDTO.getCount()).actualProductCount(orderDTO.getCount()).productPrice(orderDTO.getProductPrice()).build();
-                orderSum = orderSum.add(((orderDTO.getProductPrice()).multiply(new BigDecimal(orderDTO.getCount()))));
-                userOrderProductRepository.save(userOrderProduct);
-                PrimaryKeyBag primaryKeyBag = new PrimaryKeyBag(orderDTO.getUserId(), orderDTO.getProductId());
-                bagRepository.deleteById(primaryKeyBag);
-            }
-        }
-        Integer discountValue = managedUser.getDiscount().getDiscount();
-        BigDecimal calculatedDiscount = orderSum.multiply(new BigDecimal(discountValue)).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
-        BigDecimal orderSumWithDiscount = orderSum.subtract(calculatedDiscount);
-        userOrder.setOrderSum(orderSumWithDiscount);
-        userOrderRepository.save(userOrder);
-        log.info("Заказ с id {} для пользователя с id {} успешно создан!", managedUser.getId(), userOrder.getId());
-    }
+    private UserOrderRepository userOrderRepository;
+    private UserOrderConverter userOrderConverter;
 
     @Override
     public List<UserOrderDTO> showAllUserOrders(User user) {
@@ -96,12 +63,6 @@ public class UserOrderServiceImpl implements UserOrderService {
             throw new EmptyList("Готовые заказы отсутствуют!");
         }
         return userOrderList.stream().map(userOrder -> userOrderConverter.toDTO(userOrder)).toList();
-    }
-
-    @Override
-    public UserOrderDTO getUserOrderDTO(Long id) {
-        UserOrder userOrder = userOrderRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Заказ не найден!"));
-        return userOrderConverter.toDTO(userOrder);
     }
 
     @Override
@@ -125,7 +86,7 @@ public class UserOrderServiceImpl implements UserOrderService {
 
     @Override
     public ShowOrderDTO returnOrderInfo(Long id) {
-        UserOrderDTO userOrderDTO = getUserOrderDTO(id);
+        UserOrderDTO userOrderDTO = userOrderConverter.toDTO(getUserOrder(id));
         BigDecimal UserOrderProductSum = userOrderProductService.showUserOrderProductSum(id);
         return ShowOrderDTO.builder().userOrderDTO(userOrderDTO).UserOrderProductSum(UserOrderProductSum).build();
     }
@@ -146,5 +107,23 @@ public class UserOrderServiceImpl implements UserOrderService {
             list.add(orderDTO);
         }
         return list;
+    }
+
+    @Override
+    public UserOrder getUserOrder(Long id) {
+        return userOrderRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Заказ не найден!"));
+    }
+
+    @Override
+    public void deleteUserOrder(Long id) {
+        userOrderRepository.deleteById(id);
+    }
+
+    @Override
+    public UserOrder createUserOrder(User user, OrderPoint orderPoint) {
+        return UserOrder.builder().orderStatus(OrderStatus.CREATED)
+                .user(user)
+                .orderPoint(orderPoint)
+                .build();
     }
 }

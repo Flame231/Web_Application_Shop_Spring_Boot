@@ -5,19 +5,19 @@ import org.example.webApplicationShopSpringBoot.dto.dto.BagFormDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.ShowOrderDTO;
+import org.example.webApplicationShopSpringBoot.model.OrderPoint;
 import org.example.webApplicationShopSpringBoot.model.user.User;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
 
 import java.util.List;
 
 public interface UserOrderService {
 
-    void confirmOrder(BagFormDTO bagFormDTO, User user);
-
     List<UserOrderDTO> showAllUserOrders(User user);
 
     List<UserOrderDTO> showReadyUserOrdersByOrderPoint(User user);
 
-    UserOrderDTO getUserOrderDTO(Long id);
+    UserOrder getUserOrder(Long id);
 
     void readyUserOrder(Long userOrderId);
 
@@ -26,4 +26,8 @@ public interface UserOrderService {
     ShowOrderDTO returnOrderInfo(Long id);
 
     List<OrderDTO> toNewOrderDTO(BagFormDTO bagFormDTO, User user);
+
+    void deleteUserOrder(Long id);
+
+    UserOrder createUserOrder(User user, OrderPoint orderPoint);
 }

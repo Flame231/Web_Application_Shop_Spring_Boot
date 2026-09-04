@@ -2,6 +2,7 @@ package org.example.webApplicationShopSpringBoot.model;
 
 import lombok.*;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyArchivedUserOrderProduct;
+import org.example.webApplicationShopSpringBoot.service.ProductSum;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,7 +18,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @IdClass(PrimaryKeyArchivedUserOrderProduct.class)
-public class ArchivedUserOrderProduct {
+public class ArchivedUserOrderProduct implements ProductSum {
 
     @Id
     @ManyToOne
@@ -47,4 +48,8 @@ public class ArchivedUserOrderProduct {
     @Column(updatable = false, nullable = false)
     private Timestamp updateDateTime;
 
+    @Override
+    public Long getCount() {
+        return finalProductCount;
+    }
 }

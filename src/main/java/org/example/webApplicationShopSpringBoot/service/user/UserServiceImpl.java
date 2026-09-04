@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
         return userDiscountConverter.toDTO(user);
     }
 
-    private @NonNull User getUser(Long userId) {
+    public @NonNull User getUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFound("Пользователь не найден!"));
     }
 }

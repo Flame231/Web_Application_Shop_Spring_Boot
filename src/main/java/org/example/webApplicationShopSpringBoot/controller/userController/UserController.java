@@ -9,6 +9,7 @@ import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.BagInfoDT
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.ProductsAndBagsDTO;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
+import org.example.webApplicationShopSpringBoot.service.UserOrderProcessing.UserOrderProcessingService;
 import org.example.webApplicationShopSpringBoot.service.archivedUserOrder.ArchivedUserOrderService;
 import org.example.webApplicationShopSpringBoot.service.bag.BagService;
 import org.example.webApplicationShopSpringBoot.service.product.ProductService;
@@ -33,6 +34,7 @@ public class UserController {
     private final BagService bagService;
     private final UserOrderService userOrderService;
     private final ArchivedUserOrderService archivedUserOrderService;
+    private final UserOrderProcessingService userOrderProcessingService;
 
     @RequestMapping(value = "accountClient", method = {RequestMethod.GET, RequestMethod.POST})
     public String showAdministratorPage(Model model, @AuthenticationPrincipal User user) {
@@ -93,7 +95,7 @@ public class UserController {
 
     @PostMapping("confirmOrder")
     public String confirmOrder(@ModelAttribute BagFormDTO bagFormDTO, RedirectAttributes redirectAttributes, @AuthenticationPrincipal User user) {
-        userOrderService.confirmOrder(bagFormDTO, user);
+        userOrderProcessingService.createUserOrder(bagFormDTO, user);
         redirectAttributes.addFlashAttribute("successMessage", "Заказ успешно оформлен");
         return "redirect:/client/catalog";
     }

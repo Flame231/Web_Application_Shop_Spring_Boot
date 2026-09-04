@@ -23,4 +23,5 @@ public interface UserService {
 
     UserDiscountDTO getUserDiscount(User user);
 
+    User getUser(Long userId);
 }

@@ -23,4 +23,9 @@ public class ArchivedUserOrderProductServiceImpl implements ArchivedUserOrderPro
                 .price(e.getProductPrice())
                 .build()).collect(Collectors.toSet());
     }
+
+    @Override
+    public void setArchivedUserOrder(ArchivedUserOrder archivedUserOrder, Set<ArchivedUserOrderProduct> archivedUserOrderProduct) {
+        archivedUserOrderProduct.forEach(e -> e.setArchivedUserOrder(archivedUserOrder));
+    }
 }

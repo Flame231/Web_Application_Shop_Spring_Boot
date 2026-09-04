@@ -5,6 +5,7 @@ import org.example.webApplicationShopSpringBoot.dto.dto.NewProductDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.EditProductDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.ProductsAndBagsDTO;
+import org.example.webApplicationShopSpringBoot.model.Product;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 
@@ -29,4 +30,7 @@ public interface ProductService {
     EditProductDTO returnLists();
 
     ProductsAndBagsDTO getProductsAndBags(int page, int pageSize, User user);
+
+    Product getProduct(Long productId);
+
 }
