@@ -2,6 +2,7 @@ package org.example.webApplicationShopSpringBoot.service.productCategory;
 
 
 import org.example.webApplicationShopSpringBoot.dto.dto.ProductCategoryDTO;
+import org.example.webApplicationShopSpringBoot.model.ProductCategory;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 
 import java.util.List;
@@ -21,4 +22,7 @@ public interface ProductCategoryService {
     void deleteProductCategory(Long id);
 
     void recoverProductCategory(Long id);
+
+    ProductCategory getCategoryById(Long id);
+
 }

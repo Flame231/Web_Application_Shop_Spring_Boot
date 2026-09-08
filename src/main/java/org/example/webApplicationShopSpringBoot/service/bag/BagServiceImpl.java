@@ -1,13 +1,14 @@
 package org.example.webApplicationShopSpringBoot.service.bag;
 
 
-import lombok.AllArgsConstructor;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.dto.converterDTO.BagConverter;
-import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTORequest;
-import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagSumWithDiscountDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderPointDTO;
+import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTORequest;
+import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.BagInfoDTO;
 import org.example.webApplicationShopSpringBoot.model.Bag;
 import org.example.webApplicationShopSpringBoot.model.Product;
@@ -17,8 +18,8 @@ import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.repository.bag.BagRepository;
 import org.example.webApplicationShopSpringBoot.repository.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.service.Calculate;
-import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
 import org.example.webApplicationShopSpringBoot.service.orderPoint.OrderPointService;
+import org.example.webApplicationShopSpringBoot.service.serviceExceptions.EmptyList;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,13 +27,14 @@ import java.math.RoundingMode;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class BagServiceImpl implements BagService {
-    private BagRepository bagRepository;
-    private ProductRepository productRepository;
-    private BagConverter bagConverter;
-    private OrderPointService orderPointService;
+    private final BagRepository bagRepository;
+    private final ProductRepository productRepository;
+    private final BagConverter bagConverter;
+    private final OrderPointService orderPointService;
 
     @Override
     public void addProductToBag(BagDTORequest bagDTORequest, User user) {
@@ -62,9 +64,10 @@ public class BagServiceImpl implements BagService {
         }
     }
 
+    @Override
     public List<BagDTOResponse> getAllBags(User user) {
         List<Bag> bagList = bagRepository.getBagList(user.getId());
-        return bagList.stream().map(bag -> bagConverter.toDTO(bag)).toList();
+        return bagList.stream().map(bagConverter::toDTO).toList();
     }
 
     @Override
@@ -102,7 +105,7 @@ public class BagServiceImpl implements BagService {
         if (bagList.isEmpty()) {
             throw new EmptyList("Корзина пуста!");
         }
-        return bagList.stream().map(bag -> bagConverter.toDTO(bag)).toList();
+        return bagList.stream().map(bagConverter::toDTO).toList();
     }
 
     @Override
@@ -111,5 +114,15 @@ public class BagServiceImpl implements BagService {
         BagSumWithDiscountDTO bagSum = calculateBagSumWithDiscount(user);
         List<OrderPointDTO> orderPointDTOList = orderPointService.getAllOrderPoints();
         return BagInfoDTO.builder().bagDTOResponseList(bagDTOResponseList).bagSum(bagSum).orderPointDTOList(orderPointDTOList).build();
+    }
+
+    @Override
+    public List<Bag> getAllBagsForOrder(User user) {
+        return bagRepository.getBagList(user.getId());
+    }
+
+    @Override
+    public void deleteAllUserBags(User user) {
+        bagRepository.deleteAllByUserId(user.getId());
     }
 }

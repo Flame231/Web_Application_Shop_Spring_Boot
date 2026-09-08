@@ -11,7 +11,6 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
-// ИСПРАВЛЕНО: Изменено с interface на abstract class
 public abstract class ProductConverter {
 
     @Autowired

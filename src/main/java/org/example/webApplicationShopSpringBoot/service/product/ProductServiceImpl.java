@@ -1,8 +1,8 @@
 package org.example.webApplicationShopSpringBoot.service.product;
 
-import ch.qos.logback.classic.spi.IThrowableProxy;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.dto.converterDTO.ProductConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTOResponse;
@@ -15,7 +15,7 @@ import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.repository.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.bag.BagService;
-import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
+import org.example.webApplicationShopSpringBoot.service.serviceExceptions.ResourceNotFound;
 import org.example.webApplicationShopSpringBoot.service.productCategory.ProductCategoryService;
 import org.example.webApplicationShopSpringBoot.service.seller.SellerService;
 import org.springframework.data.domain.Page;
@@ -28,14 +28,15 @@ import java.util.List;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Transactional
 
 public class ProductServiceImpl implements ProductService {
-    private ProductRepository productRepository;
-    private ProductConverter productConverter;
-    private ProductCategoryService productCategoryService;
-    private SellerService sellerService;
-    private BagService bagService;
+    private final ProductRepository productRepository;
+    private final ProductConverter productConverter;
+    private final ProductCategoryService productCategoryService;
+    private final SellerService sellerService;
+    private final BagService bagService;
 
     @Override
     public PageResponse<ProductDTO> getActiveProducts(int page, int pageSize) {
@@ -48,9 +49,10 @@ public class ProductServiceImpl implements ProductService {
     public PageResponse<ProductDTO> getAllProducts(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         Page<Product> productsPage = productRepository.findAll(pageable);
-        return new PageResponse<>(productsPage.map(product -> productConverter.toDTO(product)));
+        return new PageResponse<>(productsPage.map(productConverter::toDTO));
     }
 
+    @Override
     public ProductDTO findProduct(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Продукт не найден!"));
         return productConverter.toDTO(product);
@@ -71,7 +73,6 @@ public class ProductServiceImpl implements ProductService {
         log.info("Продукт с id {} успешно обновлён!", existingProduct.getId());
     }
 
-    @Transactional
     @Override
     public void removeProduct(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Продукт не найден!"));
@@ -79,7 +80,6 @@ public class ProductServiceImpl implements ProductService {
         log.info("Статус продукта с id {} успешно изменён на {}!", product.getId(), product.getStatus().name());
     }
 
-    @Transactional
     @Override
     public void recoverProduct(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Продукт не найден!"));
@@ -112,7 +112,8 @@ public class ProductServiceImpl implements ProductService {
         return ProductsAndBagsDTO.builder().productDTOList(productDTOList).bagDTOResponseList(bagDTOResponseList).bagSum(bagSum).build();
     }
 
-    public Product getProduct(Long productId){
-       return productRepository.findById(productId).orElseThrow(()->new ResourceNotFound("Продукт не найден!"));
+    @Override
+    public Product getProduct(Long productId) {
+        return productRepository.findById(productId).orElseThrow(() -> new ResourceNotFound("Продукт не найден!"));
     }
 }

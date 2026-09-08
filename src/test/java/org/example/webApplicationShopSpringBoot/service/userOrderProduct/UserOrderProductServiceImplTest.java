@@ -38,10 +38,6 @@ class UserOrderProductServiceImplTest {
     @Mock
     UserOrderService userOrderService;
 
-    @Mock
-    UserService userService;
-
-
     @Test
     void addProductToOrderFailed() {
         UserOrderChangeCountDTO userOrderChangeCountDTO = new UserOrderChangeCountDTO();
@@ -125,11 +121,9 @@ class UserOrderProductServiceImplTest {
         userOrderProductList.add(userOrderProduct2);
         userOrderProductList.add(userOrderProduct3);
         when(userOrderService.getUserOrder(userOrderId)).thenReturn(userOrder);
-        when(userService.getUser(userOrder.getUser().getId())).thenReturn(user);
         when(userOrderProductRepository.findByUserOrderId(userOrderId)).thenReturn(userOrderProductList);
         assertEquals(new BigDecimal("24601.09"), userOrderProductService.showUserOrderProductSum(userOrderId));
         verify(userOrderService, times(1)).getUserOrder(userOrderId);
-        verify(userService, times(1)).getUser(userOrder.getUser().getId());
         verify(userOrderProductRepository, times(1)).findByUserOrderId(userOrderId);
     }
 }

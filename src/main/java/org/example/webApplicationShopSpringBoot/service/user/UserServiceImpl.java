@@ -17,20 +17,19 @@ import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.repository.discount.DiscountRepository;
 import org.example.webApplicationShopSpringBoot.repository.user.UserRepository;
 import org.example.webApplicationShopSpringBoot.service.BcryptUtil;
-import org.example.webApplicationShopSpringBoot.service.exceptions.DifferentUserPasswords;
-import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
-import org.example.webApplicationShopSpringBoot.service.exceptions.UserRegistrationException;
-import org.example.webApplicationShopSpringBoot.service.exceptions.WrongPassword;
+import org.example.webApplicationShopSpringBoot.service.serviceExceptions.DifferentUserPasswords;
+import org.example.webApplicationShopSpringBoot.service.serviceExceptions.ResourceNotFound;
+import org.example.webApplicationShopSpringBoot.service.serviceExceptions.UserRegistrationException;
+import org.example.webApplicationShopSpringBoot.service.serviceExceptions.WrongPassword;
 import org.jspecify.annotations.NonNull;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
-@AllArgsConstructor
-@Transactional
+@RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final DiscountRepository discountRepository;
@@ -115,7 +114,7 @@ public class UserServiceImpl implements UserService {
         return userDiscountConverter.toDTO(user);
     }
 
-    public @NonNull User getUser(Long userId) {
+    public User getUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFound("Пользователь не найден!"));
     }
 }

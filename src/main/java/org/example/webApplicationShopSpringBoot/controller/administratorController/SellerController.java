@@ -57,7 +57,7 @@ public class SellerController {
 
     @GetMapping("editSeller/{id}")
     public String showEditSellerPage(@PathVariable Long id, Model model) {
-        SellerDTO sellerDTO = sellerService.getSeller(id);
+        SellerDTO sellerDTO = sellerService.getSellerDTO(id);
         model.addAttribute("sellerDTO", sellerDTO);
         return "/superUser/seller/editSeller";
     }

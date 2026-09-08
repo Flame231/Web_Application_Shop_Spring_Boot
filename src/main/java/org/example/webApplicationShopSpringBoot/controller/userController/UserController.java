@@ -94,8 +94,8 @@ public class UserController {
     }
 
     @PostMapping("confirmOrder")
-    public String confirmOrder(@ModelAttribute BagFormDTO bagFormDTO, RedirectAttributes redirectAttributes, @AuthenticationPrincipal User user) {
-        userOrderProcessingService.createUserOrder(bagFormDTO, user);
+    public String confirmOrder(@RequestParam Long orderPointId, RedirectAttributes redirectAttributes, @AuthenticationPrincipal User user) {
+        userOrderProcessingService.createUserOrder(user, orderPointId );
         redirectAttributes.addFlashAttribute("successMessage", "Заказ успешно оформлен");
         return "redirect:/client/catalog";
     }

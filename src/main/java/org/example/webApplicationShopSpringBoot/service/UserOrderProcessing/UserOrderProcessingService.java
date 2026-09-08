@@ -1,6 +1,6 @@
 package org.example.webApplicationShopSpringBoot.service.UserOrderProcessing;
 
-import org.example.webApplicationShopSpringBoot.dto.dto.BagFormDTO;
+import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.ShowOrderDTO;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 
 public interface UserOrderProcessingService {
@@ -9,6 +9,8 @@ public interface UserOrderProcessingService {
 
     void refuseUserOrder(Long userOrderId);
 
-    void createUserOrder(BagFormDTO bagFormDTO, User user);
+    void createUserOrder(User user, Long orderPointId);
 
-}
+    ShowOrderDTO returnOrderInfo(Long id);
+
+    }

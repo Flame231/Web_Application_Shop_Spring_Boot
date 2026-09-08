@@ -66,7 +66,7 @@ public class OperatorController {
 
     @GetMapping("showOrder")
     public String showOrder(@RequestParam Long id, Model model) {
-        ShowOrderDTO showOrderDTO = userOrderService.returnOrderInfo(id);
+        ShowOrderDTO showOrderDTO = userOrderProcessingService.returnOrderInfo(id);
         model.addAttribute("showOrderDTO", showOrderDTO);
         return "/order/showOrderPointOrderPage";
     }

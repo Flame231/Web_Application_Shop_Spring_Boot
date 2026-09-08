@@ -4,7 +4,7 @@ import org.example.webApplicationShopSpringBoot.dto.converterDTO.OrderPointConve
 import org.example.webApplicationShopSpringBoot.dto.dto.OrderPointDTO;
 import org.example.webApplicationShopSpringBoot.model.OrderPoint;
 import org.example.webApplicationShopSpringBoot.repository.orderPoint.OrderPointRepository;
-import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
+import org.example.webApplicationShopSpringBoot.service.serviceExceptions.ResourceNotFound;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

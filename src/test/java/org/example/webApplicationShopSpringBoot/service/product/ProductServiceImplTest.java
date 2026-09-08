@@ -11,7 +11,7 @@ import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.repository.product.ProductRepository;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
 import org.example.webApplicationShopSpringBoot.service.bag.BagServiceImpl;
-import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
+import org.example.webApplicationShopSpringBoot.service.serviceExceptions.ResourceNotFound;
 import org.example.webApplicationShopSpringBoot.service.productCategory.ProductCategoryServiceImpl;
 import org.example.webApplicationShopSpringBoot.service.seller.SellerServiceImpl;
 import org.junit.jupiter.api.Test;

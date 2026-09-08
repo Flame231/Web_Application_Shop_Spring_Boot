@@ -2,7 +2,7 @@ package org.example.webApplicationShopSpringBoot.service.archivedUserOrder;
 
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.dto.converterDTO.ArchivedUserOrderConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.ArchivedUserOrderDTO;
@@ -12,14 +12,8 @@ import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.model.userOrder.OrderStatus;
 import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
 import org.example.webApplicationShopSpringBoot.repository.archivedUserOrder.ArchivedUserOrderRepository;
-import org.example.webApplicationShopSpringBoot.repository.userOrder.UserOrderRepository;
-import org.example.webApplicationShopSpringBoot.service.Calculate;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
-import org.example.webApplicationShopSpringBoot.service.archivedUserOrderProduct.ArchivedUserOrderProductService;
-import org.example.webApplicationShopSpringBoot.service.discount.DiscountService;
-import org.example.webApplicationShopSpringBoot.service.exceptions.EmptyList;
-import org.example.webApplicationShopSpringBoot.service.user.UserService;
-import org.example.webApplicationShopSpringBoot.service.userOrder.UserOrderService;
+import org.example.webApplicationShopSpringBoot.service.serviceExceptions.EmptyList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,12 +24,12 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
-    private ArchivedUserOrderRepository archivedUserOrderRepository;
-    private ArchivedUserOrderConverter archivedUserOrderConverter;
+    private final ArchivedUserOrderRepository archivedUserOrderRepository;
+    private final ArchivedUserOrderConverter archivedUserOrderConverter;
 
     @Override
     public ArchivedUserOrder createArchivedUserOrder(UserOrder userOrder, Set<ArchivedUserOrderProduct> archivedUserOrderProduct, BigDecimal finalOrderSum) {
@@ -74,6 +68,6 @@ public class ArchivedUserOrderServiceImpl implements ArchivedUserOrderService {
         if (archivedUserOrderPage.getTotalElements() == 0) {
             throw new EmptyList("История заказов пуста");
         }
-        return new PageResponse<>(archivedUserOrderPage.map(archivedUserOrder -> archivedUserOrderConverter.toDTO(archivedUserOrder)));
+        return new PageResponse<>(archivedUserOrderPage.map(archivedUserOrderConverter::toDTO));
     }
 }

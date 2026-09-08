@@ -38,7 +38,7 @@ class SellerServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        list = new ArrayList();
+        list = new ArrayList<>();
     }
 
     @Test
@@ -147,7 +147,7 @@ class SellerServiceImplTest {
         sellerDTO.setId(id);
         when(sellerRepository.findById(id)).thenReturn(Optional.of(seller));
         when(sellerConverter.toDTO(seller)).thenReturn(sellerDTO);
-        SellerDTO returnedSellerDTO = sellerService.getSeller(id);
+        SellerDTO returnedSellerDTO = sellerService.getSellerDTO(id);
         verify(sellerRepository, times(1)).findById(id);
         assertEquals(SellerDTO.class, returnedSellerDTO.getClass());
         assertNotNull(returnedSellerDTO);

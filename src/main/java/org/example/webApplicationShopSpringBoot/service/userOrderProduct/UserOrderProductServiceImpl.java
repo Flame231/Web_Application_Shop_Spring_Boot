@@ -1,19 +1,19 @@
 package org.example.webApplicationShopSpringBoot.service.userOrderProduct;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.webApplicationShopSpringBoot.model.user.User;
-import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
-import org.example.webApplicationShopSpringBoot.repository.user.UserRepository;
-import org.example.webApplicationShopSpringBoot.repository.userOrder.UserOrderRepository;
-import org.example.webApplicationShopSpringBoot.repository.userOrderProduct.UserOrderProductRepository;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderChangeCountDTO;
-import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrderProduct;
+import org.example.webApplicationShopSpringBoot.model.Bag;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUserOrderProduct;
 import org.example.webApplicationShopSpringBoot.model.additional.primaryKeys.PrimaryKeyUtil;
+import org.example.webApplicationShopSpringBoot.model.user.User;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
+import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrderProduct;
+import org.example.webApplicationShopSpringBoot.repository.userOrderProduct.UserOrderProductRepository;
 import org.example.webApplicationShopSpringBoot.service.Calculate;
-import org.example.webApplicationShopSpringBoot.service.exceptions.ResourceNotFound;
-import org.example.webApplicationShopSpringBoot.service.user.UserService;
+import org.example.webApplicationShopSpringBoot.service.serviceExceptions.ResourceNotFound;
 import org.example.webApplicationShopSpringBoot.service.userOrder.UserOrderService;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +22,13 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class UserOrderProductServiceImpl implements UserOrderProductService {
 
-    private UserOrderService userOrderService;
-    private UserOrderProductRepository userOrderProductRepository;
+    private final UserOrderService userOrderService;
+    private final UserOrderProductRepository userOrderProductRepository;
 
     @Override
     public void addProductToOrder(UserOrderChangeCountDTO userOrderChangeCountDTO) {
@@ -73,5 +74,14 @@ public class UserOrderProductServiceImpl implements UserOrderProductService {
     private UserOrderProduct getUserOrderProduct(PrimaryKeyUserOrderProduct primaryKeyUserOrderProduct) {
         return userOrderProductRepository.findById(primaryKeyUserOrderProduct)
                 .orElseThrow(() -> new ResourceNotFound("Продукт либо заказ не найден"));
+    }
+
+    @Override
+    public void addBagToUserOrderProduct(Bag bag, UserOrder userOrder, User user) {
+        UserOrderProduct userOrderProduct = UserOrderProduct.builder()
+                .userOrder(userOrder).product(bag.getProduct())
+                .productCount(bag.getCount()).actualProductCount(bag.getCount())
+                .productPrice(bag.getPrice()).build();
+        userOrderProductRepository.save(userOrderProduct);
     }
 }

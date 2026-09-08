@@ -37,10 +37,10 @@
     <br>
 </head>
 <body>
-<form id="orderForm" method="post" th:action="@{/client/confirmOrder}">
+<form id="orderPointId" method="post" th:action="@{/client/confirmOrder}">
     <div>
         Выбрать пункт выдачи:
-        <select name="orderPointId" form="orderForm">
+        <select name="orderPointId" form="orderPointId">
             <option th:each="orderPointDTO:${bagInfoDTO.orderPointDTOList}"
                     th:value="${orderPointDTO.id}"
                     th:text="${orderPointDTO.orderPointAddress}">
@@ -83,7 +83,6 @@
     <tbody>
     <tr th:each="bagDTO:${bagInfoDTO.bagDTOResponseList}">
         <td>
-            <input type="hidden" name="productId" form="orderForm" th:value="${bagDTO.productDTO.id}">
             <span th:text="${bagDTO.productDTO.productName}"></span>
         </td>
         <td>
@@ -91,12 +90,9 @@
         </td>
         <td>
             <span th:text="${bagDTO.productDTO.price}"></span>
-            <input type="hidden" name="productPrice" form="orderForm"
-                   th:value="${bagDTO.productDTO.price}"/>
         </td>
         <td>
             <span th:text="${bagDTO.productDTO.seller.sellerName}"></span>
-            <input type="hidden" name="count" form="orderForm" th:value="${bagDTO.count}"/>
         </td>
         <td>
             <form method="post">

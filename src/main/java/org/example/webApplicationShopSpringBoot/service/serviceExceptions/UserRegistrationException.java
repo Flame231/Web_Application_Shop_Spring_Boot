@@ -1,4 +1,4 @@
-package org.example.webApplicationShopSpringBoot.service.exceptions;
+package org.example.webApplicationShopSpringBoot.service.serviceExceptions;
 
 public class UserRegistrationException extends RuntimeException {
     public UserRegistrationException(String message, String variable) {

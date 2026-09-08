@@ -3,6 +3,7 @@ package org.example.webApplicationShopSpringBoot.service.seller;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.webApplicationShopSpringBoot.repository.seller.SellerRepository;
 import org.example.webApplicationShopSpringBoot.dto.converterDTO.SellerConverter;
@@ -10,6 +11,7 @@ import org.example.webApplicationShopSpringBoot.dto.dto.SellerDTO;
 import org.example.webApplicationShopSpringBoot.model.ItemStatus;
 import org.example.webApplicationShopSpringBoot.model.Seller;
 import org.example.webApplicationShopSpringBoot.service.PageResponse;
+import org.example.webApplicationShopSpringBoot.service.serviceExceptions.ResourceNotFound;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,24 +21,28 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class SellerServiceImpl implements SellerService {
-    private SellerRepository sellerRepository;
-    private SellerConverter sellerConverter;
+    private final SellerRepository sellerRepository;
+    private final SellerConverter sellerConverter;
 
+    @Override
     public PageResponse<SellerDTO> getSellerDTOList(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id").ascending());
         Page<Seller> resultPage = sellerRepository.findAll(pageable);
-        return new PageResponse<>(resultPage.map(seller -> sellerConverter.toDTO(seller)));
+        return new PageResponse<>(resultPage.map(sellerConverter::toDTO));
     }
 
+    @Override
     public List<SellerDTO> getSellerDTOList() {
-        return sellerRepository.findAll().stream().map(seller -> sellerConverter.toDTO(seller)).toList();
+        return sellerRepository.findAll().stream().map(sellerConverter::toDTO).toList();
     }
 
+    @Override
     public List<SellerDTO> getActiveSellerDTOList() {
-        return sellerRepository.findAll(ItemStatus.ACTIVE).stream().map(seller -> sellerConverter.toDTO(seller)).toList();
+        return sellerRepository.findAll(ItemStatus.ACTIVE).stream().map(sellerConverter::toDTO).toList();
     }
 
     @Override
@@ -54,16 +60,14 @@ public class SellerServiceImpl implements SellerService {
         log.info("Продавец {} успешно добавлен!", seller.getSellerName());
     }
 
-    @Transactional
     @Override
     public void deleteSeller(Long id) {
-        Seller seller = sellerRepository.findById(id).get();
+        Seller seller = getSeller(id);
         seller.setStatus(ItemStatus.DELETED);
         sellerRepository.save(seller);
         log.info("Статус категории продукта с id {} успешно изменён!", seller.getStatus().name());
     }
 
-    @Transactional
     @Override
     public void recoverSeller(Long id) {
         Seller seller = sellerRepository.findById(id).get();
@@ -73,9 +77,13 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public SellerDTO getSeller(Long id) {
-        Seller seller = sellerRepository.findById(id).get();
-        return sellerConverter.toDTO(seller);
+    public Seller getSeller(Long id) {
+        return sellerRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Продавец не найден!"));
     }
 
+    @Override
+    public SellerDTO getSellerDTO(Long id) {
+        Seller seller = sellerRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Продавец не найден!"));
+        return sellerConverter.toDTO(seller);
+    }
 }

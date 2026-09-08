@@ -5,6 +5,7 @@ import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTORequest;
 import org.example.webApplicationShopSpringBoot.dto.dto.bagDTO.BagDTOResponse;
 import org.example.webApplicationShopSpringBoot.dto.dto.BagSumWithDiscountDTO;
 import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.BagInfoDTO;
+import org.example.webApplicationShopSpringBoot.model.Bag;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 
 import java.math.BigDecimal;
@@ -28,4 +29,8 @@ public interface BagService {
     List<BagDTOResponse> openBag(User user);
 
     BagInfoDTO returnBagInfo(User user);
+
+    List<Bag> getAllBagsForOrder(User user);
+
+    void deleteAllUserBags(User user);
 }
