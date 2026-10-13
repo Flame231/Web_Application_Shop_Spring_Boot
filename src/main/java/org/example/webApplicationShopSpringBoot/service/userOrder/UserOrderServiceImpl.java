@@ -13,9 +13,11 @@ import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
 import org.example.webApplicationShopSpringBoot.repository.userOrder.UserOrderRepository;
 import org.example.webApplicationShopSpringBoot.service.serviceExceptions.EmptyList;
 import org.example.webApplicationShopSpringBoot.service.serviceExceptions.ResourceNotFound;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -47,8 +49,8 @@ public class UserOrderServiceImpl implements UserOrderService {
     }
 
     @Override
-    public void readyUserOrder(Long userOrderId) {
-        UserOrder userOrder = getUserOrder(userOrderId);
+    public void readyUserOrder(Long userOrderId, User operator) {
+        UserOrder userOrder = getUserOrderForOperator(userOrderId, operator);
         userOrder.setOrderStatus(OrderStatus.READY);
         userOrderRepository.save(userOrder);
         log.info("Статус заказа с id {} успешно изменён на {}", userOrder.getId(), userOrder.getOrderStatus());
@@ -67,6 +69,18 @@ public class UserOrderServiceImpl implements UserOrderService {
     @Override
     public UserOrder getUserOrder(Long id) {
         return userOrderRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Заказ не найден!"));
+    }
+
+    @Override
+    public UserOrder getUserOrderForOperator(Long id, User operator) {
+        UserOrder userOrder = getUserOrder(id);
+        if (operator == null || operator.getOrderPoint() == null
+                || operator.getOrderPoint().getId() == null
+                || userOrder.getOrderPoint() == null
+                || !Objects.equals(userOrder.getOrderPoint().getId(), operator.getOrderPoint().getId())) {
+            throw new AccessDeniedException("Нет доступа к заказу этого пункта выдачи");
+        }
+        return userOrder;
     }
 
     @Override

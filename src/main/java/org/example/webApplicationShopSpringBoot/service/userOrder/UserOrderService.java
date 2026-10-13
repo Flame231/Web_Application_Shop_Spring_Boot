@@ -16,7 +16,9 @@ public interface UserOrderService {
 
     UserOrder getUserOrder(Long id);
 
-    void readyUserOrder(Long userOrderId);
+    UserOrder getUserOrderForOperator(Long id, User operator);
+
+    void readyUserOrder(Long userOrderId, User operator);
 
     List<UserOrderDTO> showCreatedUserOrders(User user);
 

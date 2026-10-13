@@ -142,6 +142,8 @@
                     <propertyFile>liquibase.properties</propertyFile>
                     <searchPath>src/main/resources/</searchPath>
                     <url>jdbc:mysql://localhost:3306/ShopSpringBoot</url>
+                    <username>${env.DB_USERNAME}</username>
+                    <password>${env.DB_PASSWORD}</password>
                 </configuration>
             </plugin>
         </plugins>

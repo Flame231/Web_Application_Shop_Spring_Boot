@@ -88,8 +88,13 @@ class UserOrderServiceImplTest {
         Long userOrderId = 24L;
         UserOrder userOrder = new UserOrder();
         userOrder.setId(userOrderId);
+        OrderPoint orderPoint = new OrderPoint();
+        orderPoint.setId(25L);
+        userOrder.setOrderPoint(orderPoint);
+        User operator = new User();
+        operator.setOrderPoint(orderPoint);
         when(userOrderRepository.findById(userOrderId)).thenReturn(Optional.of(userOrder));
-        userOrderService.readyUserOrder(userOrderId);
+        userOrderService.readyUserOrder(userOrderId, operator);
         verify(userOrderRepository, times(1)).findById(userOrderId);
         verify(userOrderRepository, times(1)).save(userOrder);
         assertEquals(OrderStatus.READY, userOrder.getOrderStatus());

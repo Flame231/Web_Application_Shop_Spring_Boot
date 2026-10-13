@@ -2,6 +2,7 @@ package org.example.webApplicationShopSpringBoot.service.UserOrderProcessing;
 
 import org.example.webApplicationShopSpringBoot.dto.converterDTO.UserOrderConverter;
 import org.example.webApplicationShopSpringBoot.dto.dto.UserOrderDTO;
+import org.example.webApplicationShopSpringBoot.dto.dto.complicatedDTO.ShowOrderDTO;
 import org.example.webApplicationShopSpringBoot.model.*;
 import org.example.webApplicationShopSpringBoot.model.user.User;
 import org.example.webApplicationShopSpringBoot.model.userOrder.UserOrder;
@@ -20,8 +21,10 @@ import org.example.webApplicationShopSpringBoot.service.userOrderProduct.UserOrd
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,6 +41,7 @@ import static org.mockito.Mockito.*;
 class UserOrderProcessingServiceImplTest {
 
     private final String EMPTY_BAG = "Корзина товаров пуста!";
+    private final User operator = new User();
     @InjectMocks
     private UserOrderProcessingServiceImpl userOrderProcessingService;
 
@@ -95,11 +99,11 @@ class UserOrderProcessingServiceImplTest {
         userOrderProducts.add(new UserOrderProduct());
         userOrder.setUserOrderProduct(userOrderProducts);
         ArchivedUserOrder archivedUserOrder = new ArchivedUserOrder();
-        when(userOrderService.getUserOrder(userOrderId)).thenReturn(userOrder);
+        when(userOrderService.getUserOrderForOperator(userOrderId, operator)).thenReturn(userOrder);
         when(archivedUserOrderProductService.createUserOrderProduct(userOrder.getUserOrderProduct(), null)).thenReturn(archivedUserOrderProduct);
         when(archivedUserOrderService.createArchivedUserOrder(any(UserOrder.class), anySet(), any(BigDecimal.class))).thenReturn(archivedUserOrder);
-        userOrderProcessingService.closeUserOrder(userOrderId);
-        verify(userOrderService, times(1)).getUserOrder(userOrderId);
+        userOrderProcessingService.closeUserOrder(userOrderId, operator);
+        verify(userOrderService, times(1)).getUserOrderForOperator(userOrderId, operator);
         verify(archivedUserOrderProductService, times(1)).createUserOrderProduct(userOrder.getUserOrderProduct(), null);
         verify(archivedUserOrderService, times(1)).createArchivedUserOrder(any(UserOrder.class), anySet(), any(BigDecimal.class));
         verify(archivedUserOrderProductService, times(1)).setArchivedUserOrder(archivedUserOrder, archivedUserOrderProduct);
@@ -120,11 +124,11 @@ class UserOrderProcessingServiceImplTest {
         archivedUserOrderProduct.add(new ArchivedUserOrderProduct());
         userOrder.setUserOrderProduct(new HashSet<UserOrderProduct>());
         ArchivedUserOrder archivedUserOrder = new ArchivedUserOrder();
-        when(userOrderService.getUserOrder(userOrderId)).thenReturn(userOrder);
+        when(userOrderService.getUserOrderForOperator(userOrderId, operator)).thenReturn(userOrder);
         when(archivedUserOrderProductService.createUserOrderProduct(userOrder.getUserOrderProduct(), null)).thenReturn(archivedUserOrderProduct);
         when(archivedUserOrderService.refuseUserOrder(userOrder, archivedUserOrderProduct)).thenReturn(archivedUserOrder);
-        userOrderProcessingService.refuseUserOrder(userOrderId);
-        verify(userOrderService, times(1)).getUserOrder(userOrderId);
+        userOrderProcessingService.refuseUserOrder(userOrderId, operator);
+        verify(userOrderService, times(1)).getUserOrderForOperator(userOrderId, operator);
         verify(archivedUserOrderProductService, times(1)).createUserOrderProduct(userOrder.getUserOrderProduct(), null);
         verify(archivedUserOrderRepository, times(1)).save(archivedUserOrder);
         verify(userOrderService, times(1)).deleteUserOrder(userOrderId);
@@ -149,13 +153,21 @@ class UserOrderProcessingServiceImplTest {
         when(bagService.getAllBagsForOrder(user)).thenReturn(list);
         when(orderPointService.getOrderPoint(orderPointId)).thenReturn(orderPoint);
         when(userOrderService.createUserOrder(user, orderPoint)).thenReturn(userOrder);
+        UserOrder savedUserOrder = new UserOrder();
+        savedUserOrder.setId(7L);
+        when(userOrderRepository.save(userOrder)).thenReturn(savedUserOrder);
         userOrderProcessingService.createUserOrder(user, orderPointId);
         verify(bagService, times(1)).getAllBagsForOrder(user);
         verify(orderPointService, times(1)).getOrderPoint(orderPointId);
         verify(userOrderService, times(1)).createUserOrder(user, orderPoint);
-        verify(userOrderRepository, times(1)).save(userOrder);
-        verify(userOrderProductService, times(list.size())).addBagToUserOrderProduct(any(Bag.class), any(UserOrder.class), any(User.class));
-        assertEquals(new BigDecimal("955.69"), userOrder.getOrderSum());
+        InOrder inOrder = inOrder(userOrderRepository, userOrderProductService, bagService);
+        inOrder.verify(userOrderRepository).save(userOrder);
+        for (Bag bag : list) {
+            inOrder.verify(userOrderProductService).addBagToUserOrderProduct(bag, savedUserOrder, user);
+        }
+        inOrder.verify(userOrderRepository).save(savedUserOrder);
+        inOrder.verify(bagService).deleteAllUserBags(user);
+        assertEquals(new BigDecimal("955.69"), savedUserOrder.getOrderSum());
     }
 
     @Test
@@ -172,13 +184,58 @@ class UserOrderProcessingServiceImplTest {
     @Test
     void returnOrderInfo() {
         Long userOrderId = 7L;
+        OrderPoint operatorOrderPoint = new OrderPoint();
+        operatorOrderPoint.setId(25L);
+        User operator = new User();
+        operator.setOrderPoint(operatorOrderPoint);
+        OrderPoint orderPoint = new OrderPoint();
+        orderPoint.setId(25L);
+        UserOrder userOrder = new UserOrder();
+        userOrder.setOrderPoint(orderPoint);
         UserOrderDTO userOrderDTO = new UserOrderDTO();
         BigDecimal UserOrderProductSum = new BigDecimal("5400.43");
-        when(userOrderService.getUserOrder(userOrderId)).thenReturn(new UserOrder());
-        when(userOrderConverter.toDTO(userOrderService.getUserOrder(userOrderId))).thenReturn(userOrderDTO);
+        when(userOrderService.getUserOrderForOperator(userOrderId, operator)).thenReturn(userOrder);
+        when(userOrderConverter.toDTO(userOrder)).thenReturn(userOrderDTO);
         when(userOrderProductService.showUserOrderProductSum(userOrderId)).thenReturn(UserOrderProductSum);
-        assertNotNull(userOrderProcessingService.returnOrderInfo(userOrderId));
-        verify(userOrderConverter, times(1)).toDTO(userOrderService.getUserOrder(userOrderId));
+        ShowOrderDTO result = userOrderProcessingService.returnOrderInfo(userOrderId, operator);
+        assertSame(userOrderDTO, result.getUserOrderDTO());
+        assertEquals(UserOrderProductSum, result.getUserOrderProductSum());
+        verify(userOrderService, times(1)).getUserOrderForOperator(userOrderId, operator);
+        verify(userOrderConverter, times(1)).toDTO(userOrder);
         verify(userOrderProductService, times(1)).showUserOrderProductSum(userOrderId);
+    }
+
+    @Test
+    void returnOrderInfoDeniesOtherOrderPoint() {
+        Long userOrderId = 7L;
+        when(userOrderService.getUserOrderForOperator(userOrderId, operator))
+                .thenThrow(new AccessDeniedException("Нет доступа"));
+        assertThrows(AccessDeniedException.class,
+                () -> userOrderProcessingService.returnOrderInfo(userOrderId, operator));
+        verifyNoInteractions(userOrderConverter, userOrderProductService);
+    }
+
+    @Test
+    void closeUserOrderDeniesAccessBeforeArchiving() {
+        Long userOrderId = 12L;
+        when(userOrderService.getUserOrderForOperator(userOrderId, operator))
+                .thenThrow(new AccessDeniedException("Нет доступа"));
+        assertThrows(AccessDeniedException.class,
+                () -> userOrderProcessingService.closeUserOrder(userOrderId, operator));
+        verifyNoInteractions(archivedUserOrderProductService, archivedUserOrderService,
+                archivedUserOrderRepository, userService, discountService);
+        verify(userOrderService, never()).deleteUserOrder(anyLong());
+    }
+
+    @Test
+    void refuseUserOrderDeniesAccessBeforeArchiving() {
+        Long userOrderId = 12L;
+        when(userOrderService.getUserOrderForOperator(userOrderId, operator))
+                .thenThrow(new AccessDeniedException("Нет доступа"));
+        assertThrows(AccessDeniedException.class,
+                () -> userOrderProcessingService.refuseUserOrder(userOrderId, operator));
+        verifyNoInteractions(archivedUserOrderProductService, archivedUserOrderService,
+                archivedUserOrderRepository, userService, discountService);
+        verify(userOrderService, never()).deleteUserOrder(anyLong());
     }
 }

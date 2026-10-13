@@ -47,8 +47,8 @@ public class UserOrderProcessingServiceImpl implements UserOrderProcessingServic
     private final UserOrderConverter userOrderConverter;
 
     @Override
-    public void closeUserOrder(Long userOrderId) {
-        UserOrder userOrder = userOrderService.getUserOrder(userOrderId);
+    public void closeUserOrder(Long userOrderId, User operator) {
+        UserOrder userOrder = userOrderService.getUserOrderForOperator(userOrderId, operator);
         Set<ArchivedUserOrderProduct> archivedUserOrderProduct = archivedUserOrderProductService.createUserOrderProduct(
                 userOrder.getUserOrderProduct(), null);
 
@@ -64,8 +64,8 @@ public class UserOrderProcessingServiceImpl implements UserOrderProcessingServic
     }
 
     @Override
-    public void refuseUserOrder(Long userOrderId) {
-        UserOrder userOrder = userOrderService.getUserOrder(userOrderId);
+    public void refuseUserOrder(Long userOrderId, User operator) {
+        UserOrder userOrder = userOrderService.getUserOrderForOperator(userOrderId, operator);
         Set<ArchivedUserOrderProduct> archivedUserOrderProduct = archivedUserOrderProductService.createUserOrderProduct(
                 userOrder.getUserOrderProduct(), null);
         ArchivedUserOrder archivedUserOrder = archivedUserOrderService.refuseUserOrder(userOrder, archivedUserOrderProduct);
@@ -84,6 +84,7 @@ public class UserOrderProcessingServiceImpl implements UserOrderProcessingServic
         BigDecimal orderSum = BigDecimal.ZERO;
         OrderPoint orderPoint = orderPointService.getOrderPoint(orderPointId);
         UserOrder userOrder = userOrderService.createUserOrder(user, orderPoint);
+        userOrder = userOrderRepository.save(userOrder);
         Long userId = user.getId();
         for (Bag bag : list) {
             Long productCount = bag.getCount();
@@ -100,8 +101,9 @@ public class UserOrderProcessingServiceImpl implements UserOrderProcessingServic
     }
 
     @Override
-    public ShowOrderDTO returnOrderInfo(Long id) {
-        UserOrderDTO userOrderDTO = userOrderConverter.toDTO(userOrderService.getUserOrder(id));
+    public ShowOrderDTO returnOrderInfo(Long id, User operator) {
+        UserOrder userOrder = userOrderService.getUserOrderForOperator(id, operator);
+        UserOrderDTO userOrderDTO = userOrderConverter.toDTO(userOrder);
         BigDecimal UserOrderProductSum = userOrderProductService.showUserOrderProductSum(id);
         return ShowOrderDTO.builder().userOrderDTO(userOrderDTO).UserOrderProductSum(UserOrderProductSum).build();
     }

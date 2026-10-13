@@ -32,3 +32,18 @@ build/
 ### VS Code ###
 .vscode/
 .aider*
+
+### Runtime logs and source backups ###
+/logs/
+/src/main/java/org/example/webApplicationShopSpringBoot/service.zip
+/src/main/java/org/example/webApplicationShopSpringBoot/service.rar
+
+### Local credentials and configuration ###
+.env
+.env.*
+!.env.example
+!.env.sample
+/src/main/resources/application-local.properties
+/src/main/resources/application-local.yml
+/src/main/resources/application-local.yaml
+/src/main/resources/liquibase-local.properties

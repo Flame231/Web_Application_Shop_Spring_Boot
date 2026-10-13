@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserOrderProductServiceImplTest {
+
+    private final User operator = new User();
 
     @InjectMocks
     private UserOrderProductServiceImpl userOrderProductService;
@@ -48,7 +51,8 @@ class UserOrderProductServiceImplTest {
         userOrderProduct.setActualProductCount(3L);
         userOrderProduct.setProductCount(3L);
         when(userOrderProductRepository.findById(any(PrimaryKeyUserOrderProduct.class))).thenReturn(Optional.of(userOrderProduct));
-        userOrderProductService.addProductToOrder(userOrderChangeCountDTO);
+        userOrderProductService.addProductToOrder(userOrderChangeCountDTO, operator);
+        verify(userOrderService).getUserOrderForOperator(2L, operator);
         assertEquals(3L, userOrderProduct.getActualProductCount());
         verify(userOrderProductRepository, times(1)).findById(any(PrimaryKeyUserOrderProduct.class));
     }
@@ -63,7 +67,8 @@ class UserOrderProductServiceImplTest {
         userOrderProduct.setActualProductCount(3L);
         userOrderProduct.setProductCount(4L);
         when(userOrderProductRepository.findById(any(PrimaryKeyUserOrderProduct.class))).thenReturn(Optional.of(userOrderProduct));
-        userOrderProductService.addProductToOrder(userOrderChangeCountDTO);
+        userOrderProductService.addProductToOrder(userOrderChangeCountDTO, operator);
+        verify(userOrderService).getUserOrderForOperator(2L, operator);
         assertEquals(4L, userOrderProduct.getActualProductCount());
         verify(userOrderProductRepository, times(1)).findById(any(PrimaryKeyUserOrderProduct.class));
     }
@@ -78,7 +83,8 @@ class UserOrderProductServiceImplTest {
         userOrderProduct.setActualProductCount(0L);
         userOrderProduct.setProductCount(3L);
         when(userOrderProductRepository.findById(any(PrimaryKeyUserOrderProduct.class))).thenReturn(Optional.of(userOrderProduct));
-        userOrderProductService.deleteProductFromOrder(userOrderChangeCountDTO);
+        userOrderProductService.deleteProductFromOrder(userOrderChangeCountDTO, operator);
+        verify(userOrderService).getUserOrderForOperator(2L, operator);
         verify(userOrderProductRepository, times(1)).findById(any(PrimaryKeyUserOrderProduct.class));
         assertEquals(0L, userOrderProduct.getActualProductCount());
     }
@@ -93,7 +99,8 @@ class UserOrderProductServiceImplTest {
         userOrderProduct.setActualProductCount(3L);
         userOrderProduct.setProductCount(3L);
         when(userOrderProductRepository.findById(any(PrimaryKeyUserOrderProduct.class))).thenReturn(Optional.of(userOrderProduct));
-        userOrderProductService.deleteProductFromOrder(userOrderChangeCountDTO);
+        userOrderProductService.deleteProductFromOrder(userOrderChangeCountDTO, operator);
+        verify(userOrderService).getUserOrderForOperator(2L, operator);
         verify(userOrderProductRepository, times(1)).findById(any(PrimaryKeyUserOrderProduct.class));
         assertEquals(2L, userOrderProduct.getActualProductCount());
     }
@@ -125,5 +132,33 @@ class UserOrderProductServiceImplTest {
         assertEquals(new BigDecimal("24601.09"), userOrderProductService.showUserOrderProductSum(userOrderId));
         verify(userOrderService, times(1)).getUserOrder(userOrderId);
         verify(userOrderProductRepository, times(1)).findByUserOrderId(userOrderId);
+    }
+
+    @Test
+    void addProductToOrderDeniesAccessBeforeLoadingProduct() {
+        UserOrderChangeCountDTO request = deniedOrderRequest();
+        assertThrows(AccessDeniedException.class,
+                () -> userOrderProductService.addProductToOrder(request, operator));
+        verify(userOrderService).getUserOrderForOperator(42L, operator);
+        verifyNoInteractions(userOrderProductRepository);
+    }
+
+    @Test
+    void deleteProductFromOrderDeniesAccessBeforeLoadingProduct() {
+        UserOrderChangeCountDTO request = deniedOrderRequest();
+        assertThrows(AccessDeniedException.class,
+                () -> userOrderProductService.deleteProductFromOrder(request, operator));
+        verify(userOrderService).getUserOrderForOperator(42L, operator);
+        verifyNoInteractions(userOrderProductRepository);
+    }
+
+    private UserOrderChangeCountDTO deniedOrderRequest() {
+        UserOrderChangeCountDTO request = new UserOrderChangeCountDTO();
+        request.setUserOrderId(42L);
+        request.setProductId(3L);
+        request.setCount(1L);
+        when(userOrderService.getUserOrderForOperator(42L, operator))
+                .thenThrow(new AccessDeniedException("Нет доступа"));
+        return request;
     }
 }

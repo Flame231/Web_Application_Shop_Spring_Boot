@@ -9,9 +9,9 @@ import java.math.BigDecimal;
 
 public interface UserOrderProductService {
 
-    void addProductToOrder(UserOrderChangeCountDTO userOrderChangeCountDTO);
+    void addProductToOrder(UserOrderChangeCountDTO userOrderChangeCountDTO, User operator);
 
-    void deleteProductFromOrder(UserOrderChangeCountDTO userOrderChangeCountDTO);
+    void deleteProductFromOrder(UserOrderChangeCountDTO userOrderChangeCountDTO, User operator);
 
     BigDecimal showUserOrderProductSum(Long userOrderId);
 

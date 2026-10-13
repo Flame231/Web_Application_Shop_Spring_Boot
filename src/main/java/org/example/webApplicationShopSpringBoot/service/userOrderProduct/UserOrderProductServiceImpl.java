@@ -31,8 +31,9 @@ public class UserOrderProductServiceImpl implements UserOrderProductService {
     private final UserOrderProductRepository userOrderProductRepository;
 
     @Override
-    public void addProductToOrder(UserOrderChangeCountDTO userOrderChangeCountDTO) {
+    public void addProductToOrder(UserOrderChangeCountDTO userOrderChangeCountDTO, User operator) {
         Long userOrderId = userOrderChangeCountDTO.getUserOrderId();
+        userOrderService.getUserOrderForOperator(userOrderId, operator);
         Long productId = userOrderChangeCountDTO.getProductId();
         Long count = userOrderChangeCountDTO.getCount();
         PrimaryKeyUserOrderProduct primaryKeyUserOrderProduct =
@@ -47,8 +48,9 @@ public class UserOrderProductServiceImpl implements UserOrderProductService {
     }
 
     @Override
-    public void deleteProductFromOrder(UserOrderChangeCountDTO userOrderChangeCountDTO) {
+    public void deleteProductFromOrder(UserOrderChangeCountDTO userOrderChangeCountDTO, User operator) {
         Long userOrderId = userOrderChangeCountDTO.getUserOrderId();
+        userOrderService.getUserOrderForOperator(userOrderId, operator);
         Long productId = userOrderChangeCountDTO.getProductId();
         Long count = userOrderChangeCountDTO.getCount();
         PrimaryKeyUserOrderProduct primaryKeyUserOrderProduct =

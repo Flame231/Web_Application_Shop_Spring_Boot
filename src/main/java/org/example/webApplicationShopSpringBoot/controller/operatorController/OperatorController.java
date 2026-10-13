@@ -52,8 +52,8 @@ public class OperatorController {
     }
 
     @PostMapping("changeUserOrderStatus")
-    public String changeUserOrderStatus(@RequestParam Long userOrderId) {
-        userOrderService.readyUserOrder(userOrderId);
+    public String changeUserOrderStatus(@RequestParam Long userOrderId, @AuthenticationPrincipal User operator) {
+        userOrderService.readyUserOrder(userOrderId, operator);
         return "redirect:readyOrders";
     }
 
@@ -65,35 +65,35 @@ public class OperatorController {
     }
 
     @GetMapping("showOrder")
-    public String showOrder(@RequestParam Long id, Model model) {
-        ShowOrderDTO showOrderDTO = userOrderProcessingService.returnOrderInfo(id);
+    public String showOrder(@RequestParam Long id, Model model, @AuthenticationPrincipal User operator) {
+        ShowOrderDTO showOrderDTO = userOrderProcessingService.returnOrderInfo(id, operator);
         model.addAttribute("showOrderDTO", showOrderDTO);
         return "/order/showOrderPointOrderPage";
     }
 
     @PostMapping("addProductToOrder")
-    public String addProductToOrder(@ModelAttribute UserOrderChangeCountDTO userOrderChangeCountDTO, @RequestParam Long id, RedirectAttributes redirectAttributes) {
-        userOrderProductService.addProductToOrder(userOrderChangeCountDTO);
+    public String addProductToOrder(@ModelAttribute UserOrderChangeCountDTO userOrderChangeCountDTO, @RequestParam Long id, RedirectAttributes redirectAttributes, @AuthenticationPrincipal User operator) {
+        userOrderProductService.addProductToOrder(userOrderChangeCountDTO, operator);
         redirectAttributes.addAttribute("id", id);
         return "redirect:/operator/showOrder";
     }
 
     @PostMapping("deleteProductFromOrder")
-    public String deleteProductFromOrder(@ModelAttribute UserOrderChangeCountDTO userOrderChangeCountDTO, @RequestParam Long id, RedirectAttributes redirectAttributes) {
-        userOrderProductService.deleteProductFromOrder(userOrderChangeCountDTO);
+    public String deleteProductFromOrder(@ModelAttribute UserOrderChangeCountDTO userOrderChangeCountDTO, @RequestParam Long id, RedirectAttributes redirectAttributes, @AuthenticationPrincipal User operator) {
+        userOrderProductService.deleteProductFromOrder(userOrderChangeCountDTO, operator);
         redirectAttributes.addAttribute("id", id);
         return "redirect:/operator/showOrder";
     }
 
     @PostMapping("refuseOrder")
-    public String refuseOrder(@RequestParam Long userOrderId) {
-        userOrderProcessingService.refuseUserOrder(userOrderId);
+    public String refuseOrder(@RequestParam Long userOrderId, @AuthenticationPrincipal User operator) {
+        userOrderProcessingService.refuseUserOrder(userOrderId, operator);
         return "redirect:/operator/arrivedOrders";
     }
 
     @PostMapping("closeOrder")
-    public String closeOrder(@RequestParam Long userOrderId) {
-        userOrderProcessingService.closeUserOrder(userOrderId);
+    public String closeOrder(@RequestParam Long userOrderId, @AuthenticationPrincipal User operator) {
+        userOrderProcessingService.closeUserOrder(userOrderId, operator);
         return "redirect:/operator/arrivedOrders";
     }
 }
